@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Testing
+namespace ImageBinarizerApp
 {
     /// <summary>
     /// This class is use to Parse the arguments of the Application
