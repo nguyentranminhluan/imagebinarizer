@@ -80,7 +80,7 @@ namespace ImageBinarizerApp
             //int separatorIndex = datas.OutputImagePath.LastIndexOf(Path.DirectorySeparatorChar)
             //if (!(args[2].Equals("--output-image") && separatorIndex >= 0 && Directory.Exists(args[3].Substring(0, separatorIndex))))
             
-            if (Directory.Exists(Path.GetDirectoryName(datas.OutputImagePath)))
+            if (!Directory.Exists(Path.GetDirectoryName(datas.OutputImagePath))) 
             {
                 Console.WriteLine("\nError: Output Directory doesn't exist.");
                 Console.WriteLine("\nPress any key to exit the application.");
