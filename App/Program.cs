@@ -37,23 +37,6 @@ namespace ImageBinarizerApp
                 console.readline();
                 return;
             }*/
-            var parsingObject = new CommandLineParsing(args);
-
-            if (parsingObject.Help())
-            {
-                parsingObject.PrintHelp();
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
-                return;
-            }
-            var datas = new BinarizeData();
-
-            if (!parsingObject.Parsing(out datas))
-            {
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
-                return;
-            }
 
             /*String inputImagePath = "";
             String outputImagePath = "";
@@ -63,29 +46,26 @@ namespace ImageBinarizerApp
             int greenThreshold = -1;
             int blueThreshold = -1;*/
 
-            //if (!(args[0].Equals("--input-image") && File.Exists(args[1])))
-            if (!(File.Exists(datas.InputImagePath)))
+            /*if (!(args[0].Equals("--input-image") && File.Exists(args[1])))            
             {
                 Console.WriteLine("\nError: Input file doesn't exist.");
                 Console.WriteLine("\nPress any key to exit the application.");
                 Console.ReadLine();
                 return;
-            }
+            }*/
 
 
             //inputImagePath = args[1];
 
 
-            //int separatorIndex = args[3].LastIndexOf(Path.DirectorySeparatorChar);
-            int separatorIndex = datas.OutputImagePath.LastIndexOf(Path.DirectorySeparatorChar);
-            //if (!(args[2].Equals("--output-image") && separatorIndex >= 0 && Directory.Exists(args[3].Substring(0, separatorIndex))))
-            if (!(separatorIndex >= 0 && Directory.Exists(datas.OutputImagePath.Substring(0, separatorIndex))))
+            //int separatorIndex = args[3].LastIndexOf(Path.DirectorySeparatorChar);            
+            /*if (!(args[2].Equals("--output-image") && separatorIndex >= 0 && Directory.Exists(args[3].Substring(0, separatorIndex))))           
             {
                 Console.WriteLine("\nError: Output Directory doesn't exist.");
                 Console.WriteLine("\nPress any key to exit the application.");
                 Console.ReadLine();
                 return;
-            }
+            }*/
 
             //outputImagePath = args[3];
 
@@ -148,27 +128,11 @@ namespace ImageBinarizerApp
                 greenThreshold = -1;
                 blueThreshold = -1;
             }*/
-            if((datas.RedThreshold != -1 && (datas.RedThreshold < 0 || datas.RedThreshold >255)))
-            {
-                Console.WriteLine("\nError: Red Threshold should be in between 0 and 255.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+            
+            var datas = new BinarizeData();
+            if(!(argumentValidation(args, out datas))){
                 return;
-            }
-            if ((datas.GreenThreshold != -1 && (datas.GreenThreshold < 0 || datas.GreenThreshold > 255)))
-            {
-                Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
-                return;
-            }
-            if ((datas.BlueThreshold != -1 && (datas.BlueThreshold < 0 || datas.BlueThreshold > 255)))
-            {
-                Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
-                return;
-            }
+            }           
 
 
             Console.WriteLine("\nImage Binarization in progress...");
@@ -193,6 +157,71 @@ namespace ImageBinarizerApp
 
             Console.ReadLine();
 
+        }
+
+        /// <summary>
+        /// Check validation of arguments
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="datas"></param>
+        /// <returns></returns>
+        private static bool argumentValidation(string[] args, out BinarizeData datas)
+        {
+            var parsingObject = new CommandLineParsing(args);
+            datas = new BinarizeData();
+
+            if (parsingObject.Help())
+            {
+                parsingObject.PrintHelp();
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }           
+
+            if (!parsingObject.Parsing(out datas))
+            {
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+
+            if (!(File.Exists(datas.InputImagePath)))
+            {
+                Console.WriteLine("\nError: Input file doesn't exist.");
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+            int separatorIndex = datas.OutputImagePath.LastIndexOf(Path.DirectorySeparatorChar);
+            if (!(separatorIndex >= 0 && Directory.Exists(datas.OutputImagePath.Substring(0, separatorIndex))))
+            {
+                Console.WriteLine("\nError: Output Directory doesn't exist.");
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+            if ((datas.RedThreshold != -1 && (datas.RedThreshold < 0 || datas.RedThreshold > 255)))
+            {
+                Console.WriteLine("\nError: Red Threshold should be in between 0 and 255.");
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+            if ((datas.GreenThreshold != -1 && (datas.GreenThreshold < 0 || datas.GreenThreshold > 255)))
+            {
+                Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+            if ((datas.BlueThreshold != -1 && (datas.BlueThreshold < 0 || datas.BlueThreshold > 255)))
+            {
+                Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+            return true;
         }
     }
 }
