@@ -141,9 +141,6 @@ namespace ImageBinarizerApp
                 blueThreshold = -1;
             }*/
 
-
-
-
             BinarizeConfiguration configurationDatas;
             if (!(TryParseConfiguration(args, out configurationDatas, out string errMsg)))
             {
@@ -166,7 +163,6 @@ namespace ImageBinarizerApp
             }
             catch (Exception e)
             {
-
                 ErrMsgPrinter($"\nError: {e.Message}");
                 return;
             }
@@ -253,7 +249,7 @@ namespace ImageBinarizerApp
             //Check if blue threshold is valid
             if ((configurationDatas.BlueThreshold != -1 && (configurationDatas.BlueThreshold < 0 || configurationDatas.BlueThreshold > 255)))
             {
-                errMsg = "\nError: Green Threshold should be in between 0 and 255.";
+                errMsg = "Blue Threshold should be in between 0 and 255.";
                 return false;
             }
 
