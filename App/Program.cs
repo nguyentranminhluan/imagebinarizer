@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageBinarizerApp.Entities;
+using System;
 using System.IO;
 
 namespace ImageBinarizerApp
@@ -16,8 +17,8 @@ namespace ImageBinarizerApp
         {
             Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.0.2]");
             Console.WriteLine("Copyright <c> 2019 daenet GmbH, Damir Dobric. All rights reserved.");
-            Console.WriteLine("\nUse following command for help:");
-            Console.WriteLine("dotnet ImageBinarizerApp -help");
+            Console.WriteLine("\nInsert one of these [\"-help\", \"-h\", \"--h\"] to following command for help:");
+            Console.WriteLine("\n\tdotnet ImageBinarizerApp [command]");
 
             //Test if necessary input arguments were supplied.
             /*if (args.length < 8)
@@ -128,9 +129,9 @@ namespace ImageBinarizerApp
                 greenThreshold = -1;
                 blueThreshold = -1;
             }*/
-            
-            var datas = new BinarizeData();
-            if(!(argumentValidation(args, out datas))){
+
+            BinarizeConfiguration configurationDatas;
+            if(!(tryParseConfiguration(args, out configurationDatas))){
                 return;
             }           
 
@@ -141,8 +142,10 @@ namespace ImageBinarizerApp
             {
                 ImageBinarizerApplication obj = new ImageBinarizerApplication();
                 //obj.Binarizer(inputImagePath, outputImagePath, imageWidth, imageHeight, redThreshold, greenThreshold, blueThreshold);
-                obj.Binarizer(datas.InputImagePath, datas.OutputImagePath, datas.ImageWidth, datas.ImageHeight,
-                                datas.RedThreshold, datas.GreenThreshold, datas.BlueThreshold);
+                obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath, 
+                                configurationDatas.ImageWidth, configurationDatas.ImageHeight,
+                                    configurationDatas.RedThreshold, configurationDatas.GreenThreshold, 
+                                        configurationDatas.BlueThreshold);
             }
             catch (Exception e)
             {
@@ -163,12 +166,12 @@ namespace ImageBinarizerApp
         /// Check validation of arguments
         /// </summary>
         /// <param name="args"></param>
-        /// <param name="datas"></param>
+        /// <param name="configurationDatas"></param>
         /// <returns></returns>
-        private static bool argumentValidation(string[] args, out BinarizeData datas)
+        private static bool tryParseConfiguration(string[] args, out BinarizeConfiguration configurationDatas)
         {
             var parsingObject = new CommandLineParsing(args);
-            datas = new BinarizeData();
+            configurationDatas = new BinarizeConfiguration();
             // Check if -help is called
             if (parsingObject.Help())
             {
@@ -178,14 +181,14 @@ namespace ImageBinarizerApp
                 return false;
             }           
             //Check if datas Parsed is correct
-            if (!parsingObject.Parsing(out datas))
+            if (!parsingObject.Parsing(out configurationDatas))
             {
                 Console.WriteLine("\nPress any key to exit the application.");
                 Console.ReadLine();
                 return false;
             }
             //Check if input file is valid
-            if (!(File.Exists(datas.InputImagePath)))
+            if (!(File.Exists(configurationDatas.InputImagePath)))
             {
                 Console.WriteLine("\nError: Input file doesn't exist.");
                 Console.WriteLine("\nPress any key to exit the application.");
@@ -193,7 +196,7 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Check if output dir is valid
-            if (!(Directory.Exists(Path.GetDirectoryName(datas.OutputImagePath))))
+            if (!(Directory.Exists(Path.GetDirectoryName(configurationDatas.OutputImagePath))))
             {
                 Console.WriteLine("\nError: Output Directory doesn't exist.");
                 Console.WriteLine("\nPress any key to exit the application.");
@@ -201,7 +204,7 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Check if width or height input is valid
-            if(datas.ImageHeight < 0 || datas.ImageWidth < 0)
+            if(configurationDatas.ImageHeight < 0 || configurationDatas.ImageWidth < 0)
             {
                 Console.WriteLine("\nError: Height and Width should be larger than 0");
                 Console.WriteLine("\nPress any key to exit the application.");
@@ -209,7 +212,7 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Check if red threshold is valid
-            if ((datas.RedThreshold != -1 && (datas.RedThreshold < 0 || datas.RedThreshold > 255)))
+            if ((configurationDatas.RedThreshold != -1 && (configurationDatas.RedThreshold < 0 || configurationDatas.RedThreshold > 255)))
             {
                 Console.WriteLine("\nError: Red Threshold should be in between 0 and 255.");
                 Console.WriteLine("\nPress any key to exit the application.");
@@ -217,7 +220,7 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Check if green threshold is valid
-            if ((datas.GreenThreshold != -1 && (datas.GreenThreshold < 0 || datas.GreenThreshold > 255)))
+            if ((configurationDatas.GreenThreshold != -1 && (configurationDatas.GreenThreshold < 0 || configurationDatas.GreenThreshold > 255)))
             {
                 Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
                 Console.WriteLine("\nPress any key to exit the application.");
@@ -225,7 +228,7 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Check if blue threshold is valid
-            if ((datas.BlueThreshold != -1 && (datas.BlueThreshold < 0 || datas.BlueThreshold > 255)))
+            if ((configurationDatas.BlueThreshold != -1 && (configurationDatas.BlueThreshold < 0 || configurationDatas.BlueThreshold > 255)))
             {
                 Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
                 Console.WriteLine("\nPress any key to exit the application.");

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ImageBinarizerApp.Entities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,35 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Conducting parsing process
         /// </summary>
-        /// <param name="datas"></param>
+        /// <param name="Configurations"></param>
         /// <returns></returns>
-        public bool Parsing(out BinarizeData datas)
+        public bool Parsing(out BinarizeConfiguration Configurations)
         {
-            var switchMappings = new Dictionary<string, string>()
+            Dictionary<string, string> switchMappings = mappingCommandLine();
+
+            Configurations = new BinarizeConfiguration();
+
+            try
+            {
+                var builder = new ConfigurationBuilder().AddCommandLine(command, switchMappings);
+                var config = builder.Build();
+
+                config.Bind(Configurations);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+
+
+        }
+
+        private static Dictionary<string, string> mappingCommandLine()
+        {
+            return new Dictionary<string, string>()
             {
                 { "-iip", "inputImagePath"},
                 { "--input-image", "inputImagePath"},
@@ -38,6 +63,7 @@ namespace ImageBinarizerApp
                 { "--output-image", "outputImagePath" },
                 { "-iw", "imageWidth" },
                 { "-width", "imageWidth" },
+                { "-ih", "imageHeight"},
                 { "-height", "imageHeight"},
                 { "-rt", "redThreshold" },
                 { "-red", "redThreshold" },
@@ -46,26 +72,6 @@ namespace ImageBinarizerApp
                 { "-bt", "blueThreshold"},
                 { "-blue", "blueThreshold"}
             };
-
-            var data = new BinarizeData();
-
-            try
-            {
-                var builder = new ConfigurationBuilder().AddCommandLine(command, switchMappings);
-                var config = builder.Build();
-
-                config.Bind(data);
-                datas = data;
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                datas = data;
-                return false;
-            }
-
-
         }
 
         /// <summary>
@@ -86,31 +92,21 @@ namespace ImageBinarizerApp
         public void PrintHelp()
         {
             Console.WriteLine("\nHelp:");
-            Console.WriteLine("\nPass the arguments as following:");
-            Console.WriteLine("\nExample with automatic RGB:\ndotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
-            Console.WriteLine("\nExample with explicit RGB:\ndotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 -red 100 -green 100 -blue 100");
+            Console.WriteLine("\n\t- Input image path: {\"- iip\", \"--input - image\"}");
+            Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\"}");
+            Console.WriteLine("\t- Image width: {\"-iw\", \"-width\"}");
+            Console.WriteLine("\t- Image height: {\"-ih\", \"-height\"}");
+            Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\"}");
+            Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\"}");
+            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\"}");
+            Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automaticaly if not specify");
+            Console.WriteLine("\nOthers values need to be larger than 0");
+            Console.WriteLine("\n- Example:");
+            Console.WriteLine("\tWith automatic RGB: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
+            Console.WriteLine("\tOnly Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");
+            Console.WriteLine("\tPassing all arguments: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
         }
     }
 
-    /// <summary>
-    /// Collect requested Binarize data
-    /// </summary>
-    class BinarizeData
-    {
-        private String inputImagePath = "";
-        private String outputImagePath = "";
-        private int imageWidth = 0;
-        private int imageHeight = 0;
-        private int redThreshold = -1;
-        private int greenThreshold = -1;
-        private int blueThreshold = -1;
-        public string InputImagePath { get { return inputImagePath; } set { inputImagePath = value; } }
-        public string OutputImagePath { get { return outputImagePath; } set { outputImagePath = value; } }
-        public int ImageWidth { get { return imageWidth; } set { imageWidth = value; } }
-        public int ImageHeight { get { return imageHeight; } set { imageHeight = value; } }
-        public int RedThreshold { get { return redThreshold; } set { redThreshold = value; } }
-        public int GreenThreshold { get { return greenThreshold; } set { greenThreshold = value; } }
-        public int BlueThreshold { get { return blueThreshold; } set { blueThreshold = value; } }
-
-    }
+    
 }
