@@ -13,6 +13,7 @@ namespace ImageBinarizerApp
     /// </summary>
     class CommandLineParsing
     {
+        public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
         private string[] command;
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace ImageBinarizerApp
         /// <returns></returns>
         public bool Parsing(out BinarizeConfiguration Configurations)
         {
-            Dictionary<string, string> switchMappings = mappingCommandLine();
+            Dictionary<string, string> switchMappings = MappingCommandLine();
 
             Configurations = new BinarizeConfiguration();
 
@@ -53,7 +54,7 @@ namespace ImageBinarizerApp
 
         }
 
-        private static Dictionary<string, string> mappingCommandLine()
+        private static Dictionary<string, string> MappingCommandLine()
         {
             return new Dictionary<string, string>()
             {
@@ -80,8 +81,8 @@ namespace ImageBinarizerApp
         /// <returns></returns>
         public bool Help()
         {
-            string[] helps = { "-help", "-h", "--h" };
-            if (command.Length == 1 && helps.Contains(command[0]))
+
+            if (command.Length == 1 && HelpArguments.Contains(command[0]))
                 return true;
             return false;
         }
@@ -108,5 +109,5 @@ namespace ImageBinarizerApp
         }
     }
 
-    
+
 }

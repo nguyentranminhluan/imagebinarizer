@@ -1,6 +1,7 @@
 ﻿using ImageBinarizerApp.Entities;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace ImageBinarizerApp
 {
@@ -15,9 +16,10 @@ namespace ImageBinarizerApp
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
+            string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
             Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.0.2]");
             Console.WriteLine("Copyright <c> 2019 daenet GmbH, Damir Dobric. All rights reserved.");
-            Console.WriteLine("\nInsert one of these [\"-help\", \"-h\", \"--h\"] to following command for help:");
+            Console.WriteLine($"\nInsert one of these [{printedHelpArgs}] to following command for help:");
             Console.WriteLine("\n\tdotnet ImageBinarizerApp [command]");
 
             //Test if necessary input arguments were supplied.
@@ -131,9 +133,11 @@ namespace ImageBinarizerApp
             }*/
 
             BinarizeConfiguration configurationDatas;
-            if(!(tryParseConfiguration(args, out configurationDatas))){
+            if (!(TryParseConfiguration(args, out configurationDatas, out string errMsg)))
+            {
+                ErrMsgPrinter(errMsg);
                 return;
-            }           
+            }
 
 
             Console.WriteLine("\nImage Binarization in progress...");
@@ -142,24 +146,33 @@ namespace ImageBinarizerApp
             {
                 ImageBinarizerApplication obj = new ImageBinarizerApplication();
                 //obj.Binarizer(inputImagePath, outputImagePath, imageWidth, imageHeight, redThreshold, greenThreshold, blueThreshold);
-                obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath, 
+                obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath,
                                 configurationDatas.ImageWidth, configurationDatas.ImageHeight,
-                                    configurationDatas.RedThreshold, configurationDatas.GreenThreshold, 
+                                    configurationDatas.RedThreshold, configurationDatas.GreenThreshold,
                                         configurationDatas.BlueThreshold);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nError: {e.Message}");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                ErrMsgPrinter($"\nError: {e.Message}");
+                //Console.WriteLine($"\nError: {e.Message}");
+                //Console.WriteLine("\nPress any key to exit the application.");
+                //Console.ReadLine();
                 return;
             }
 
             Console.WriteLine("\nImage Binarization completed.");
+            ErrMsgPrinter();
+
+        }
+
+        private static void ErrMsgPrinter(string errMsg = null)
+        {
+            if (string.IsNullOrEmpty(errMsg) == false)
+            {
+                Console.WriteLine(errMsg);
+            }
             Console.WriteLine("\nPress any key to exit the application.");
-
             Console.ReadLine();
-
         }
 
         /// <summary>
@@ -168,73 +181,77 @@ namespace ImageBinarizerApp
         /// <param name="args"></param>
         /// <param name="configurationDatas"></param>
         /// <returns></returns>
-        private static bool tryParseConfiguration(string[] args, out BinarizeConfiguration configurationDatas)
+        private static bool TryParseConfiguration(string[] args, out BinarizeConfiguration configurationDatas, out string errMsg)
         {
             var parsingObject = new CommandLineParsing(args);
             configurationDatas = new BinarizeConfiguration();
+
+            //
             // Check if -help is called
             if (parsingObject.Help())
             {
+                errMsg = null;
                 parsingObject.PrintHelp();
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
-                return false;
-            }           
-            //Check if datas Parsed is correct
-            if (!parsingObject.Parsing(out configurationDatas))
-            {
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
                 return false;
             }
+
+            //
+            // Check if datas Parsed is correct
+            if (!parsingObject.Parsing(out configurationDatas))
+            {
+                errMsg = null;
+                return false;
+            }
+
+            //
             //Check if input file is valid
             if (!(File.Exists(configurationDatas.InputImagePath)))
             {
-                Console.WriteLine("\nError: Input file doesn't exist.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                errMsg = "\nError: Input file doesn't exist.";
                 return false;
             }
+
+            //
             //Check if output dir is valid
             if (!(Directory.Exists(Path.GetDirectoryName(configurationDatas.OutputImagePath))))
             {
-                Console.WriteLine("\nError: Output Directory doesn't exist.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                errMsg = "\nError: Output Directory doesn't exist.";
                 return false;
             }
+
+            //
             //Check if width or height input is valid
-            if(configurationDatas.ImageHeight < 0 || configurationDatas.ImageWidth < 0)
+            if (configurationDatas.ImageHeight < 0 || configurationDatas.ImageWidth < 0)
             {
-                Console.WriteLine("\nError: Height and Width should be larger than 0");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                errMsg = "\nError: Height and Width should be larger than 0";
                 return false;
             }
+
+            //
             //Check if red threshold is valid
             if ((configurationDatas.RedThreshold != -1 && (configurationDatas.RedThreshold < 0 || configurationDatas.RedThreshold > 255)))
             {
-                Console.WriteLine("\nError: Red Threshold should be in between 0 and 255.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                errMsg = "\nError: Red Threshold should be in between 0 and 255.";
                 return false;
             }
+
+            //
             //Check if green threshold is valid
             if ((configurationDatas.GreenThreshold != -1 && (configurationDatas.GreenThreshold < 0 || configurationDatas.GreenThreshold > 255)))
             {
-                Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                errMsg = "\nError: Green Threshold should be in between 0 and 255.";
                 return false;
             }
+
+            //
             //Check if blue threshold is valid
             if ((configurationDatas.BlueThreshold != -1 && (configurationDatas.BlueThreshold < 0 || configurationDatas.BlueThreshold > 255)))
             {
-                Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
-                Console.WriteLine("\nPress any key to exit the application.");
-                Console.ReadLine();
+                errMsg = "\nError: Green Threshold should be in between 0 and 255.";
                 return false;
             }
+
+            errMsg = null;
             return true;
         }
     }
