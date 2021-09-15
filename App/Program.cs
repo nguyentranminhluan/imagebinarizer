@@ -192,8 +192,9 @@ namespace ImageBinarizerApp
                 Console.ReadLine();
                 return false;
             }
-            int separatorIndex = datas.OutputImagePath.LastIndexOf(Path.DirectorySeparatorChar);
-            if (!(separatorIndex >= 0 && Directory.Exists(datas.OutputImagePath.Substring(0, separatorIndex))))
+            //int separatorIndex = datas.OutputImagePath.LastIndexOf(Path.DirectorySeparatorChar);
+            //if (!(separatorIndex >= 0 && Directory.Exists(datas.OutputImagePath.Substring(0, separatorIndex))))
+            if (!(Directory.Exists(Path.GetDirectoryName(datas.OutputImagePath))))
             {
                 Console.WriteLine("\nError: Output Directory doesn't exist.");
                 Console.WriteLine("\nPress any key to exit the application.");
