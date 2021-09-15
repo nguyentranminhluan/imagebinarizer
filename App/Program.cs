@@ -132,6 +132,9 @@ namespace ImageBinarizerApp
                 blueThreshold = -1;
             }*/
 
+            
+
+
             BinarizeConfiguration configurationDatas;
             if (!(TryParseConfiguration(args, out configurationDatas, out string errMsg)))
             {
@@ -153,16 +156,10 @@ namespace ImageBinarizerApp
             }
             catch (Exception e)
             {
-                ErrMsgPrinter($"\nError: {e.Message}");
-                //Console.WriteLine($"\nError: {e.Message}");
-                //Console.WriteLine("\nPress any key to exit the application.");
-                //Console.ReadLine();
+                ErrMsgPrinter($"\nError: {e.Message}");                
                 return;
             }
-
-            Console.WriteLine("\nImage Binarization completed.");
-            ErrMsgPrinter();
-
+            ErrMsgPrinter("\nImage Binarization completed.");
         }
 
         private static void ErrMsgPrinter(string errMsg = null)
@@ -256,3 +253,4 @@ namespace ImageBinarizerApp
         }
     }
 }
+// --input-image D:\DAENET\image\old.jpg --output-image D:\DAENET\image\out.txt -width 800 -height 225 -red 100 -green 100 -blue 100
