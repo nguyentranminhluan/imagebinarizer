@@ -2,7 +2,7 @@
   "profiles": {
     "ImageBinarizerApp": {
       "commandName": "Project",
-      "commandLineArgs": "--input-image D:\\DAENET\\image\\old.jpg --output-image D:\\DAENET\\image\\out.txt -width 800 -height 225 -red 100 -green 100 -blue 100"
+      "commandLineArgs": "-h"
     }
   }
 }
