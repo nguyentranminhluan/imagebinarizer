@@ -169,7 +169,7 @@ namespace ImageBinarizerApp
         {
             var parsingObject = new CommandLineParsing(args);
             datas = new BinarizeData();
-
+            // Check if -help is called
             if (parsingObject.Help())
             {
                 parsingObject.PrintHelp();
@@ -177,14 +177,14 @@ namespace ImageBinarizerApp
                 Console.ReadLine();
                 return false;
             }           
-
+            //Check if datas Parsed is correct
             if (!parsingObject.Parsing(out datas))
             {
                 Console.WriteLine("\nPress any key to exit the application.");
                 Console.ReadLine();
                 return false;
             }
-
+            //Check if input file is valid
             if (!(File.Exists(datas.InputImagePath)))
             {
                 Console.WriteLine("\nError: Input file doesn't exist.");
@@ -192,8 +192,7 @@ namespace ImageBinarizerApp
                 Console.ReadLine();
                 return false;
             }
-            //int separatorIndex = datas.OutputImagePath.LastIndexOf(Path.DirectorySeparatorChar);
-            //if (!(separatorIndex >= 0 && Directory.Exists(datas.OutputImagePath.Substring(0, separatorIndex))))
+            //Check if output dir is valid
             if (!(Directory.Exists(Path.GetDirectoryName(datas.OutputImagePath))))
             {
                 Console.WriteLine("\nError: Output Directory doesn't exist.");
@@ -201,6 +200,15 @@ namespace ImageBinarizerApp
                 Console.ReadLine();
                 return false;
             }
+            //Check if width or height input is valid
+            if(datas.ImageHeight < 0 || datas.ImageWidth < 0)
+            {
+                Console.WriteLine("\nError: Height and Width should be larger than 0");
+                Console.WriteLine("\nPress any key to exit the application.");
+                Console.ReadLine();
+                return false;
+            }
+            //Check if red threshold is valid
             if ((datas.RedThreshold != -1 && (datas.RedThreshold < 0 || datas.RedThreshold > 255)))
             {
                 Console.WriteLine("\nError: Red Threshold should be in between 0 and 255.");
@@ -208,6 +216,7 @@ namespace ImageBinarizerApp
                 Console.ReadLine();
                 return false;
             }
+            //Check if green threshold is valid
             if ((datas.GreenThreshold != -1 && (datas.GreenThreshold < 0 || datas.GreenThreshold > 255)))
             {
                 Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");
@@ -215,6 +224,7 @@ namespace ImageBinarizerApp
                 Console.ReadLine();
                 return false;
             }
+            //Check if blue threshold is valid
             if ((datas.BlueThreshold != -1 && (datas.BlueThreshold < 0 || datas.BlueThreshold > 255)))
             {
                 Console.WriteLine("\nError: Green Threshold should be in between 0 and 255.");

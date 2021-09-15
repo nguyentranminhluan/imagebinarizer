@@ -18,14 +18,21 @@ namespace ImageBinarizerApp
         /// </summary>
         public void Binarizer(String inputImagePath, String outputImagePath, int imageWidth, int imageHeight, int redThreshold, int greenThreshold, int blueThreshold)
         {
+            Bitmap bitmap = new Bitmap(inputImagePath);
+
             Dictionary<String, int> imageParams = new Dictionary<string, int>();
-            imageParams.Add("imageWidth", imageWidth);
-            imageParams.Add("imageHeight", imageHeight);
+            if(imageWidth > 0)
+                imageParams.Add("imageWidth", imageWidth);
+            else
+                imageParams.Add("imageWidth", bitmap.Width);
+            if(imageHeight > 0)
+                imageParams.Add("imageHeight", imageHeight);
+            else
+                imageParams.Add("imageWidth", bitmap.Height);
             imageParams.Add("redThreshold", redThreshold);
             imageParams.Add("greenThreshold", greenThreshold);
             imageParams.Add("blueThreshold", blueThreshold);            
 
-            Bitmap bitmap = new Bitmap(inputImagePath);
 
             int imgWidth = bitmap.Width;
             int imgHeight = bitmap.Height;
