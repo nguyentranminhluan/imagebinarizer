@@ -92,7 +92,7 @@ namespace ImageBinarizerApp
         public void PrintHelp()
         {
             Console.WriteLine("\nHelp:");
-            Console.WriteLine("\n\t- Input image path: {\"- iip\", \"--input - image\"}");
+            Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\"}");
             Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\"}");
             Console.WriteLine("\t- Image width: {\"-iw\", \"-width\"}");
             Console.WriteLine("\t- Image height: {\"-ih\", \"-height\"}");
