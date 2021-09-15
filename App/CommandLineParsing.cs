@@ -30,7 +30,7 @@ namespace ImageBinarizerApp
         /// </summary>
         /// <param name="Configurations"></param>
         /// <returns></returns>
-        public bool Parsing(out BinarizeConfiguration Configurations)
+        public bool Parsing(out BinarizeConfiguration Configurations, out string errMsg)
         {
             Dictionary<string, string> switchMappings = MappingCommandLine();
 
@@ -42,12 +42,12 @@ namespace ImageBinarizerApp
                 var config = builder.Build();
 
                 config.Bind(Configurations);
-
+                errMsg = null;
                 return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                errMsg = e.Message;
                 return false;
             }
 
@@ -83,14 +83,17 @@ namespace ImageBinarizerApp
         {
 
             if (command.Length == 1 && HelpArguments.Contains(command[0]))
+            {
+                PrintHelp();
                 return true;
+            }
             return false;
         }
 
         /// <summary>
         /// Print help to console
         /// </summary>
-        public void PrintHelp()
+        private void PrintHelp()
         {
             Console.WriteLine("\nHelp:");
             Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\"}");

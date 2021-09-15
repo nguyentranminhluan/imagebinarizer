@@ -17,10 +17,19 @@ namespace ImageBinarizerApp
         static void Main(string[] args)
         {
             string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
-            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.0.2]");
-            Console.WriteLine("Copyright <c> 2019 daenet GmbH, Damir Dobric. All rights reserved.");
-            Console.WriteLine($"\nInsert one of these [{printedHelpArgs}] to following command for help:");
-            Console.WriteLine("\n\tdotnet ImageBinarizerApp [command]");
+            Console.WriteLine(".------------------------------------------------------------------------------------------.");
+            Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.0.2]|");
+            Console.WriteLine("    Copyright <c> 2019 daenet GmbH, Damir Dobric. All rights reserved.");
+            Console.WriteLine($"\n    Insert one of these [{printedHelpArgs}] to following command for help:");
+            Console.WriteLine("\n\t\tdotnet ImageBinarizerApp [command]\n|");
+            for (int i = 1; i < 9; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.WriteLine("|");
+                Console.SetCursorPosition(91, i);
+                Console.WriteLine("|");
+            }
+            Console.WriteLine("\'------------------------------------------------------------------------------------------\'");
 
             //Test if necessary input arguments were supplied.
             /*if (args.length < 8)
@@ -132,12 +141,13 @@ namespace ImageBinarizerApp
                 blueThreshold = -1;
             }*/
 
-            
+
 
 
             BinarizeConfiguration configurationDatas;
             if (!(TryParseConfiguration(args, out configurationDatas, out string errMsg)))
             {
+                Console.Write("\nError: ");
                 ErrMsgPrinter(errMsg);
                 return;
             }
@@ -156,7 +166,8 @@ namespace ImageBinarizerApp
             }
             catch (Exception e)
             {
-                ErrMsgPrinter($"\nError: {e.Message}");                
+
+                ErrMsgPrinter($"\nError: {e.Message}");
                 return;
             }
             ErrMsgPrinter("\nImage Binarization completed.");
@@ -166,7 +177,7 @@ namespace ImageBinarizerApp
         {
             if (string.IsNullOrEmpty(errMsg) == false)
             {
-                Console.WriteLine(errMsg);
+                Console.Write(errMsg + "\n");
             }
             Console.WriteLine("\nPress any key to exit the application.");
             Console.ReadLine();
@@ -188,15 +199,13 @@ namespace ImageBinarizerApp
             if (parsingObject.Help())
             {
                 errMsg = null;
-                parsingObject.PrintHelp();
                 return false;
             }
 
             //
             // Check if datas Parsed is correct
-            if (!parsingObject.Parsing(out configurationDatas))
+            if (!parsingObject.Parsing(out configurationDatas, out errMsg))
             {
-                errMsg = null;
                 return false;
             }
 
@@ -204,7 +213,7 @@ namespace ImageBinarizerApp
             //Check if input file is valid
             if (!(File.Exists(configurationDatas.InputImagePath)))
             {
-                errMsg = "\nError: Input file doesn't exist.";
+                errMsg = "Input file doesn't exist.";
                 return false;
             }
 
@@ -212,7 +221,7 @@ namespace ImageBinarizerApp
             //Check if output dir is valid
             if (!(Directory.Exists(Path.GetDirectoryName(configurationDatas.OutputImagePath))))
             {
-                errMsg = "\nError: Output Directory doesn't exist.";
+                errMsg = "Output Directory doesn't exist.";
                 return false;
             }
 
@@ -220,7 +229,7 @@ namespace ImageBinarizerApp
             //Check if width or height input is valid
             if (configurationDatas.ImageHeight < 0 || configurationDatas.ImageWidth < 0)
             {
-                errMsg = "\nError: Height and Width should be larger than 0";
+                errMsg = "Height and Width should be larger than 0";
                 return false;
             }
 
@@ -228,7 +237,7 @@ namespace ImageBinarizerApp
             //Check if red threshold is valid
             if ((configurationDatas.RedThreshold != -1 && (configurationDatas.RedThreshold < 0 || configurationDatas.RedThreshold > 255)))
             {
-                errMsg = "\nError: Red Threshold should be in between 0 and 255.";
+                errMsg = "Red Threshold should be in between 0 and 255.";
                 return false;
             }
 
@@ -236,7 +245,7 @@ namespace ImageBinarizerApp
             //Check if green threshold is valid
             if ((configurationDatas.GreenThreshold != -1 && (configurationDatas.GreenThreshold < 0 || configurationDatas.GreenThreshold > 255)))
             {
-                errMsg = "\nError: Green Threshold should be in between 0 and 255.";
+                errMsg = "Green Threshold should be in between 0 and 255.";
                 return false;
             }
 
