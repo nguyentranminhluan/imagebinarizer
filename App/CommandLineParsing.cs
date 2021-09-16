@@ -96,13 +96,13 @@ namespace ImageBinarizerApp
         private void PrintHelp()
         {
             Console.WriteLine("\nHelp:");
-            Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\"}");
-            Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\"}");
-            Console.WriteLine("\t- Image width: {\"-iw\", \"-width\"}");
-            Console.WriteLine("\t- Image height: {\"-ih\", \"-height\"}");
-            Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\"}");
-            Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\"}");
-            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\"}");
+            Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\", \"--inputImagePath\"}");
+            Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\", \"--outputImagePath\"}");
+            Console.WriteLine("\t- Image width: {\"-iw\", \"-width\", \"--imageWidth\"}");
+            Console.WriteLine("\t- Image height: {\"-ih\", \"-height\", \"--imageHeight\"}");
+            Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\", \"--redThreshold\"}");
+            Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\", \"--greenThreshold\"}");
+            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\", \"--blueThreshold\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automaticaly if not specified.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. \n\t0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
