@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,16 +41,18 @@ namespace ImageBinarizerApp
             {
                 var builder = new ConfigurationBuilder().AddCommandLine(command, switchMappings);
                 var config = builder.Build();
-
                 config.Bind(Configurations);
-                errMsg = null;
-                return true;
+                
             }
             catch (Exception e)
             {
                 errMsg = e.Message;
                 return false;
             }
+            if (!PropertiesValidating(Configurations, out errMsg))
+                return false;
+            errMsg = null;
+            return true;
 
 
         }
@@ -73,6 +76,65 @@ namespace ImageBinarizerApp
                 { "-bt", "blueThreshold"},
                 { "-blue", "blueThreshold"}
             };
+        }
+
+        /// <summary>
+        /// Check validation of arguments
+        /// </summary>
+        /// <param name="Configurations"></param>
+        /// <param name="errMsg"></param>
+        /// <returns></returns>
+        private bool PropertiesValidating(BinarizeConfiguration Configurations, out string errMsg)
+        {
+            //
+            //Check if input file is valid
+            if (!(File.Exists(Configurations.InputImagePath)))
+            {
+                errMsg = "Input file doesn't exist.";
+                return false;
+            }
+
+            //
+            //Check if output dir is valid
+            if (!(Directory.Exists(Path.GetDirectoryName(Configurations.OutputImagePath))))
+            {
+                errMsg = "Output Directory doesn't exist.";
+                return false;
+            }
+
+            //
+            //Check if width or height input is valid
+            if (Configurations.ImageHeight < 0 || Configurations.ImageWidth < 0)
+            {
+                errMsg = "Height and Width should be larger than 0";
+                return false;
+            }
+
+            //
+            //Check if red threshold is valid
+            if ((Configurations.RedThreshold < -1 || Configurations.RedThreshold > 255))
+            {
+                errMsg = "Red Threshold should be in between 0 and 255.";
+                return false;
+            }
+
+            //
+            //Check if green threshold is valid
+            if ((Configurations.GreenThreshold < -1 || Configurations.GreenThreshold > 255))
+            {
+                errMsg = "Green Threshold should be in between 0 and 255.";
+                return false;
+            }
+
+            //
+            //Check if blue threshold is valid
+            if ((Configurations.BlueThreshold < -1 || Configurations.BlueThreshold > 255))
+            {
+                errMsg = "Blue Threshold should be in between 0 and 255.";
+                return false;
+            }
+            errMsg = null;
+            return true;
         }
 
         /// <summary>

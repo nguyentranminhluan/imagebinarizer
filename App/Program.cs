@@ -206,57 +206,8 @@ namespace ImageBinarizerApp
             if (!parsingObject.Parsing(out configurationDatas, out errMsg))
             {
                 return false;
-            }
+            }            
 
-            //
-            //Check if input file is valid
-            if (!(File.Exists(configurationDatas.InputImagePath)))
-            {
-                errMsg = "Input file doesn't exist.";
-                return false;
-            }
-
-            //
-            //Check if output dir is valid
-            if (!(Directory.Exists(Path.GetDirectoryName(configurationDatas.OutputImagePath))))
-            {
-                errMsg = "Output Directory doesn't exist.";
-                return false;
-            }
-
-            //
-            //Check if width or height input is valid
-            if (configurationDatas.ImageHeight < 0 || configurationDatas.ImageWidth < 0)
-            {
-                errMsg = "Height and Width should be larger than 0";
-                return false;
-            }
-
-            //
-            //Check if red threshold is valid
-            if ((configurationDatas.RedThreshold != -1 && (configurationDatas.RedThreshold < 0 || configurationDatas.RedThreshold > 255)))
-            {
-                errMsg = "Red Threshold should be in between 0 and 255.";
-                return false;
-            }
-
-            //
-            //Check if green threshold is valid
-            if ((configurationDatas.GreenThreshold != -1 && (configurationDatas.GreenThreshold < 0 || configurationDatas.GreenThreshold > 255)))
-            {
-                errMsg = "Green Threshold should be in between 0 and 255.";
-                return false;
-            }
-
-            //
-            //Check if blue threshold is valid
-            if ((configurationDatas.BlueThreshold != -1 && (configurationDatas.BlueThreshold < 0 || configurationDatas.BlueThreshold > 255)))
-            {
-                errMsg = "Blue Threshold should be in between 0 and 255.";
-                return false;
-            }
-
-            errMsg = null;
             return true;
         }
     }
