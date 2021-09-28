@@ -9,14 +9,14 @@ namespace ImageBinarizerLib
     /// Main class for the Image Binarizer algorithm using Ipipeline
     /// </summary>
 
-    public class ImageBinarizer: IPipelineModule<double[,,],double[,,]>
+    public class ImageBinarizer : IPipelineModule<double[,,], double[,,]>
     {
         private int m_RedThreshold = -1;
 
         private int m_GreenThreshold = -1;
 
         private int m_BlueThreshold = -1;
-        private int white, black;
+        private int m_white = 1, m_black = 0;
 
         private Size? m_TargetSize;
 
@@ -36,7 +36,7 @@ namespace ImageBinarizerLib
         {
             int targetWidth = 0;
             int targetHeight = 0;
-            
+
             if (imageParams.TryGetValue("redThreshold", out int rt))
                 this.m_RedThreshold = rt;
 
@@ -51,15 +51,10 @@ namespace ImageBinarizerLib
 
             if (imageParams.TryGetValue("imageHeight", out int ih))
                 targetHeight = ih;
-            if (!inverse)
+            if (inverse)
             {
-                this.white = 1;
-                this.black = 0;
-            }
-            else
-            {
-                this.white = 0;
-                this.black = 1;
+                this.m_white = 0;
+                this.m_black = 1;
             }
 
             if (targetHeight > 0 && targetWidth > 0)
@@ -72,9 +67,9 @@ namespace ImageBinarizerLib
         /// <param name="ctx">this define the Interface IContext for Data descriptor</param>
         /// <returns></returns>
         public double[,,] Run(double[,,] data, IContext ctx)
-        {            
+        {
             return GetBinary(data);
-        }        
+        }
 
         /// <summary>
         /// Gets double array representation of the image.I.E.: 010000111000
@@ -93,18 +88,18 @@ namespace ImageBinarizerLib
                     int g = (int)data[i, j, 1];
                     int b = (int)data[i, j, 2];
 
-        //set limits,bytes can hold values from 0 upto 255
+                    //set limits,bytes can hold values from 0 upto 255
                     img.SetPixel(i, j, Color.FromArgb(255, r, g, b));
                 }
             }
 
             if (this.m_TargetSize != null)
                 img = new Bitmap(img, this.m_TargetSize.Value);
-            
+
             int hg = img.Height;
             int wg = img.Width;
 
-            double[,,] outArray = new double[hg,wg,3];
+            double[,,] outArray = new double[hg, wg, 3];
 
             int sumR = 0;
             int sumG = 0;
@@ -118,7 +113,7 @@ namespace ImageBinarizerLib
                     sumB += img.GetPixel(j, i).B;
                 }
             }
-        //The average is calculated taking the parameters.When no thresholds are given it automatically calculates the average.
+            //The average is calculated taking the parameters.When no thresholds are given it automatically calculates the average.
             int avgR = sumR / (hg * wg);
             int avgG = sumG / (hg * wg);
             int avgB = sumB / (hg * wg);
@@ -142,8 +137,8 @@ namespace ImageBinarizerLib
             {
                 for (int j = 0; j < wg; j++)
                 {
-                    outArray[i,j,0] = (img.GetPixel(j, i).R > this.m_RedThreshold && img.GetPixel(j, i).G > this.m_GreenThreshold &&
-                       img.GetPixel(j, i).B > this.m_BlueThreshold) ? white : black;
+                    outArray[i, j, 0] = (img.GetPixel(j, i).R > this.m_RedThreshold && img.GetPixel(j, i).G > this.m_GreenThreshold &&
+                       img.GetPixel(j, i).B > this.m_BlueThreshold) ? this.m_white : this.m_black;
                 }
             }
             return outArray;
