@@ -16,7 +16,8 @@ namespace ImageBinarizerLib
         private int m_GreenThreshold = -1;
 
         private int m_BlueThreshold = -1;
-        
+        private int white, black;
+
         private Size? m_TargetSize;
 
         /// <summary>
@@ -29,12 +30,13 @@ namespace ImageBinarizerLib
         /// <summary>
         /// constructor with parameter.
         /// </summary>
-        /// <param name="imageParams">Parameters given</param>
-        public ImageBinarizer(Dictionary<String, int> imageParams)
+        /// <param name="imageParams"></param>
+        /// <param name="inverse"></param>
+        public ImageBinarizer(Dictionary<String, int> imageParams, bool inverse)
         {
             int targetWidth = 0;
             int targetHeight = 0;
-
+            
             if (imageParams.TryGetValue("redThreshold", out int rt))
                 this.m_RedThreshold = rt;
 
@@ -49,6 +51,16 @@ namespace ImageBinarizerLib
 
             if (imageParams.TryGetValue("imageHeight", out int ih))
                 targetHeight = ih;
+            if (!inverse)
+            {
+                this.white = 1;
+                this.black = 0;
+            }
+            else
+            {
+                this.white = 0;
+                this.black = 1;
+            }
 
             if (targetHeight > 0 && targetWidth > 0)
                 this.m_TargetSize = new Size(targetWidth, targetHeight);
@@ -131,7 +143,7 @@ namespace ImageBinarizerLib
                 for (int j = 0; j < wg; j++)
                 {
                     outArray[i,j,0] = (img.GetPixel(j, i).R > this.m_RedThreshold && img.GetPixel(j, i).G > this.m_GreenThreshold &&
-                       img.GetPixel(j, i).B > this.m_BlueThreshold) ? 1 : 0;
+                       img.GetPixel(j, i).B > this.m_BlueThreshold) ? white : black;
                 }
             }
             return outArray;

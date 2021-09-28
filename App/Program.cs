@@ -150,8 +150,7 @@ namespace ImageBinarizerApp
                 ErrMsgPrinter(errMsg);
                 return;
             }
-
-
+                        
             Console.WriteLine("\nImage Binarization in progress...");
 
             try
@@ -161,7 +160,7 @@ namespace ImageBinarizerApp
                 obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath,
                                 configurationDatas.ImageWidth, configurationDatas.ImageHeight,
                                     configurationDatas.RedThreshold, configurationDatas.GreenThreshold,
-                                        configurationDatas.BlueThreshold);
+                                        configurationDatas.BlueThreshold, configurationDatas.Inverse);
             }
             catch (Exception e)
             {
@@ -191,24 +190,11 @@ namespace ImageBinarizerApp
         private static bool TryParseConfiguration(string[] args, out BinarizeConfiguration configurationDatas, out string errMsg)
         {
             var parsingObject = new CommandLineParsing(args);
-            configurationDatas = new BinarizeConfiguration();
-
-            //
-            // Check if -help is called
-            if (parsingObject.Help())
-            {
-                errMsg = null;
-                return false;
-            }
 
             //
             // Check if datas Parsed is correct
-            if (!parsingObject.Parsing(out configurationDatas, out errMsg))
-            {
-                return false;
-            }            
-
-            return true;
+            return parsingObject.Parsing(out configurationDatas, out errMsg);
+            
         }
     }
 }

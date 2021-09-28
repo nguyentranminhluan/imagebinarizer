@@ -16,7 +16,7 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Method for Image Binarization
         /// </summary>
-        public void Binarizer(String inputImagePath, String outputImagePath, int imageWidth, int imageHeight, int redThreshold, int greenThreshold, int blueThreshold)
+        public void Binarizer(String inputImagePath, String outputImagePath, int imageWidth, int imageHeight, int redThreshold, int greenThreshold, int blueThreshold, bool inverse)
         {
             Bitmap bitmap = new Bitmap(inputImagePath);
 
@@ -31,8 +31,8 @@ namespace ImageBinarizerApp
                 imageParams.Add("imageWidth", bitmap.Height);
             imageParams.Add("redThreshold", redThreshold);
             imageParams.Add("greenThreshold", greenThreshold);
-            imageParams.Add("blueThreshold", blueThreshold);            
-
+            imageParams.Add("blueThreshold", blueThreshold);
+            
 
             int imgWidth = bitmap.Width;
             int imgHeight = bitmap.Height;
@@ -49,7 +49,7 @@ namespace ImageBinarizerApp
                 }
             }
 
-            ImageBinarizer img = new ImageBinarizer(imageParams);
+            ImageBinarizer img = new ImageBinarizer(imageParams, inverse);
             double[,,] outputData = img.GetBinary(inputData);
 
             StringBuilder stringArray = new StringBuilder();

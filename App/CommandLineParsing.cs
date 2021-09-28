@@ -15,7 +15,7 @@ namespace ImageBinarizerApp
     class CommandLineParsing
     {
         public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
-        private string[] command;
+        private List<string> command;
 
         /// <summary>
         /// Constructor to pass the arguments
@@ -23,7 +23,7 @@ namespace ImageBinarizerApp
         /// <param name="args"></param>
         public CommandLineParsing(string[] args)
         {
-            command = args;
+            command = args.ToList();
         }
 
         /// <summary>
@@ -33,28 +33,73 @@ namespace ImageBinarizerApp
         /// <returns></returns>
         public bool Parsing(out BinarizeConfiguration Configurations, out string errMsg)
         {
-            Dictionary<string, string> switchMappings = MappingCommandLine();
-
             Configurations = new BinarizeConfiguration();
 
+            //
+            //Check if help or inverse argument was called
+            CheckHelp();
+            CheckInverse();            
+
+            Dictionary<string, string> switchMappings = MappingCommandLine();
+                        
             try
             {
-                var builder = new ConfigurationBuilder().AddCommandLine(command, switchMappings);
+                var builder = new ConfigurationBuilder().AddCommandLine(command.ToArray(), switchMappings);
                 var config = builder.Build();
                 config.Bind(Configurations);
-                
+
             }
             catch (Exception e)
             {
                 errMsg = e.Message;
                 return false;
             }
+            //Console.WriteLine(Configurations.Inverse);
             if (!PropertiesValidating(Configurations, out errMsg))
                 return false;
             errMsg = null;
             return true;
 
 
+        }
+
+        /// <summary>
+        /// Checking inverse argument
+        /// </summary>
+        private void CheckInverse()
+        {
+            bool inverse = false;
+            while (command.Contains("-inv"))
+            {
+                command.Remove("-inv");
+                inverse = true;
+            }
+            if (inverse)
+            {
+                command.Add("-inv");
+                command.Add("true");
+            }
+        }
+
+        /// <summary>
+        /// Checking help argument
+        /// </summary>
+        private void CheckHelp()
+        {
+            bool help = false;
+            foreach(var arg in HelpArguments)
+            {
+                while (command.Contains(arg))
+                {
+                    command.Remove(arg);
+                    help = true;
+                }
+            }
+            if (help)
+            {
+                command.Add("-help");
+                command.Add("true");
+            }
         }
 
         private static Dictionary<string, string> MappingCommandLine()
@@ -74,7 +119,9 @@ namespace ImageBinarizerApp
                 { "-gt", "greenThreshold" },
                 { "-green", "greenThreshold" },
                 { "-bt", "blueThreshold"},
-                { "-blue", "blueThreshold"}
+                { "-blue", "blueThreshold"},
+                { "-help", "help"},
+                { "-inv", "inverse"}
             };
         }
 
@@ -86,6 +133,15 @@ namespace ImageBinarizerApp
         /// <returns></returns>
         private bool PropertiesValidating(BinarizeConfiguration Configurations, out string errMsg)
         {
+            //
+            //Check if help is call
+            if (Configurations.Help)
+            {
+                PrintHelp();
+                errMsg = null;
+                return false;
+            }
+
             //
             //Check if input file is valid
             if (!(File.Exists(Configurations.InputImagePath)))
@@ -136,22 +192,7 @@ namespace ImageBinarizerApp
             errMsg = null;
             return true;
         }
-
-        /// <summary>
-        /// Check if help is call
-        /// </summary>
-        /// <returns></returns>
-        public bool Help()
-        {
-
-            if (command.Length == 1 && HelpArguments.Contains(command[0]))
-            {
-                PrintHelp();
-                return true;
-            }
-            return false;
-        }
-
+        
         /// <summary>
         /// Print help to console
         /// </summary>
@@ -165,12 +206,15 @@ namespace ImageBinarizerApp
             Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\", \"--redThreshold\"}");
             Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\", \"--greenThreshold\"}");
             Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\", \"--blueThreshold\"}");
+            Console.WriteLine("\t- Inverse the contrast: {\"-inv\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automaticaly if not specified.");
+            Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. \n\t0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
             Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
-            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");
-            Console.WriteLine("\n\t+ Passing all arguments: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
+            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");            
+            Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
+            Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
         }
     }
 

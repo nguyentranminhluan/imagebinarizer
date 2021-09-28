@@ -18,6 +18,8 @@ namespace ImageBinarizerApp.Entities
         public int RedThreshold { get; set; } = -1;
         public int GreenThreshold { get; set; } = -1;
         public int BlueThreshold { get; set; } = -1;
+        public bool Help { get; set; } = false;
+        public bool Inverse { get; set; } = false;
 
     }
 }
