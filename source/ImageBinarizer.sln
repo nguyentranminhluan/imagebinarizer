@@ -3,30 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{B8CD7F39-B04B-4551-AF7D-F9C5549A0493}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{F2653569-8EFC-40BF-82DB-39E65E0D6078}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0B0D22A8-A10C-4993-8C36-DCDDC1851B52}"
-	ProjectSection(SolutionItems) = preProject
-		Documentation\Image Binarization  PPT.pptx = Documentation\Image Binarization  PPT.pptx
-		Documentation\Image Binarization.docx = Documentation\Image Binarization.docx
-		Documentation\Image Binarization.pdf = Documentation\Image Binarization.pdf
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerApp", "App\ImageBinarizerApp.csproj", "{E6CDAC50-9372-4C55-AD1A-026350C0B8FA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerLib", "Lib\ImageBinarizerLib.csproj", "{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{654AF647-7568-4D8A-B03A-17E1B6B29584}"
-	ProjectSection(SolutionItems) = preProject
-		Packages\LearningApi.1.3.1.nupkg = Packages\LearningApi.1.3.1.nupkg
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{228E104E-F497-4B39-ABDF-833813196126}"
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizer", "ImageBinarizer\ImageBinarizer.csproj", "{DD113A82-8548-4AA4-AC9A-6563C864DE89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,21 +18,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E6CDAC50-9372-4C55-AD1A-026350C0B8FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6CDAC50-9372-4C55-AD1A-026350C0B8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6CDAC50-9372-4C55-AD1A-026350C0B8FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6CDAC50-9372-4C55-AD1A-026350C0B8FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E6CDAC50-9372-4C55-AD1A-026350C0B8FA} = {B8CD7F39-B04B-4551-AF7D-F9C5549A0493}
-		{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69} = {F2653569-8EFC-40BF-82DB-39E65E0D6078}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17B106DD-4FD5-4E6F-AE00-E9ECD2F61186}
