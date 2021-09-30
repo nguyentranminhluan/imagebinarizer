@@ -76,24 +76,7 @@ namespace ImageBinarizerApp
         public void Binarizer(BinarizeConfiguration config)
         {
             Bitmap bitmap = new Bitmap(config.InputImagePath);
-
-            BinarizerParams imageParams = new BinarizerParams();
-
-            if (config.ImageWidth > 0)
-                imageParams.ImageWidth = config.ImageWidth;
-            else
-                imageParams.ImageWidth = bitmap.Width;
-            if (config.ImageHeight > 0)
-                imageParams.ImageHeight = config.ImageHeight;
-            else
-                imageParams.ImageHeight = bitmap.Height;
-            imageParams.RedThreshold = config.RedThreshold;
-            imageParams.GreenThreshold = config.GreenThreshold;
-            imageParams.BlueThreshold= config.BlueThreshold;
-            imageParams.GreyThreshold = config.GreyThreshold;
-            imageParams.Inverse = config.Inverse;
-            imageParams.GreyScale = config.GreyScale;
-
+            BinarizerParams imageParams = MappingParams(config, bitmap);
 
             int imgWidth = bitmap.Width;
             int imgHeight = bitmap.Height;
@@ -126,6 +109,33 @@ namespace ImageBinarizerApp
             {
                 writer.Write(stringArray.ToString());
             }
+        }
+
+        /// <summary>
+        /// mapping parameters from configuration
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        private BinarizerParams MappingParams(BinarizeConfiguration config, Bitmap bitmap)
+        {
+            BinarizerParams imageParams = new BinarizerParams();
+
+            if (config.ImageWidth > 0)
+                imageParams.ImageWidth = config.ImageWidth;
+            else
+                imageParams.ImageWidth = bitmap.Width;
+            if (config.ImageHeight > 0)
+                imageParams.ImageHeight = config.ImageHeight;
+            else
+                imageParams.ImageHeight = bitmap.Height;
+            imageParams.RedThreshold = config.RedThreshold;
+            imageParams.GreenThreshold = config.GreenThreshold;
+            imageParams.BlueThreshold = config.BlueThreshold;
+            imageParams.GreyThreshold = config.GreyThreshold;
+            imageParams.Inverse = config.Inverse;
+            imageParams.GreyScale = config.GreyScale;
+            return imageParams;
         }
     }
 }
