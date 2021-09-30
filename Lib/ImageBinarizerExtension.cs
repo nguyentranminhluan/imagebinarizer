@@ -23,5 +23,18 @@ namespace ImageBinarizerLib
             api.AddModule(module, $"ImageBinarizer-{Guid.NewGuid()}");
             return api;
         }
+
+        /// <summary>
+        /// Creating Object of Image Binarization in this method and adding it to Api
+        /// </summary>
+        /// <param name="api"></param>
+        /// <param name="imageParams"></param>
+        /// <returns></returns>
+        public static LearningApi UseImageBinarizer(this LearningApi api, BinarizerParams imageParams)
+        {
+            ImageBinarizer module = new ImageBinarizer(imageParams);
+            api.AddModule(module, $"ImageBinarizer-{Guid.NewGuid()}");
+            return api;
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace ImageBinarizerLib
 
         }
         /// <summary>
-        /// constructor with parameter.
+        /// constructor with separate parameters.
         /// </summary>
         /// <param name="imageParams"></param>
         /// <param name="inverse"></param>
@@ -60,6 +60,25 @@ namespace ImageBinarizerLib
             if (targetHeight > 0 && targetWidth > 0)
                 this.m_TargetSize = new Size(targetWidth, targetHeight);
         }
+
+        /// <summary>
+        /// constructor with object parameters.
+        /// </summary>
+        /// <param name="imageParams"></param>
+        public ImageBinarizer(BinarizerParams imageParams)
+        {
+            this.m_RedThreshold = imageParams.RedThreshold;
+            this.m_GreenThreshold = imageParams.GreenThreshold;
+            this.m_BlueThreshold = imageParams.BlueThreshold;
+            this.m_TargetSize = new Size(imageParams.ImageWidth, imageParams.ImageHeight);
+            if (imageParams.Inverse)
+            {
+                this.m_white = 0;
+                this.m_black = 1;
+            }
+
+        }
+
         /// <summary>
         /// Method of Interface Ipipline
         /// </summary>
@@ -93,8 +112,7 @@ namespace ImageBinarizerLib
                 }
             }
 
-            if (this.m_TargetSize != null)
-                img = new Bitmap(img, this.m_TargetSize.Value);
+            img = new Bitmap(img, this.m_TargetSize.Value);
 
             int hg = img.Height;
             int wg = img.Width;

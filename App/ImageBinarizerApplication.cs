@@ -1,4 +1,5 @@
-﻿using ImageBinarizerLib;
+﻿using ImageBinarizerApp.Entities;
+using ImageBinarizerLib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -62,6 +63,63 @@ namespace ImageBinarizerApp
                 stringArray.AppendLine();
             }
             using (StreamWriter writer = File.CreateText(outputImagePath))
+            {
+                writer.Write(stringArray.ToString());
+            }
+        }
+
+        /// <summary>
+        /// method to call Binarizer
+        /// </summary>
+        /// <param name="config"></param>
+        public void Binarizer(BinarizeConfiguration config)
+        {
+            Bitmap bitmap = new Bitmap(config.InputImagePath);
+
+            BinarizerParams imageParams = new BinarizerParams();
+
+            if (config.ImageWidth > 0)
+                imageParams.ImageWidth = config.ImageWidth;
+            else
+                imageParams.ImageWidth = bitmap.Width;
+            if (config.ImageHeight > 0)
+                imageParams.ImageHeight = config.ImageHeight;
+            else
+                imageParams.ImageHeight = bitmap.Height;
+            imageParams.RedThreshold = config.RedThreshold;
+            imageParams.GreenThreshold = config.GreenThreshold;
+            imageParams.BlueThreshold= config.BlueThreshold;
+            imageParams.Inverse = config.Inverse;
+
+
+            int imgWidth = bitmap.Width;
+            int imgHeight = bitmap.Height;
+            double[,,] inputData = new double[imgWidth, imgHeight, 3];
+
+            for (int i = 0; i < imgWidth; i++)
+            {
+                for (int j = 0; j < imgHeight; j++)
+                {
+                    Color color = bitmap.GetPixel(i, j);
+                    inputData[i, j, 0] = color.R;
+                    inputData[i, j, 1] = color.G;
+                    inputData[i, j, 2] = color.B;
+                }
+            }
+
+            ImageBinarizer img = new ImageBinarizer(imageParams);
+            double[,,] outputData = img.GetBinary(inputData);
+
+            StringBuilder stringArray = new StringBuilder();
+            for (int i = 0; i < outputData.GetLength(0); i++)
+            {
+                for (int j = 0; j < outputData.GetLength(1); j++)
+                {
+                    stringArray.Append(outputData[i, j, 0]);
+                }
+                stringArray.AppendLine();
+            }
+            using (StreamWriter writer = File.CreateText(config.OutputImagePath))
             {
                 writer.Write(stringArray.ToString());
             }

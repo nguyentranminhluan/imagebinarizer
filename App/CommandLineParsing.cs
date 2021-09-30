@@ -209,12 +209,15 @@ namespace ImageBinarizerApp
             Console.WriteLine("\t- Inverse the contrast: {\"-inv\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automaticaly if not specified.");
             Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
-            Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. \n\t0 to assign width and height default value.");
+            Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
+                                                                                        "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
             Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
             Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");            
-            Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
-            Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
+            Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
+                                "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
+            Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
+                           "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
         }
     }
 

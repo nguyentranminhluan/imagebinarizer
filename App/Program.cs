@@ -157,10 +157,11 @@ namespace ImageBinarizerApp
             {
                 ImageBinarizerApplication obj = new ImageBinarizerApplication();
                 //obj.Binarizer(inputImagePath, outputImagePath, imageWidth, imageHeight, redThreshold, greenThreshold, blueThreshold);
-                obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath,
-                                configurationDatas.ImageWidth, configurationDatas.ImageHeight,
-                                    configurationDatas.RedThreshold, configurationDatas.GreenThreshold,
-                                        configurationDatas.BlueThreshold, configurationDatas.Inverse);
+                //obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath,
+                //                configurationDatas.ImageWidth, configurationDatas.ImageHeight,
+                //                    configurationDatas.RedThreshold, configurationDatas.GreenThreshold,
+                //                        configurationDatas.BlueThreshold, configurationDatas.Inverse);
+                obj.Binarizer(configurationDatas);
             }
             catch (Exception e)
             {
