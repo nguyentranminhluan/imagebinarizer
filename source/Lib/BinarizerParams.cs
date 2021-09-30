@@ -48,5 +48,8 @@ namespace ImageBinarizerLib
         /// Calculate base on grey scale threshold
         /// </summary>
         public bool GreyScale { get; set; } = false;
+
+        public string InputImagePath { get; set; }
     }
+
 }

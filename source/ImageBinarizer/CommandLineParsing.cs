@@ -16,7 +16,7 @@ namespace ImageBinarizerApp
     {
         public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
         private List<string> command;
-        private static Dictionary<string, string> MappingCommandLine()
+        private static Dictionary<string, string> GetCommandLineMap()
         {
             return new Dictionary<string, string>()
             {
@@ -55,18 +55,14 @@ namespace ImageBinarizerApp
         /// </summary>
         /// <param name="Configurations"></param>
         /// <returns></returns>
-        public bool Parsing(out BinarizeConfiguration Configurations, out string errMsg)
+        public bool Parsing(out BinarizerConfiguration Configurations, out string errMsg)
         {
-            Configurations = new BinarizeConfiguration();
+            Configurations = new BinarizerConfiguration();
 
-            //
-            //Check if help or inverse argument was called
-            CheckHelp();
-            CheckInverse();
-            CheckGreyScale();
+            CorrectArgsIfRequired();
 
-            Dictionary<string, string> switchMappings = MappingCommandLine();
-                        
+            Dictionary<string, string> switchMappings = GetCommandLineMap();
+
             try
             {
                 var builder = new ConfigurationBuilder().AddCommandLine(command.ToArray(), switchMappings);
@@ -80,13 +76,23 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Console.WriteLine(Configurations.Inverse);
-            if (!PropertiesValidating(Configurations, out errMsg))
+            if (!ValidateArgs(Configurations, out errMsg))
                 return false;
             errMsg = null;
             return true;
 
 
         }
+
+        private void CorrectArgsIfRequired()
+        {
+            //
+            //Check if help or inverse argument was called
+            CheckHelp();
+            CheckInverse();
+            CheckGreyScale();
+        }
+
         /// <summary>
         /// Checking GreyScale argument
         /// </summary>
@@ -152,7 +158,7 @@ namespace ImageBinarizerApp
         /// <param name="Configurations"></param>
         /// <param name="errMsg"></param>
         /// <returns></returns>
-        private bool PropertiesValidating(BinarizeConfiguration Configurations, out string errMsg)
+        private bool ValidateArgs(BinarizerConfiguration Configurations, out string errMsg)
         {
             //
             //Check if help is call
@@ -171,12 +177,15 @@ namespace ImageBinarizerApp
                 return false;
             }
 
-            //
-            //Check if output dir is valid
-            if (!(Directory.Exists(Path.GetDirectoryName(Configurations.OutputImagePath))))
+            if (Path.GetDirectoryName(Configurations.OutputImagePath) != String.Empty)
             {
-                errMsg = "Output Directory doesn't exist.";
-                return false;
+                //
+                //Check if output dir is valid
+                if (!(Directory.Exists(Path.GetDirectoryName(Configurations.OutputImagePath))))
+                {
+                    errMsg = "Output Directory doesn't exist.";
+                    return false;
+                }
             }
 
             //

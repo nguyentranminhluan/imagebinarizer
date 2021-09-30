@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using LearningFoundation;
 
 namespace ImageBinarizerLib
@@ -16,6 +18,8 @@ namespace ImageBinarizerLib
         private int m_BlueThreshold = -1;
         private int m_GreyThreshold = -1;
 
+        private BinarizerParams configuration;
+
         bool m_GreyScale = false;
 
         private int m_white = 1;
@@ -26,10 +30,11 @@ namespace ImageBinarizerLib
         /// <summary>
         /// By default constructor without parameter
         /// </summary>
-        public ImageBinarizer()
+        public ImageBinarizer(BinarizerParams configuration)
         {
-
+            this.configuration = configuration;
         }
+
         /// <summary>
         /// constructor with separate parameters.
         /// </summary>
@@ -67,24 +72,26 @@ namespace ImageBinarizerLib
         /// <summary>
         /// constructor with object parameters.
         /// </summary>
-        /// <param name="imageParams"></param>
-        public ImageBinarizer(BinarizerParams imageParams)
-        {
-            this.m_RedThreshold = imageParams.RedThreshold;
-            this.m_GreenThreshold = imageParams.GreenThreshold;
-            this.m_BlueThreshold = imageParams.BlueThreshold;
-            this.m_GreyThreshold = imageParams.GreyThreshold;
-            if (imageParams.ImageHeight > 0 && imageParams.ImageWidth > 0)
-                this.m_TargetSize = new Size(imageParams.ImageWidth, imageParams.ImageHeight);
+        /// <param name="configuration"></param>
+        //public void Binarize(BinarizerParams imageParams)
+        //{
+        //    this.m_RedThreshold = configuration.RedThreshold;
+        //    this.m_GreenThreshold = configuration.GreenThreshold;
+        //    this.m_BlueThreshold = configuration.BlueThreshold;
+        //    this.m_GreyThreshold = configuration.GreyThreshold;
+         
+        //    if (configuration.ImageHeight > 0 && configuration.ImageWidth > 0)
+        //        this.m_TargetSize = new Size(configuration.ImageWidth, configuration.ImageHeight);
 
-            if (imageParams.Inverse)
-            {
-                this.m_white = 0;
-                this.m_black = 1;
-            }
-            this.m_GreyScale = imageParams.GreyScale;
+        //    if (configuration.Inverse)
+        //    {
+        //        this.m_white = 0;
+        //        this.m_black = 1;
+        //    }
 
-        }
+        //    this.m_GreyScale = configuration.GreyScale;
+
+        //}
 
         /// <summary>
         /// Method of Interface Ipipline
@@ -104,6 +111,8 @@ namespace ImageBinarizerLib
         /// <returns></returns>
         public double[,,] GetBinary(double[,,] data)
         {
+     
+
             Bitmap img = new Bitmap(data.GetLength(0), data.GetLength(1));
 
             for (int i = 0; i < data.GetLength(0); i++)
@@ -118,6 +127,7 @@ namespace ImageBinarizerLib
                     img.SetPixel(i, j, Color.FromArgb(255, r, g, b));
                 }
             }
+
             if (this.m_TargetSize != null)
                 img = new Bitmap(img, this.m_TargetSize.Value);
 
@@ -128,7 +138,7 @@ namespace ImageBinarizerLib
 
             //The average is calculated taking the parameters.When no thresholds are given it automatically calculates the average.
             int avgR, avgG, avgB, avgGrey;
-            AvgCal(img, out avgR, out avgG, out avgB, out avgGrey);
+            CalcAverageRGB(img, out avgR, out avgG, out avgB, out avgGrey);
 
             if (this.m_RedThreshold < 0 || this.m_RedThreshold > 255)
                 this.m_RedThreshold = avgR;
@@ -152,6 +162,54 @@ namespace ImageBinarizerLib
         }
 
         /// <summary>
+        /// method to call Binarizer
+        /// </summary>
+
+        private  void RunBinarizer()
+        {
+            Bitmap bitmap = new Bitmap(configuration.InputImagePath);
+
+            int imgWidth = bitmap.Width;
+            int imgHeight = bitmap.Height;
+            double[,,] inputData = new double[imgWidth, imgHeight, 3];
+
+            for (int i = 0; i < imgWidth; i++)
+            {
+                for (int j = 0; j < imgHeight; j++)
+                {
+                    Color color = bitmap.GetPixel(i, j);
+                    inputData[i, j, 0] = color.R;
+                    inputData[i, j, 1] = color.G;
+                    inputData[i, j, 2] = color.B;
+                }
+            }
+
+            double[,,] outputData = img.GetBinary(inputData);
+
+            StringBuilder stringArray = CreateTextFromBinary(outputData);
+            using (StreamWriter writer = File.CreateText(config.OutputImagePath))
+            {
+                writer.Write(stringArray.ToString());
+            }
+        }
+
+        private static StringBuilder CreateTextFromBinary(double[,,] outputData)
+        {
+            StringBuilder stringArray = new StringBuilder();
+
+            for (int i = 0; i < outputData.GetLength(0); i++)
+            {
+                for (int j = 0; j < outputData.GetLength(1); j++)
+                {
+                    stringArray.Append(outputData[i, j, 0]);
+                }
+                stringArray.AppendLine();
+            }
+
+            return stringArray;
+        }
+
+        /// <summary>
         /// Average values calculation 
         /// </summary>
         /// <param name="img"></param>
@@ -159,7 +217,7 @@ namespace ImageBinarizerLib
         /// <param name="avgG"></param>
         /// <param name="avgB"></param>
         /// <param name="avgGrey"></param>
-        private void AvgCal(Bitmap img, out int avgR, out int avgG, out int avgB, out int avgGrey)
+        private void CalcAverageRGB(Bitmap img, out int avgR, out int avgG, out int avgB, out int avgGrey)
         {
             int hg = img.Height;
             int wg = img.Width;

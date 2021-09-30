@@ -1,7 +1,9 @@
 ﻿using ImageBinarizerApp.Entities;
+using ImageBinarizerLib;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace ImageBinarizerApp
 {
@@ -19,9 +21,10 @@ namespace ImageBinarizerApp
             string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
             Console.WriteLine(".------------------------------------------------------------------------------------------.");
             Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.0.2]|");
-            Console.WriteLine("    Copyright <c> 2019 daenet GmbH, Damir Dobric. All rights reserved.");
-            Console.WriteLine($"\n    Insert one of these [{printedHelpArgs}] to following command for help:");
-            Console.WriteLine("\n\t\tdotnet ImageBinarizerApp [command]\n|");
+            Console.WriteLine("    Copyright <c> daenet GmbH, All rights reserved.");
+            Console.WriteLine($"\n    Insert one of these [{printedHelpArgs}] to following command for help:"); // TODO. show only if no correct args specified.
+            Console.WriteLine("\n\t\tdotnet imagebinarizer [command]\n|");
+
             for (int i = 1; i < 9; i++)
             {
                 Console.SetCursorPosition(0, i);
@@ -29,6 +32,7 @@ namespace ImageBinarizerApp
                 Console.SetCursorPosition(91, i);
                 Console.WriteLine("|");
             }
+
             Console.WriteLine("\'------------------------------------------------------------------------------------------\'");
 
             #region Old code
@@ -143,41 +147,49 @@ namespace ImageBinarizerApp
             //}
             #endregion
 
-            BinarizeConfiguration configurationDatas;
-            if (!(TryParseConfiguration(args, out configurationDatas, out string errMsg)))
+            BinarizerConfiguration configuration;
+
+            if (!(TryParseConfiguration(args, out configuration, out string errMsg)))
             {
                 errMsg = errMsg == null ? null : "\nError: " + errMsg;
-                ErrMsgPrinter(errMsg);
+                PrintMessage(errMsg, true);
                 return;
             }
-                        
+
             Console.WriteLine("\nImage Binarization in progress...");
 
             try
             {
-                ImageBinarizerApplication obj = new ImageBinarizerApplication();
-                //obj.Binarizer(inputImagePath, outputImagePath, imageWidth, imageHeight, redThreshold, greenThreshold, blueThreshold);
-                //obj.Binarizer(configurationDatas.InputImagePath, configurationDatas.OutputImagePath,
-                //                configurationDatas.ImageWidth, configurationDatas.ImageHeight,
-                //                    configurationDatas.RedThreshold, configurationDatas.GreenThreshold,
-                //                        configurationDatas.BlueThreshold, configurationDatas.Inverse);
-                obj.Binarizer(configurationDatas);
+                ImageBinarizer img = new ImageBinarizer(MapParams(configuration));
+
+                img.RunBinarization();              
             }
             catch (Exception e)
             {
                 Console.WriteLine("Image Binarization failed.\n");
-                ErrMsgPrinter($"\nError: {e.Message}");
+                PrintMessage($"\nError: {e.Message}");
                 return;
             }
-            ErrMsgPrinter("\nImage Binarization completed.");
+
+            PrintMessage("\nImage Binarization completed.");
         }
 
-        private static void ErrMsgPrinter(string errMsg = null)
+        private static void PrintMessage(string errMsg = null, bool isError = false)
         {
-            if (string.IsNullOrEmpty(errMsg) == false)
+            var clr = Console.ForegroundColor;
+
+            if (!string.IsNullOrEmpty(errMsg))
             {
+                if (isError)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
                 Console.Write(errMsg + "\n");
             }
+
+            Console.ForegroundColor = clr;
+
             Console.WriteLine("\nPress any key to exit the application.");
             Console.ReadLine();
         }
@@ -188,15 +200,41 @@ namespace ImageBinarizerApp
         /// <param name="args"></param>
         /// <param name="configurationDatas"></param>
         /// <returns></returns>
-        private static bool TryParseConfiguration(string[] args, out BinarizeConfiguration configurationDatas, out string errMsg)
+        private static bool TryParseConfiguration(string[] args, out BinarizerConfiguration configurationDatas, out string errMsg)
         {
             var parsingObject = new CommandLineParsing(args);
 
             //
             // Check if datas Parsed is correct
             return parsingObject.Parsing(out configurationDatas, out errMsg);
-            
         }
+
+      
+
+        /// <summary>
+        /// Mapping parameters from configuration
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        private static BinarizerParams MapParams(BinarizerConfiguration config)
+        {
+            BinarizerParams imageParams = new BinarizerParams();
+
+            if (config.ImageWidth > 0)
+                imageParams.ImageWidth = config.ImageWidth;
+            if (config.ImageHeight > 0)
+                imageParams.ImageHeight = config.ImageHeight;
+            imageParams.RedThreshold = config.RedThreshold;
+            imageParams.GreenThreshold = config.GreenThreshold;
+            imageParams.BlueThreshold = config.BlueThreshold;
+            imageParams.GreyThreshold = config.GreyThreshold;
+            imageParams.Inverse = config.Inverse;
+            imageParams.GreyScale = config.GreyScale;
+            return imageParams;
+        }
+
     }
 }
+
 // --input-image D:\DAENET\image\old.jpg --output-image D:\DAENET\image\out.txt -width 800 -height 225 -red 100 -green 100 -blue 100
