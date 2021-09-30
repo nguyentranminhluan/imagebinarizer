@@ -16,6 +16,30 @@ namespace ImageBinarizerApp
     {
         public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
         private List<string> command;
+        private static Dictionary<string, string> MappingCommandLine()
+        {
+            return new Dictionary<string, string>()
+            {
+                { "-iip", "inputImagePath"},
+                { "--input-image", "inputImagePath"},
+                { "-oip", "outputImagePath" },
+                { "--output-image", "outputImagePath" },
+                { "-iw", "imageWidth" },
+                { "-width", "imageWidth" },
+                { "-ih", "imageHeight"},
+                { "-height", "imageHeight"},
+                { "-rt", "redThreshold" },
+                { "-red", "redThreshold" },
+                { "-gt", "greenThreshold" },
+                { "-green", "greenThreshold" },
+                { "-bt", "blueThreshold"},
+                { "-blue", "blueThreshold"},
+                { "-grey", "greyThreshold"},
+                { "-help", "help"},
+                { "-inv", "inverse"},
+                { "-gs", "greyScale"}
+            };
+        }
 
         /// <summary>
         /// Constructor to pass the arguments
@@ -38,7 +62,8 @@ namespace ImageBinarizerApp
             //
             //Check if help or inverse argument was called
             CheckHelp();
-            CheckInverse();            
+            CheckInverse();
+            CheckGreyScale();
 
             Dictionary<string, string> switchMappings = MappingCommandLine();
                         
@@ -61,6 +86,23 @@ namespace ImageBinarizerApp
             return true;
 
 
+        }
+        /// <summary>
+        /// Checking GreyScale argument
+        /// </summary>
+        private void CheckGreyScale()
+        {
+            bool greyScale = false;
+            while (command.Contains("-gs"))
+            {
+                command.Remove("-gs");
+                greyScale = true;
+            }
+            if (greyScale)
+            {
+                command.Add("-gs");
+                command.Add("true");
+            }
         }
 
         /// <summary>
@@ -102,28 +144,7 @@ namespace ImageBinarizerApp
             }
         }
 
-        private static Dictionary<string, string> MappingCommandLine()
-        {
-            return new Dictionary<string, string>()
-            {
-                { "-iip", "inputImagePath"},
-                { "--input-image", "inputImagePath"},
-                { "-oip", "outputImagePath" },
-                { "--output-image", "outputImagePath" },
-                { "-iw", "imageWidth" },
-                { "-width", "imageWidth" },
-                { "-ih", "imageHeight"},
-                { "-height", "imageHeight"},
-                { "-rt", "redThreshold" },
-                { "-red", "redThreshold" },
-                { "-gt", "greenThreshold" },
-                { "-green", "greenThreshold" },
-                { "-bt", "blueThreshold"},
-                { "-blue", "blueThreshold"},
-                { "-help", "help"},
-                { "-inv", "inverse"}
-            };
-        }
+        
 
         /// <summary>
         /// Check validation of arguments
@@ -189,6 +210,14 @@ namespace ImageBinarizerApp
                 errMsg = "Blue Threshold should be in between 0 and 255.";
                 return false;
             }
+
+            //
+            //Check if grey threshold is valid
+            if ((Configurations.GreyThreshold < -1 || Configurations.GreyThreshold > 255))
+            {
+                errMsg = "Grey Threshold should be in between 0 and 255.";
+                return false;
+            }
             errMsg = null;
             return true;
         }
@@ -206,9 +235,13 @@ namespace ImageBinarizerApp
             Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\", \"--redThreshold\"}");
             Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\", \"--greenThreshold\"}");
             Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\", \"--blueThreshold\"}");
+            Console.WriteLine("\t- Grey threshold: {\"-grey\", \"--greyThreshold\"}");
             Console.WriteLine("\t- Inverse the contrast: {\"-inv\"}");
+            Console.WriteLine("\t- Grey scale: {\"-grey\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automaticaly if not specified.");
             Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
+            Console.WriteLine("\nAdding \"-gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grey\" or " +
+                                    "\"--greyThreshold\" along with this to set threshold for grey scale binarizer.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
@@ -218,6 +251,8 @@ namespace ImageBinarizerApp
                                 "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
             Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
                            "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
+            Console.WriteLine("\n\t+ Passing all arguments with grey scale calculation: " +
+                          "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-grey 100 -gs");
         }
     }
 

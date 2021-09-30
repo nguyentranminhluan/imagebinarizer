@@ -14,6 +14,7 @@ namespace ImageBinarizerApp
     class ImageBinarizerApplication
     {
 
+        [Obsolete]
         /// <summary>
         /// Method for Image Binarization
         /// </summary>
@@ -89,7 +90,9 @@ namespace ImageBinarizerApp
             imageParams.RedThreshold = config.RedThreshold;
             imageParams.GreenThreshold = config.GreenThreshold;
             imageParams.BlueThreshold= config.BlueThreshold;
+            imageParams.GreyThreshold = config.GreyThreshold;
             imageParams.Inverse = config.Inverse;
+            imageParams.GreyScale = config.GreyScale;
 
 
             int imgWidth = bitmap.Width;

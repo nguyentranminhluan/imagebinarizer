@@ -30,8 +30,16 @@ namespace ImageBinarizerLib
         /// </summary>
         public int BlueThreshold { get; set; } = -1;
         /// <summary>
+        /// Grey threshold
+        /// </summary>
+        public int GreyThreshold { get; set; } = -1;
+        /// <summary>
         /// Inverse the contrast of the image
         /// </summary>
         public bool Inverse { get; set; } = false;
+        /// <summary>
+        /// Calculate base on grey scale threshold
+        /// </summary>
+        public bool GreyScale { get; set; } = false;
     }
 }

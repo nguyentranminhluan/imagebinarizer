@@ -12,11 +12,14 @@ namespace ImageBinarizerLib
     public class ImageBinarizer : IPipelineModule<double[,,], double[,,]>
     {
         private int m_RedThreshold = -1;
-
         private int m_GreenThreshold = -1;
-
         private int m_BlueThreshold = -1;
-        private int m_white = 1, m_black = 0;
+        private int m_GreyThreshold = -1;
+
+        bool m_GreyScale = false;
+
+        private int m_white = 1;
+        private int m_black = 0;
 
         private Size? m_TargetSize;
 
@@ -70,12 +73,16 @@ namespace ImageBinarizerLib
             this.m_RedThreshold = imageParams.RedThreshold;
             this.m_GreenThreshold = imageParams.GreenThreshold;
             this.m_BlueThreshold = imageParams.BlueThreshold;
-            this.m_TargetSize = new Size(imageParams.ImageWidth, imageParams.ImageHeight);
+            this.m_GreyThreshold = imageParams.GreyThreshold;
+            if (imageParams.ImageHeight > 0 && imageParams.ImageWidth > 0)
+                this.m_TargetSize = new Size(imageParams.ImageWidth, imageParams.ImageHeight);
+
             if (imageParams.Inverse)
             {
                 this.m_white = 0;
                 this.m_black = 1;
             }
+            this.m_GreyScale = imageParams.GreyScale;
 
         }
 
@@ -111,8 +118,8 @@ namespace ImageBinarizerLib
                     img.SetPixel(i, j, Color.FromArgb(255, r, g, b));
                 }
             }
-
-            img = new Bitmap(img, this.m_TargetSize.Value);
+            if(this.m_TargetSize != null)
+                img = new Bitmap(img, this.m_TargetSize.Value);
 
             int hg = img.Height;
             int wg = img.Width;
@@ -135,28 +142,40 @@ namespace ImageBinarizerLib
             int avgR = sumR / (hg * wg);
             int avgG = sumG / (hg * wg);
             int avgB = sumB / (hg * wg);
+            int avgGrey = (299 * sumR + 587 * sumG + 114 * sumB) / (1000 * hg * wg); //using the NTSC formula
 
-            if (m_RedThreshold < 0 || m_RedThreshold > 255)
+            if (this.m_RedThreshold < 0 || this.m_RedThreshold > 255)
+                this.m_RedThreshold = avgR;
+            
+
+            if (this.m_GreenThreshold < 0 || this.m_GreenThreshold > 255)
+                this.m_GreenThreshold = avgG;
+            
+
+            if (this.m_BlueThreshold < 0 || this.m_BlueThreshold > 255)
+                this.m_BlueThreshold = avgB;
+
+            if (this.m_GreyThreshold < 0 || this.m_GreyThreshold > 255)
+                this.m_GreyThreshold = avgGrey;
+
+            if (!this.m_GreyScale)
             {
-                m_RedThreshold = avgR;
+                for (int i = 0; i < hg; i++)
+                {
+                    for (int j = 0; j < wg; j++)
+                    {
+                        outArray[i, j, 0] = (img.GetPixel(j, i).R > this.m_RedThreshold && img.GetPixel(j, i).G > this.m_GreenThreshold &&
+                           img.GetPixel(j, i).B > this.m_BlueThreshold) ? this.m_white : this.m_black;
+                    }
+                }
+                return outArray;
             }
-
-            if (m_GreenThreshold < 0 || m_GreenThreshold > 255)
-            {
-                m_GreenThreshold = avgG;
-            }
-
-            if (m_BlueThreshold < 0 || m_BlueThreshold > 255)
-            {
-                m_BlueThreshold = avgB;
-            }
-
             for (int i = 0; i < hg; i++)
             {
                 for (int j = 0; j < wg; j++)
                 {
-                    outArray[i, j, 0] = (img.GetPixel(j, i).R > this.m_RedThreshold && img.GetPixel(j, i).G > this.m_GreenThreshold &&
-                       img.GetPixel(j, i).B > this.m_BlueThreshold) ? this.m_white : this.m_black;
+                    outArray[i, j, 0] = ((0.299 * img.GetPixel(j, i).R + 0.587 * img.GetPixel(j, i).G +
+                       0.114 * img.GetPixel(j, i).B) > this.m_GreyThreshold) ? this.m_white : this.m_black;
                 }
             }
             return outArray;
