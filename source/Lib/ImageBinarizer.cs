@@ -13,14 +13,8 @@ namespace ImageBinarizerLib
 
     public class ImageBinarizer : IPipelineModule<double[,,], double[,,]>
     {
-        private int m_RedThreshold = -1;
-        private int m_GreenThreshold = -1;
-        private int m_BlueThreshold = -1;
-        private int m_GreyThreshold = -1;
 
         private BinarizerParams configuration;
-
-        bool m_GreyScale = false;
 
         private int m_white = 1;
         private int m_black = 0;
@@ -33,41 +27,43 @@ namespace ImageBinarizerLib
         public ImageBinarizer(BinarizerParams configuration)
         {
             this.configuration = configuration;
+            if (configuration.ImageHeight > 0 && configuration.ImageWidth > 0)
+                this.m_TargetSize = new Size(configuration.ImageWidth, configuration.ImageHeight);
         }
 
-        /// <summary>
-        /// constructor with separate parameters.
-        /// </summary>
-        /// <param name="imageParams"></param>
-        /// <param name="inverse"></param>
-        public ImageBinarizer(Dictionary<String, int> imageParams, bool inverse)
-        {
-            int targetWidth = 0;
-            int targetHeight = 0;
+        ///// <summary>
+        ///// constructor with separate parameters.
+        ///// </summary>
+        ///// <param name="imageParams"></param>
+        ///// <param name="inverse"></param>
+        //public ImageBinarizer(Dictionary<String, int> imageParams, bool inverse)
+        //{
+        //    int targetWidth = 0;
+        //    int targetHeight = 0;
 
-            if (imageParams.TryGetValue("redThreshold", out int rt))
-                this.m_RedThreshold = rt;
+        //    if (imageParams.TryGetValue("redThreshold", out int rt))
+        //        this.m_RedThreshold = rt;
 
-            if (imageParams.TryGetValue("greenThreshold", out int gt))
-                this.m_GreenThreshold = gt;
+        //    if (imageParams.TryGetValue("greenThreshold", out int gt))
+        //        this.m_GreenThreshold = gt;
 
-            if (imageParams.TryGetValue("blueThreshold", out int bt))
-                this.m_BlueThreshold = bt;
+        //    if (imageParams.TryGetValue("blueThreshold", out int bt))
+        //        this.m_BlueThreshold = bt;
 
-            if (imageParams.TryGetValue("imageWidth", out int iw))
-                targetWidth = iw;
+        //    if (imageParams.TryGetValue("imageWidth", out int iw))
+        //        targetWidth = iw;
 
-            if (imageParams.TryGetValue("imageHeight", out int ih))
-                targetHeight = ih;
-            if (inverse)
-            {
-                this.m_white = 0;
-                this.m_black = 1;
-            }
+        //    if (imageParams.TryGetValue("imageHeight", out int ih))
+        //        targetHeight = ih;
+        //    if (inverse)
+        //    {
+        //        this.m_white = 0;
+        //        this.m_black = 1;
+        //    }
 
-            if (targetHeight > 0 && targetWidth > 0)
-                this.m_TargetSize = new Size(targetWidth, targetHeight);
-        }
+        //    if (targetHeight > 0 && targetWidth > 0)
+        //        this.m_TargetSize = new Size(targetWidth, targetHeight);
+        //}
 
         /// <summary>
         /// constructor with object parameters.
@@ -79,7 +75,7 @@ namespace ImageBinarizerLib
         //    this.m_GreenThreshold = configuration.GreenThreshold;
         //    this.m_BlueThreshold = configuration.BlueThreshold;
         //    this.m_GreyThreshold = configuration.GreyThreshold;
-         
+
         //    if (configuration.ImageHeight > 0 && configuration.ImageWidth > 0)
         //        this.m_TargetSize = new Size(configuration.ImageWidth, configuration.ImageHeight);
 
@@ -111,7 +107,7 @@ namespace ImageBinarizerLib
         /// <returns></returns>
         public double[,,] GetBinary(double[,,] data)
         {
-     
+
 
             Bitmap img = new Bitmap(data.GetLength(0), data.GetLength(1));
 
@@ -136,25 +132,10 @@ namespace ImageBinarizerLib
 
             //double[,,] outArray = new double[hg, wg, 3];
 
-            //The average is calculated taking the parameters.When no thresholds are given it automatically calculates the average.
-            int avgR, avgG, avgB, avgGrey;
-            CalcAverageRGB(img, out avgR, out avgG, out avgB, out avgGrey);
+            //The average is calculated taking the parameters.When no thresholds are given it automatically calculates the average.            
+            CalcAverageRGB(img);
 
-            if (this.m_RedThreshold < 0 || this.m_RedThreshold > 255)
-                this.m_RedThreshold = avgR;
-
-
-            if (this.m_GreenThreshold < 0 || this.m_GreenThreshold > 255)
-                this.m_GreenThreshold = avgG;
-
-
-            if (this.m_BlueThreshold < 0 || this.m_BlueThreshold > 255)
-                this.m_BlueThreshold = avgB;
-
-            if (this.m_GreyThreshold < 0 || this.m_GreyThreshold > 255)
-                this.m_GreyThreshold = avgGrey;
-
-            if (!this.m_GreyScale)
+            if (!this.configuration.GreyScale)
             {
                 return RGBBinarize(img);
             }
@@ -164,10 +145,9 @@ namespace ImageBinarizerLib
         /// <summary>
         /// method to call Binarizer
         /// </summary>
-
-        private  void RunBinarizer()
+        public void RunBinarizer()
         {
-            Bitmap bitmap = new Bitmap(configuration.InputImagePath);
+            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
 
             int imgWidth = bitmap.Width;
             int imgHeight = bitmap.Height;
@@ -184,10 +164,10 @@ namespace ImageBinarizerLib
                 }
             }
 
-            double[,,] outputData = img.GetBinary(inputData);
+            double[,,] outputData = GetBinary(inputData);
 
             StringBuilder stringArray = CreateTextFromBinary(outputData);
-            using (StreamWriter writer = File.CreateText(config.OutputImagePath))
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
             {
                 writer.Write(stringArray.ToString());
             }
@@ -213,17 +193,14 @@ namespace ImageBinarizerLib
         /// Average values calculation 
         /// </summary>
         /// <param name="img"></param>
-        /// <param name="avgR"></param>
-        /// <param name="avgG"></param>
-        /// <param name="avgB"></param>
-        /// <param name="avgGrey"></param>
-        private void CalcAverageRGB(Bitmap img, out int avgR, out int avgG, out int avgB, out int avgGrey)
+        private void CalcAverageRGB(Bitmap img)
         {
             int hg = img.Height;
             int wg = img.Width;
-            int sumR = 0;
-            int sumG = 0;
-            int sumB = 0;
+            Int64 sumR = 0;
+            Int64 sumG = 0;
+            Int64 sumB = 0;
+            //TODO. buffer to get pixels, divide image to avoid overflow of the type of number
             for (int i = 0; i < hg; i++)
             {
                 for (int j = 0; j < wg; j++)
@@ -232,11 +209,24 @@ namespace ImageBinarizerLib
                     sumG += img.GetPixel(j, i).G;
                     sumB += img.GetPixel(j, i).B;
                 }
-            }            
-            avgR = sumR / (hg * wg);
-            avgG = sumG / (hg * wg);
-            avgB = sumB / (hg * wg);
-            avgGrey = (299 * sumR + 587 * sumG + 114 * sumB) / (1000 * hg * wg);//using the NTSC formula
+            }
+            double avgR = sumR / (hg * wg);
+            double avgG = sumG / (hg * wg);
+            double avgB = sumB / (hg * wg);
+            double avgGrey = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;//using the NTSC formula
+            if (this.configuration.RedThreshold < 0 || this.configuration.RedThreshold > 255)
+                this.configuration.RedThreshold = (int)avgR;
+
+
+            if (this.configuration.GreenThreshold < 0 || this.configuration.GreenThreshold > 255)
+                this.configuration.GreenThreshold = (int)avgG;
+
+
+            if (this.configuration.BlueThreshold < 0 || this.configuration.BlueThreshold > 255)
+                this.configuration.BlueThreshold = (int)avgB;
+
+            if (this.configuration.GreyThreshold < 0 || this.configuration.GreyThreshold > 255)
+                this.configuration.GreyThreshold = (int)avgGrey;
         }
 
         /// <summary>
@@ -254,7 +244,7 @@ namespace ImageBinarizerLib
                 for (int j = 0; j < wg; j++)
                 {
                     outArray[i, j, 0] = ((0.299 * img.GetPixel(j, i).R + 0.587 * img.GetPixel(j, i).G +
-                       0.114 * img.GetPixel(j, i).B) > this.m_GreyThreshold) ? this.m_white : this.m_black;
+                       0.114 * img.GetPixel(j, i).B) > this.configuration.GreyThreshold) ? this.m_white : this.m_black;
                 }
             }
             return outArray;
@@ -274,13 +264,14 @@ namespace ImageBinarizerLib
             {
                 for (int j = 0; j < wg; j++)
                 {
-                    outArray[i, j, 0] = (img.GetPixel(j, i).R > this.m_RedThreshold && img.GetPixel(j, i).G > this.m_GreenThreshold &&
-                       img.GetPixel(j, i).B > this.m_BlueThreshold) ? this.m_white : this.m_black;
+                    outArray[i, j, 0] = (img.GetPixel(j, i).R > this.configuration.RedThreshold &&
+                                         img.GetPixel(j, i).G > this.configuration.GreenThreshold &&
+                                         img.GetPixel(j, i).B > this.configuration.BlueThreshold) ? this.m_white : this.m_black;
                 }
             }
             return outArray;
         }
 
-        
+
     }
 }
