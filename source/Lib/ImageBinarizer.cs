@@ -25,10 +25,11 @@ namespace ImageBinarizerLib
         /// </summary>
         public ImageBinarizer(BinarizerParams configuration)
         {
-            this.configuration = configuration;
-            if (configuration.ImageHeight > 0 && configuration.ImageWidth > 0)
-                this.m_TargetSize = new Size(configuration.ImageWidth, configuration.ImageHeight);
+            this.configuration = configuration;            
+
         }
+
+        
 
         /// <summary>
         /// Method of Interface Ipipline
@@ -70,7 +71,7 @@ namespace ImageBinarizerLib
                     img.SetPixel(i, j, Color.FromArgb(255, r, g, b));
                 }
             }
-
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
             if (this.m_TargetSize != null)
                 img = new Bitmap(img, this.m_TargetSize.Value);
 
@@ -288,11 +289,17 @@ namespace ImageBinarizerLib
         public void RunBinarizerOnWin()
         {
             Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
-            if (this.m_TargetSize != null)
-                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
 
             int imgWidth = bitmap.Width;
             int imgHeight = bitmap.Height;
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
+
+            imgWidth = bitmap.Width;
+            imgHeight = bitmap.Height;
+
             double[,,] inputData = new double[imgWidth, imgHeight, 3];
 
             for (int i = 0; i < imgWidth; i++)
@@ -329,6 +336,24 @@ namespace ImageBinarizerLib
             }
 
             return stringArray;
-        }        
+        }
+        private Size? GetTargetSizeFromConfigOrDefault(int width, int height)
+        {
+            if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
+                return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
+
+            if (width == 0 || height == 0) 
+                return null;
+
+            double ratio = (double)height / width;
+            int defaultWidth = 1200;
+
+            if (this.configuration.ImageHeight > 0)
+                return new Size((int)(this.configuration.ImageHeight / ratio), this.configuration.ImageHeight);
+
+            if (this.configuration.ImageWidth > 0)
+                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
+            return new Size(defaultWidth, (int)(defaultWidth * ratio)); 
+        }
     }
 }
