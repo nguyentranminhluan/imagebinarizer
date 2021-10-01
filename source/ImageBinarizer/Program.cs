@@ -47,7 +47,7 @@ namespace ImageBinarizerApp
             try
             {
                 ImageBinarizer img = new ImageBinarizer(configuration as BinarizerParams);
-                img.RunBinarizer();
+                img.RunBinarizerOnWin();
             }
             catch (Exception e)
             {
