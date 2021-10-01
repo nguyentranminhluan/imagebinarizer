@@ -10,7 +10,6 @@ namespace ImageBinarizerLib
     /// <summary>
     /// Main class for the Image Binarizer algorithm using Ipipeline
     /// </summary>
-
     public class ImageBinarizer : IPipelineModule<double[,,], double[,,]>
     {
 
@@ -30,64 +29,6 @@ namespace ImageBinarizerLib
             if (configuration.ImageHeight > 0 && configuration.ImageWidth > 0)
                 this.m_TargetSize = new Size(configuration.ImageWidth, configuration.ImageHeight);
         }
-
-        ///// <summary>
-        ///// constructor with separate parameters.
-        ///// </summary>
-        ///// <param name="imageParams"></param>
-        ///// <param name="inverse"></param>
-        //public ImageBinarizer(Dictionary<String, int> imageParams, bool inverse)
-        //{
-        //    int targetWidth = 0;
-        //    int targetHeight = 0;
-
-        //    if (imageParams.TryGetValue("redThreshold", out int rt))
-        //        this.m_RedThreshold = rt;
-
-        //    if (imageParams.TryGetValue("greenThreshold", out int gt))
-        //        this.m_GreenThreshold = gt;
-
-        //    if (imageParams.TryGetValue("blueThreshold", out int bt))
-        //        this.m_BlueThreshold = bt;
-
-        //    if (imageParams.TryGetValue("imageWidth", out int iw))
-        //        targetWidth = iw;
-
-        //    if (imageParams.TryGetValue("imageHeight", out int ih))
-        //        targetHeight = ih;
-        //    if (inverse)
-        //    {
-        //        this.m_white = 0;
-        //        this.m_black = 1;
-        //    }
-
-        //    if (targetHeight > 0 && targetWidth > 0)
-        //        this.m_TargetSize = new Size(targetWidth, targetHeight);
-        //}
-
-        /// <summary>
-        /// constructor with object parameters.
-        /// </summary>
-        /// <param name="configuration"></param>
-        //public void Binarize(BinarizerParams imageParams)
-        //{
-        //    this.m_RedThreshold = configuration.RedThreshold;
-        //    this.m_GreenThreshold = configuration.GreenThreshold;
-        //    this.m_BlueThreshold = configuration.BlueThreshold;
-        //    this.m_GreyThreshold = configuration.GreyThreshold;
-
-        //    if (configuration.ImageHeight > 0 && configuration.ImageWidth > 0)
-        //        this.m_TargetSize = new Size(configuration.ImageWidth, configuration.ImageHeight);
-
-        //    if (configuration.Inverse)
-        //    {
-        //        this.m_white = 0;
-        //        this.m_black = 1;
-        //    }
-
-        //    this.m_GreyScale = configuration.GreyScale;
-
-        //}
 
         /// <summary>
         /// Method of Interface Ipipline
@@ -125,14 +66,10 @@ namespace ImageBinarizerLib
             }
 
             if (this.m_TargetSize != null)
-                img = new Bitmap(img, this.m_TargetSize.Value);
+                img = new Bitmap(img, this.m_TargetSize.Value);            
 
-            //int hg = img.Height;
-            //int wg = img.Width;
-
-            //double[,,] outArray = new double[hg, wg, 3];
-
-            //The average is calculated taking the parameters.When no thresholds are given it automatically calculates the average.            
+            //The average is calculated taking the parameters.
+            //When no thresholds are given, they will be automatically assigned the average values.            
             CalcAverageRGB(img);
 
             if (!this.configuration.GreyScale)
@@ -239,6 +176,7 @@ namespace ImageBinarizerLib
             int hg = img.Height;
             int wg = img.Width;
             double[,,] outArray = new double[hg, wg, 3];
+
             for (int i = 0; i < hg; i++)
             {
                 for (int j = 0; j < wg; j++)
@@ -247,6 +185,7 @@ namespace ImageBinarizerLib
                        0.114 * img.GetPixel(j, i).B) > this.configuration.GreyThreshold) ? this.m_white : this.m_black;
                 }
             }
+
             return outArray;
         }
 
@@ -260,6 +199,7 @@ namespace ImageBinarizerLib
             int hg = img.Height;
             int wg = img.Width;
             double[,,] outArray = new double[hg, wg, 3];
+
             for (int i = 0; i < hg; i++)
             {
                 for (int j = 0; j < wg; j++)
@@ -269,9 +209,8 @@ namespace ImageBinarizerLib
                                          img.GetPixel(j, i).B > this.configuration.BlueThreshold) ? this.m_white : this.m_black;
                 }
             }
+
             return outArray;
         }
-
-
     }
 }

@@ -150,8 +150,6 @@ namespace ImageBinarizerApp
             }
         }
 
-
-
         /// <summary>
         /// Check validation of arguments
         /// </summary>

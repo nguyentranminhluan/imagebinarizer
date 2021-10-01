@@ -6,6 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerLib", "Lib\ImageBinarizerLib.csproj", "{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{228E104E-F497-4B39-ABDF-833813196126}"
+	ProjectSection(SolutionItems) = preProject
+		packages\LearningApi.1.3.1.nupkg = packages\LearningApi.1.3.1.nupkg
+		NuGet.Config = NuGet.Config
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizer", "ImageBinarizer\ImageBinarizer.csproj", "{DD113A82-8548-4AA4-AC9A-6563C864DE89}"
 EndProject
