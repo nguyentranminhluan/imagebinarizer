@@ -18,22 +18,20 @@ namespace ImageBinarizerApp
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-            string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
-            Console.WriteLine(".------------------------------------------------------------------------------------------.");
-            Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.0.2]|");
+            //Console.WriteLine(".------------------------------------------------------------------------------------------.");
+            Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.0.2]");
             Console.WriteLine("    Copyright <c> daenet GmbH, All rights reserved.");
-            Console.WriteLine($"\n    Insert one of these [{printedHelpArgs}] to following command for help:"); // TODO. show only if no correct args specified.
-            Console.WriteLine("\n\t\tdotnet imagebinarizer [command]\n|");
 
-            for (int i = 1; i < 9; i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.WriteLine("|");
-                Console.SetCursorPosition(91, i);
-                Console.WriteLine("|");
-            }
 
-            Console.WriteLine("\'------------------------------------------------------------------------------------------\'");
+            //for (int i = 1; i < 4; i++)
+            //{
+            //    Console.SetCursorPosition(0, i);
+            //    Console.WriteLine("|");
+            //    Console.SetCursorPosition(91, i);
+            //    Console.WriteLine("|");
+            //}
+
+            //Console.WriteLine("\'------------------------------------------------------------------------------------------\'");
 
             #region Old code
             //Test if necessary input arguments were supplied.
@@ -160,14 +158,13 @@ namespace ImageBinarizerApp
 
             try
             {
-                ImageBinarizer img = new ImageBinarizer(MapParams(configuration));
-
-                img.RunBinarization();              
+                ImageBinarizer img = new ImageBinarizer(configuration as BinarizerParams);
+                img.RunBinarizer();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Image Binarization failed.\n");
-                PrintMessage($"\nError: {e.Message}");
+                PrintMessage($"\nError: {e.Message}", true);
                 return;
             }
 
@@ -186,11 +183,16 @@ namespace ImageBinarizerApp
                 }
 
                 Console.Write(errMsg + "\n");
+                Console.ForegroundColor = clr;
+                string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
+                Console.WriteLine($"\nInsert one of these [{printedHelpArgs}] to following command for help:"); // TODO. show only if no correct args specified.
+                Console.WriteLine("\n\t\tdotnet imagebinarizer [command]\n");
+                Console.WriteLine("\nPress any key to exit the application.");
             }
 
-            Console.ForegroundColor = clr;
 
-            Console.WriteLine("\nPress any key to exit the application.");
+
+
             Console.ReadLine();
         }
 
@@ -207,32 +209,7 @@ namespace ImageBinarizerApp
             //
             // Check if datas Parsed is correct
             return parsingObject.Parsing(out configurationDatas, out errMsg);
-        }
-
-      
-
-        /// <summary>
-        /// Mapping parameters from configuration
-        /// </summary>
-        /// <param name="config"></param>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        private static BinarizerParams MapParams(BinarizerConfiguration config)
-        {
-            BinarizerParams imageParams = new BinarizerParams();
-
-            if (config.ImageWidth > 0)
-                imageParams.ImageWidth = config.ImageWidth;
-            if (config.ImageHeight > 0)
-                imageParams.ImageHeight = config.ImageHeight;
-            imageParams.RedThreshold = config.RedThreshold;
-            imageParams.GreenThreshold = config.GreenThreshold;
-            imageParams.BlueThreshold = config.BlueThreshold;
-            imageParams.GreyThreshold = config.GreyThreshold;
-            imageParams.Inverse = config.Inverse;
-            imageParams.GreyScale = config.GreyScale;
-            return imageParams;
-        }
+        }       
 
     }
 }

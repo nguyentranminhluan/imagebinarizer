@@ -10,6 +10,16 @@ namespace ImageBinarizerLib
     public class BinarizerParams
     {
         /// <summary>
+        /// Input path
+        /// </summary>
+        public string InputImagePath { get; set; } = "";
+
+        /// <summary>
+        /// Output path
+        /// </summary>
+        public string OutputImagePath { get; set; } = "";
+
+        /// <summary>
         /// image width
         /// </summary>
         public int ImageWidth { get; set; } = 0;
@@ -40,7 +50,7 @@ namespace ImageBinarizerLib
         public int GreyThreshold { get; set; } = -1;
 
         /// <summary>
-        /// Inverse the contrast of the image
+        /// Inverse of the image
         /// </summary>
         public bool Inverse { get; set; } = false;
 
@@ -48,8 +58,6 @@ namespace ImageBinarizerLib
         /// Calculate base on grey scale threshold
         /// </summary>
         public bool GreyScale { get; set; } = false;
-
-        public string InputImagePath { get; set; }
     }
 
 }

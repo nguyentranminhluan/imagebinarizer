@@ -1,9 +1,4 @@
 ﻿using ImageBinarizerLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageBinarizerApp.Entities
 {
@@ -12,8 +7,10 @@ namespace ImageBinarizerApp.Entities
     /// </summary>
     public class BinarizerConfiguration : BinarizerParams
     {
+        /// <summary>
+        /// Enable to print help function
+        /// </summary>
         public bool Help { get; set; } = false;
-     
 
     }
 }

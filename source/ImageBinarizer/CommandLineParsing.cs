@@ -87,7 +87,7 @@ namespace ImageBinarizerApp
         private void CorrectArgsIfRequired()
         {
             //
-            //Check if help or inverse argument was called
+            //Check if help, inverse, or Geryscale argument was called
             CheckHelp();
             CheckInverse();
             CheckGreyScale();
@@ -135,7 +135,7 @@ namespace ImageBinarizerApp
         private void CheckHelp()
         {
             bool help = false;
-            foreach(var arg in HelpArguments)
+            foreach (var arg in HelpArguments)
             {
                 while (command.Contains(arg))
                 {
@@ -150,7 +150,7 @@ namespace ImageBinarizerApp
             }
         }
 
-        
+
 
         /// <summary>
         /// Check validation of arguments
@@ -230,7 +230,7 @@ namespace ImageBinarizerApp
             errMsg = null;
             return true;
         }
-        
+
         /// <summary>
         /// Print help to console
         /// </summary>
@@ -255,7 +255,7 @@ namespace ImageBinarizerApp
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
             Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
-            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");            
+            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
                                 "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
             Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
