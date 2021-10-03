@@ -12,12 +12,40 @@ namespace ImageBinarizerApp
     /// </summary>
     class Program
     {
+        //public static void PrintData()
+        //{
+        //    var clr = Console.ForegroundColor;
+        //    using (StreamReader readtext = new StreamReader("out1.txt"))
+        //    {
+        //        string readMeText = readtext.ReadLine();
+        //        while (readMeText != null)
+        //        {
+        //            for (int i = 0; i < readMeText.Length; i++)
+        //            {
+        //                if (readMeText[i] == '0')
+        //                {
+        //                    Console.ForegroundColor = ConsoleColor.Blue;
+        //                }
+
+        //                Console.Write(readMeText[i]);
+        //                Console.ForegroundColor = clr;
+        //            }
+
+        //            Console.WriteLine();
+        //            readMeText = readtext.ReadLine();
+        //        }
+
+        //    }
+        //}
+
         /// <summary>
         /// Main entry point for Program
         /// </summary>
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
+
+            //PrintData();
             //Console.WriteLine(".------------------------------------------------------------------------------------------.");
             Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.0.2]");
             Console.WriteLine("    Copyright <c> daenet GmbH, All rights reserved.");
@@ -79,9 +107,8 @@ namespace ImageBinarizerApp
                     Console.WriteLine($"\nInsert one of these [{printedHelpArgs}] to following command for help:");
                     Console.WriteLine("\n\t\tdotnet imagebinarizer [command]\n");
                 }
-                else Console.Write(errMsg + "\n");
-
-
+                else
+                    Console.Write(errMsg + "\n");
             }
 
             Console.WriteLine("\nPress any key to exit the application.");
@@ -100,10 +127,10 @@ namespace ImageBinarizerApp
 
             //
             // Check if datas Parsed is correct
-            return parsingObject.Parsing(out configurationDatas, out errMsg);
+            return parsingObject.Parse(out configurationDatas, out errMsg);
         }
 
     }
 }
 
-// --input-image D:\DAENET\image\old.jpg --output-image D:\DAENET\image\out.txt -width 800 -height 225 -red 100 -green 100 -blue 100
+// --input-image D:\DAENET\image\daenet.png --output-image D:\DAENET\image\out.txt -width 800 -height 225 -red 100 -green 100 -blue 100

@@ -25,11 +25,9 @@ namespace ImageBinarizerLib
         /// </summary>
         public ImageBinarizer(BinarizerParams configuration)
         {
-            this.configuration = configuration;            
+            this.configuration = configuration;
 
         }
-
-        
 
         /// <summary>
         /// Method of Interface Ipipline
@@ -87,7 +85,7 @@ namespace ImageBinarizerLib
             return GreyScaleBinarize(img);
         }
         private double[,,] GetBinaryWithoutResize(double[,,] data)
-        {            
+        {
 
             //The average is calculated taking the parameters.
             //When no thresholds are given, they will be assigned automatically the average values.            
@@ -110,25 +108,35 @@ namespace ImageBinarizerLib
         {
             int hg = img.Height;
             int wg = img.Width;
-            
-            Int64 sumR = 0;
-            Int64 sumG = 0;
-            Int64 sumB = 0;
-            //TODO. buffer to get pixels, divide image to avoid overflow of the type of number
+
+            const int constWidth = 4000;
+            const int constHeight = 4000;
+
+            double[,] sumR = new double[wg / constWidth + 1, hg / constHeight + 1];
+            double[,] sumG = new double[wg / constWidth + 1, hg / constHeight + 1];
+            double[,] sumB = new double[wg / constWidth + 1, hg / constHeight + 1];
             for (int i = 0; i < hg; i++)
             {
                 for (int j = 0; j < wg; j++)
                 {
-                    sumR += img.GetPixel(j, i).R;
-                    sumG += img.GetPixel(j, i).G;
-                    sumB += img.GetPixel(j, i).B;
+                    sumR[j / constWidth, i / constHeight] += img.GetPixel(j, i).R;
+                    sumG[j / constWidth, i / constHeight] += img.GetPixel(j, i).G;
+                    sumB[j / constWidth, i / constHeight] += img.GetPixel(j, i).B;
                 }
             }
-
-            double avgR = sumR / (hg * wg);
-            double avgG = sumG / (hg * wg);
-            double avgB = sumB / (hg * wg);
-            double avgGrey = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;//using the NTSC formula
+            double avgR = 0;
+            double avgG = 0;
+            double avgB = 0;
+            for (int i = 0; i < hg / constHeight + 1; i++)
+            {
+                for (int j = 0; j < wg / constWidth + 1; j++)
+                {
+                    avgR += sumR[j, i] / (hg * wg);
+                    avgG += sumG[j, i] / (hg * wg);
+                    avgB += sumB[j, i] / (hg * wg);
+                }
+            }
+            double avgGrey = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;//using the NTSC formula            
 
             if (this.configuration.RedThreshold < 0 || this.configuration.RedThreshold > 255)
                 this.configuration.RedThreshold = (int)avgR;
@@ -152,24 +160,34 @@ namespace ImageBinarizerLib
             int hg = data.GetLength(1);
             int wg = data.GetLength(0);
 
-            Int64 sumR = 0;
-            Int64 sumG = 0;
-            Int64 sumB = 0;
-            //TODO. buffer to get pixels, divide image to avoid overflow of the type of number
+            const int constWidth = 4000;
+            const int constHeight = 4000;
+
+            double[,] sumR = new double[wg / constWidth + 1, hg / constHeight + 1];
+            double[,] sumG = new double[wg / constWidth + 1, hg / constHeight + 1];
+            double[,] sumB = new double[wg / constWidth + 1, hg / constHeight + 1];
             for (int i = 0; i < hg; i++)
             {
                 for (int j = 0; j < wg; j++)
                 {
-                    sumR += (long)data[j, i, 0];
-                    sumG += (long)data[j, i, 1];
-                    sumB += (long)data[j, i, 2];
+                    sumR[j / constWidth, i / constHeight] += data[j, i, 0];
+                    sumG[j / constWidth, i / constHeight] += data[j, i, 1];
+                    sumB[j / constWidth, i / constHeight] += data[j, i, 2];
                 }
             }
-
-            double avgR = sumR / (hg * wg);
-            double avgG = sumG / (hg * wg);
-            double avgB = sumB / (hg * wg);
-            double avgGrey = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;//using the NTSC formula
+            double avgR = 0;
+            double avgG = 0;
+            double avgB = 0;
+            for (int i = 0; i < hg / constHeight + 1; i++)
+            {
+                for (int j = 0; j < wg / constWidth + 1; j++)
+                {
+                    avgR += sumR[j, i] / (hg * wg);
+                    avgG += sumG[j, i] / (hg * wg);
+                    avgB += sumB[j, i] / (hg * wg);
+                }
+            }
+            double avgGrey = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;//using the NTSC formula            
 
             if (this.configuration.RedThreshold < 0 || this.configuration.RedThreshold > 255)
                 this.configuration.RedThreshold = (int)avgR;
@@ -295,10 +313,11 @@ namespace ImageBinarizerLib
 
             this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
             if (this.m_TargetSize != null)
+            {
                 bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
-
-            imgWidth = bitmap.Width;
-            imgHeight = bitmap.Height;
+                imgWidth = bitmap.Width;
+                imgHeight = bitmap.Height;
+            }
 
             double[,,] inputData = new double[imgWidth, imgHeight, 3];
 
@@ -322,6 +341,11 @@ namespace ImageBinarizerLib
             }
         }
 
+        /// <summary>
+        /// create string array from output
+        /// </summary>
+        /// <param name="outputData"></param>
+        /// <returns></returns>
         private static StringBuilder CreateTextFromBinary(double[,,] outputData)
         {
             StringBuilder stringArray = new StringBuilder();
@@ -337,23 +361,34 @@ namespace ImageBinarizerLib
 
             return stringArray;
         }
+
+        /// <summary>
+        /// Get size of binarized image
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
         private Size? GetTargetSizeFromConfigOrDefault(int width, int height)
         {
             if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
                 return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
 
-            if (width == 0 || height == 0) 
+            if (width == 0 || height == 0)
                 return null;
 
             double ratio = (double)height / width;
             int defaultWidth = 1200;
 
             if (this.configuration.ImageHeight > 0)
-                return new Size((int)(this.configuration.ImageHeight / ratio), this.configuration.ImageHeight);
+                return new Size((int)(this.configuration.ImageHeight * 2 / ratio), this.configuration.ImageHeight);
 
             if (this.configuration.ImageWidth > 0)
-                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
-            return new Size(defaultWidth, (int)(defaultWidth * ratio)); 
+                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio / 2));
+
+            if (defaultWidth > width)
+                return new Size(width, height / 2);
+
+            return new Size(defaultWidth, (int)(defaultWidth * ratio / 2));
         }
     }
 }

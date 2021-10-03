@@ -55,7 +55,7 @@ namespace ImageBinarizerApp
         /// </summary>
         /// <param name="Configurations"></param>
         /// <returns></returns>
-        public bool Parsing(out BinarizerConfiguration Configurations, out string errMsg)
+        public bool Parse(out BinarizerConfiguration Configurations, out string errMsg)
         {
             Configurations = new BinarizerConfiguration();
 
