@@ -12,7 +12,7 @@ namespace ImageBinarizerLib
     /// <summary>
     /// Main class for the Image Binarizer algorithm using Ipipeline
     /// </summary>
-    public class ImageBinarizer : IPipelineModule<double[,,], double[,,]>
+    public class ImageBinarizer : ImagePixelsDataHandler, IPipelineModule<double[,,], double[,,]>
     {
 
         private BinarizerParams configuration;
@@ -54,20 +54,25 @@ namespace ImageBinarizerLib
         public double[,,] GetBinary(double[,,] data, bool needResize = true)
         {
             if (needResize)
-            {
-                Bitmap img = SetPixelColorUsingLockbits(data);
+            {                
+                Bitmap img = SetPixelsColors(data);
 
                 this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
                 if (this.m_TargetSize != null)
                     img = new Bitmap(img, this.m_TargetSize.Value);
 
-                double[,,] resizedData = GetPixelColorUsingLockbits(img);
+                double[,,] resizedData = GetPixelsColors(img);
                 return GetBinaryWithDataArray(resizedData);
             }               
 
             return GetBinaryWithDataArray(data);
         }
         
+        /// <summary>
+        /// Get Binary array with input array double
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private double[,,] GetBinaryWithDataArray(double[,,] data)
         {
 
@@ -77,7 +82,7 @@ namespace ImageBinarizerLib
 
             if (!this.configuration.GreyScale)
             {
-                return RGBBinarize(data);
+                return RgbScaleBinarize(data);
             }
 
             return GreyScaleBinarize(data);
@@ -162,7 +167,7 @@ namespace ImageBinarizerLib
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private double[,,] RGBBinarize(double[,,] data)
+        private double[,,] RgbScaleBinarize(double[,,] data)
         {
             int hg = data.GetLength(1);
             int wg = data.GetLength(0);
@@ -197,7 +202,7 @@ namespace ImageBinarizerLib
                 bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);                
             }
 
-            double[,,] inputData = GetPixelColorUsingLockbits(bitmap);
+            double[,,] inputData = GetPixelsColors(bitmap);
 
             double[,,] outputData = GetBinary(inputData, false);
 
@@ -256,75 +261,6 @@ namespace ImageBinarizerLib
                 return new Size(width, height / 2);
 
             return new Size(defaultWidth, (int)(defaultWidth * ratio / 2));
-        }
-
-        /// <summary>
-        /// Get Pixel data in faster way
-        /// </summary>
-        /// <param name="getPixelBitmap"></param>
-        /// <returns></returns>
-        private double[,,] GetPixelColorUsingLockbits(Bitmap getPixelBitmap)
-        {
-            BitmapData bitmapData = getPixelBitmap.LockBits(new Rectangle(0, 0, getPixelBitmap.Width, getPixelBitmap.Height), ImageLockMode.ReadOnly, getPixelBitmap.PixelFormat);
-
-            double[,,] colorData = new double[getPixelBitmap.Width, getPixelBitmap.Height, 3];
-
-            int bytesPerPixel = Bitmap.GetPixelFormatSize(getPixelBitmap.PixelFormat) / 8;
-            int byteCount = bitmapData.Stride * getPixelBitmap.Height;
-            byte[] pixels = new byte[byteCount];
-            IntPtr ptrFirstPixel = bitmapData.Scan0;
-            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
-            int heightInPixels = bitmapData.Height;
-            int widthInBytes = bitmapData.Width * bytesPerPixel;
-
-            for (int y = 0; y < heightInPixels; y++)
-            {
-                int currentLine = y * bitmapData.Stride;
-                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
-                {
-                    colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x];
-                    colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
-                    colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x + 2];                    
-                }
-            }
-            
-            getPixelBitmap.UnlockBits(bitmapData);
-            return colorData;
-        }
-
-        /// <summary>
-        /// Set Pixel data in faster way
-        /// </summary>
-        /// <param name="data"></param>
-        private Bitmap SetPixelColorUsingLockbits(double[,,] data)
-        {
-            Bitmap processedBitmap = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
-            BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
-
-            int bytesPerPixel = Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
-            int byteCount = bitmapData.Stride * processedBitmap.Height;
-            byte[] pixels = new byte[byteCount];
-            IntPtr ptrFirstPixel = bitmapData.Scan0;
-            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
-            int heightInPixels = bitmapData.Height;
-            int widthInBytes = bitmapData.Width * bytesPerPixel;
-
-            for (int y = 0; y < heightInPixels; y++)
-            {
-                int currentLine = y * bitmapData.Stride;
-                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
-                {                    
-                    // calculate new pixel value
-                    pixels[currentLine + x] = (byte)data[x / bytesPerPixel, y, 2];
-                    pixels[currentLine + x + 1] = (byte)data[x / bytesPerPixel, y, 1];
-                    pixels[currentLine + x + 2] = (byte)data[x / bytesPerPixel, y, 0];
-                }
-            }
-
-            // copy modified bytes back
-            Marshal.Copy(pixels, 0, ptrFirstPixel, pixels.Length);
-            processedBitmap.UnlockBits(bitmapData);
-            return processedBitmap;
         }
     }
 }
