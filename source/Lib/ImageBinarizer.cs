@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using LearningFoundation;
 
@@ -26,7 +28,11 @@ namespace ImageBinarizerLib
         public ImageBinarizer(BinarizerParams configuration)
         {
             this.configuration = configuration;
-
+            if (this.configuration.Inverse)
+            {
+                this.m_white = 0;
+                this.m_black = 1;
+            }
         }
 
         /// <summary>
@@ -45,46 +51,24 @@ namespace ImageBinarizerLib
         /// </summary>
         /// <params name="img">Image instance. Typically bitmap.</params>
         /// <returns></returns>
-        public double[,,] GetBinary(double[,,] data, bool isResize = true)
+        public double[,,] GetBinary(double[,,] data, bool needResize = true)
         {
-            if (isResize)
-                return ResizeAndGetBinary(data);
-
-            return GetBinaryWithoutResize(data);
-        }
-
-        private double[,,] ResizeAndGetBinary(double[,,] data)
-        {
-            Bitmap img = new Bitmap(data.GetLength(0), data.GetLength(1));
-
-            for (int i = 0; i < data.GetLength(0); i++)
+            if (needResize)
             {
-                for (int j = 0; j < data.GetLength(1); j++)
-                {
-                    int r = (int)data[i, j, 0];
-                    int g = (int)data[i, j, 1];
-                    int b = (int)data[i, j, 2];
+                Bitmap img = SetPixelColorUsingLockbits(data);
 
-                    //set limits,bytes can hold values from 0 upto 255
-                    img.SetPixel(i, j, Color.FromArgb(255, r, g, b));
-                }
-            }
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
-            if (this.m_TargetSize != null)
-                img = new Bitmap(img, this.m_TargetSize.Value);
+                this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
+                if (this.m_TargetSize != null)
+                    img = new Bitmap(img, this.m_TargetSize.Value);
 
-            //The average is calculated taking the parameters.
-            //When no thresholds are given, they will be assigned automatically the average values.            
-            CalcAverageRGBGrey(img);
+                double[,,] resizedData = GetPixelColorUsingLockbits(img);
+                return GetBinaryWithDataArray(resizedData);
+            }               
 
-            if (!this.configuration.GreyScale)
-            {
-                return RGBBinarize(img);
-            }
-
-            return GreyScaleBinarize(img);
+            return GetBinaryWithDataArray(data);
         }
-        private double[,,] GetBinaryWithoutResize(double[,,] data)
+        
+        private double[,,] GetBinaryWithDataArray(double[,,] data)
         {
 
             //The average is calculated taking the parameters.
@@ -98,59 +82,7 @@ namespace ImageBinarizerLib
 
             return GreyScaleBinarize(data);
         }
-
-        #region CalcAverageRGBGrey
-        /// <summary>
-        /// Average values calculation 
-        /// </summary>
-        /// <param name="img"></param>
-        private void CalcAverageRGBGrey(Bitmap img)
-        {
-            int hg = img.Height;
-            int wg = img.Width;
-
-            const int constWidth = 4000;
-            const int constHeight = 4000;
-
-            double[,] sumR = new double[wg / constWidth + 1, hg / constHeight + 1];
-            double[,] sumG = new double[wg / constWidth + 1, hg / constHeight + 1];
-            double[,] sumB = new double[wg / constWidth + 1, hg / constHeight + 1];
-            for (int i = 0; i < hg; i++)
-            {
-                for (int j = 0; j < wg; j++)
-                {
-                    sumR[j / constWidth, i / constHeight] += img.GetPixel(j, i).R;
-                    sumG[j / constWidth, i / constHeight] += img.GetPixel(j, i).G;
-                    sumB[j / constWidth, i / constHeight] += img.GetPixel(j, i).B;
-                }
-            }
-            double avgR = 0;
-            double avgG = 0;
-            double avgB = 0;
-            for (int i = 0; i < hg / constHeight + 1; i++)
-            {
-                for (int j = 0; j < wg / constWidth + 1; j++)
-                {
-                    avgR += sumR[j, i] / (hg * wg);
-                    avgG += sumG[j, i] / (hg * wg);
-                    avgB += sumB[j, i] / (hg * wg);
-                }
-            }
-            double avgGrey = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;//using the NTSC formula            
-
-            if (this.configuration.RedThreshold < 0 || this.configuration.RedThreshold > 255)
-                this.configuration.RedThreshold = (int)avgR;
-
-            if (this.configuration.GreenThreshold < 0 || this.configuration.GreenThreshold > 255)
-                this.configuration.GreenThreshold = (int)avgG;
-
-            if (this.configuration.BlueThreshold < 0 || this.configuration.BlueThreshold > 255)
-                this.configuration.BlueThreshold = (int)avgB;
-
-            if (this.configuration.GreyThreshold < 0 || this.configuration.GreyThreshold > 255)
-                this.configuration.GreyThreshold = (int)avgGrey;
-        }
-
+        
         /// <summary>
         /// Average values calculation 
         /// </summary>
@@ -201,31 +133,6 @@ namespace ImageBinarizerLib
             if (this.configuration.GreyThreshold < 0 || this.configuration.GreyThreshold > 255)
                 this.configuration.GreyThreshold = (int)avgGrey;
         }
-        #endregion
-
-        #region GreyScaleBinarize
-        /// <summary>
-        /// Binarize using grey scale threshold
-        /// </summary>
-        /// <param name="img"></param>
-        /// <returns></returns>
-        private double[,,] GreyScaleBinarize(Bitmap img)
-        {
-            int hg = img.Height;
-            int wg = img.Width;
-            double[,,] outArray = new double[hg, wg, 3];
-
-            for (int i = 0; i < hg; i++)
-            {
-                for (int j = 0; j < wg; j++)
-                {
-                    outArray[i, j, 0] = ((0.299 * img.GetPixel(j, i).R + 0.587 * img.GetPixel(j, i).G +
-                       0.114 * img.GetPixel(j, i).B) > this.configuration.GreyThreshold) ? this.m_white : this.m_black;
-                }
-            }
-
-            return outArray;
-        }
 
         /// <summary>
         /// Binarize using grey scale threshold
@@ -249,33 +156,7 @@ namespace ImageBinarizerLib
 
             return outArray;
         }
-        #endregion
-
-        #region RGBBinarize
-        /// <summary>
-        /// Binarize usign RGB threshold
-        /// </summary>
-        /// <param name="img"></param>
-        /// <returns></returns>
-        private double[,,] RGBBinarize(Bitmap img)
-        {
-            int hg = img.Height;
-            int wg = img.Width;
-            double[,,] outArray = new double[hg, wg, 3];
-
-            for (int i = 0; i < hg; i++)
-            {
-                for (int j = 0; j < wg; j++)
-                {
-                    outArray[i, j, 0] = (img.GetPixel(j, i).R > this.configuration.RedThreshold &&
-                                         img.GetPixel(j, i).G > this.configuration.GreenThreshold &&
-                                         img.GetPixel(j, i).B > this.configuration.BlueThreshold) ? this.m_white : this.m_black;
-                }
-            }
-
-            return outArray;
-        }
-
+        
         /// <summary>
         /// Binarize usign RGB threshold
         /// </summary>
@@ -299,7 +180,6 @@ namespace ImageBinarizerLib
 
             return outArray;
         }
-        #endregion
 
         /// <summary>
         /// method to call Binarizer on window
@@ -314,23 +194,10 @@ namespace ImageBinarizerLib
             this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
             if (this.m_TargetSize != null)
             {
-                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
-                imgWidth = bitmap.Width;
-                imgHeight = bitmap.Height;
+                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);                
             }
 
-            double[,,] inputData = new double[imgWidth, imgHeight, 3];
-
-            for (int i = 0; i < imgWidth; i++)
-            {
-                for (int j = 0; j < imgHeight; j++)
-                {
-                    Color color = bitmap.GetPixel(i, j);
-                    inputData[i, j, 0] = color.R;
-                    inputData[i, j, 1] = color.G;
-                    inputData[i, j, 2] = color.B;
-                }
-            }
+            double[,,] inputData = GetPixelColorUsingLockbits(bitmap);
 
             double[,,] outputData = GetBinary(inputData, false);
 
@@ -389,6 +256,75 @@ namespace ImageBinarizerLib
                 return new Size(width, height / 2);
 
             return new Size(defaultWidth, (int)(defaultWidth * ratio / 2));
+        }
+
+        /// <summary>
+        /// Get Pixel data in faster way
+        /// </summary>
+        /// <param name="getPixelBitmap"></param>
+        /// <returns></returns>
+        private double[,,] GetPixelColorUsingLockbits(Bitmap getPixelBitmap)
+        {
+            BitmapData bitmapData = getPixelBitmap.LockBits(new Rectangle(0, 0, getPixelBitmap.Width, getPixelBitmap.Height), ImageLockMode.ReadOnly, getPixelBitmap.PixelFormat);
+
+            double[,,] colorData = new double[getPixelBitmap.Width, getPixelBitmap.Height, 3];
+
+            int bytesPerPixel = Bitmap.GetPixelFormatSize(getPixelBitmap.PixelFormat) / 8;
+            int byteCount = bitmapData.Stride * getPixelBitmap.Height;
+            byte[] pixels = new byte[byteCount];
+            IntPtr ptrFirstPixel = bitmapData.Scan0;
+            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
+            int heightInPixels = bitmapData.Height;
+            int widthInBytes = bitmapData.Width * bytesPerPixel;
+
+            for (int y = 0; y < heightInPixels; y++)
+            {
+                int currentLine = y * bitmapData.Stride;
+                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
+                {
+                    colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x];
+                    colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
+                    colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x + 2];                    
+                }
+            }
+            
+            getPixelBitmap.UnlockBits(bitmapData);
+            return colorData;
+        }
+
+        /// <summary>
+        /// Set Pixel data in faster way
+        /// </summary>
+        /// <param name="data"></param>
+        private Bitmap SetPixelColorUsingLockbits(double[,,] data)
+        {
+            Bitmap processedBitmap = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
+            BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
+
+            int bytesPerPixel = Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
+            int byteCount = bitmapData.Stride * processedBitmap.Height;
+            byte[] pixels = new byte[byteCount];
+            IntPtr ptrFirstPixel = bitmapData.Scan0;
+            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
+            int heightInPixels = bitmapData.Height;
+            int widthInBytes = bitmapData.Width * bytesPerPixel;
+
+            for (int y = 0; y < heightInPixels; y++)
+            {
+                int currentLine = y * bitmapData.Stride;
+                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
+                {                    
+                    // calculate new pixel value
+                    pixels[currentLine + x] = (byte)data[x / bytesPerPixel, y, 2];
+                    pixels[currentLine + x + 1] = (byte)data[x / bytesPerPixel, y, 1];
+                    pixels[currentLine + x + 2] = (byte)data[x / bytesPerPixel, y, 0];
+                }
+            }
+
+            // copy modified bytes back
+            Marshal.Copy(pixels, 0, ptrFirstPixel, pixels.Length);
+            processedBitmap.UnlockBits(bitmapData);
+            return processedBitmap;
         }
     }
 }
