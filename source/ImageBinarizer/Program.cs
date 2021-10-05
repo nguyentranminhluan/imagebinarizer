@@ -47,7 +47,7 @@ namespace ImageBinarizerApp
 
             //PrintData();
             //Console.WriteLine(".------------------------------------------------------------------------------------------.");
-            Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.0.2]");
+            Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.1.0]");
             Console.WriteLine("    Copyright <c> daenet GmbH, All rights reserved.");
 
 
