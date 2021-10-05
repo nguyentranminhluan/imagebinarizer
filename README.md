@@ -48,7 +48,7 @@ This binarize image then can be used for many purposes, such as being used in co
 
 Another option to binarize the image is to get the inverse of it. The pictures below compare the normal binarized image (left) with the inverted binarized image (right):
 
-<img src="/images/NormalConvert.png" width="450"><img src="/images/InverseConvert.png" width="450">
+<img src="/images/NormalConvert.png" width="400"><img src="/images/InverseConvert.png" width="400">
 
 There are more interesting features to look into in this project: width and height of image customing, gray scale binarizing, color recognizing with thresholds setup, ...
 
