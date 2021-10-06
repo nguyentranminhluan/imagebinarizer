@@ -17,7 +17,7 @@ namespace ImageBinarizerLib
         /// </summary>
         /// <param name="bitmapInput"></param>
         /// <returns></returns>
-        private protected double[,,] GetPixelsColorsOnWin(Bitmap bitmapInput)
+        private protected double[,,] GetPixelsColors(Bitmap bitmapInput)
         {
             double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
 
@@ -54,7 +54,7 @@ namespace ImageBinarizerLib
         /// </summary>
         /// <param name="bitmapInput"></param>
         /// <returns></returns>
-        private protected double[,,] GetPixelsColorsOnLinux(SKBitmap bitmapInput)
+        private protected double[,,] GetPixelsColors(SKBitmap bitmapInput)
         {
             double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];            
 
@@ -72,9 +72,9 @@ namespace ImageBinarizerLib
                 int currentLine = y * stride;
                 for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
                 {
-                    colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x];
+                    colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x];
                     colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
-                    colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x + 2];
+                    colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x + 2];
                 }
             }
 

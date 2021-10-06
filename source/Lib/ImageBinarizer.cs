@@ -62,7 +62,7 @@ namespace ImageBinarizerLib
                 if (this.m_TargetSize != null)
                     img = new Bitmap(img, this.m_TargetSize.Value);
 
-                double[,,] resizedData = GetPixelsColorsOnWin(img);
+                double[,,] resizedData = GetPixelsColors(img);
                 return GetBinaryWithDataArray(resizedData);
             }               
 
@@ -203,7 +203,7 @@ namespace ImageBinarizerLib
                 bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);                
             }
 
-            double[,,] inputData = GetPixelsColorsOnWin(bitmap);
+            double[,,] inputData = GetPixelsColors(bitmap);
 
             double[,,] outputData = GetBinary(inputData, false);
 
@@ -213,24 +213,25 @@ namespace ImageBinarizerLib
                 writer.Write(stringArray.ToString());
             }
         }
+
         /// <summary>
         /// method to call Binarizer on Linux
         /// </summary>
         public void RunBinarizerOnLinux()
         {
-            SKBitmap bitmap = SKBitmap.Decode(this.configuration.InputImagePath);
+            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
 
-            int imgWidth = bitmap.Width;
-            int imgHeight = bitmap.Height;
+            int imgWidth = skBitmap.Width;
+            int imgHeight = skBitmap.Height;
 
             this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
             if (this.m_TargetSize != null)
             {
                 SKImageInfo info = new SKImageInfo(this.m_TargetSize.Value.Width, this.m_TargetSize.Value.Height, SKColorType.Rgba8888);
-                bitmap = SKBitmap.Decode(bitmap.Bytes, info);
+                skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
             }
 
-            double[,,] inputData = GetPixelsColorsOnLinux(bitmap);
+            double[,,] inputData = GetPixelsColors(skBitmap);
 
             double[,,] outputData = GetBinary(inputData, false);
 
