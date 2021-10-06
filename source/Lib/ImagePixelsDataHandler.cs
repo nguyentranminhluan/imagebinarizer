@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -12,30 +13,31 @@ namespace ImageBinarizerLib
     {
 
         /// <summary>
-        /// Get Pixel data in faster way
+        /// Get Pixels data on Win
         /// </summary>
-        /// <param name="getPixelBitmap"></param>
+        /// <param name="bitmapInput"></param>
         /// <returns></returns>
-        private protected double[,,] GetPixelsColors(Bitmap getPixelBitmap)
+        private protected double[,,] GetPixelsColorsOnWin(Bitmap bitmapInput)
         {
-            if (getPixelBitmap.PixelFormat == PixelFormat.Format8bppIndexed)
-                getPixelBitmap = new Bitmap(getPixelBitmap, getPixelBitmap.Width, getPixelBitmap.Height);
+            double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
 
-            BitmapData bitmapData = getPixelBitmap.LockBits(new Rectangle(0, 0, getPixelBitmap.Width, getPixelBitmap.Height), ImageLockMode.ReadOnly, getPixelBitmap.PixelFormat);
+            //
+            //Check bits depth of Image
+            if (Bitmap.GetPixelFormatSize(bitmapInput.PixelFormat) / 8 < 3)
+                bitmapInput = new Bitmap(bitmapInput, bitmapInput.Width, bitmapInput.Height);
 
-            double[,,] colorData = new double[getPixelBitmap.Width, getPixelBitmap.Height, 3];
-
-            int bytesPerPixel = Bitmap.GetPixelFormatSize(getPixelBitmap.PixelFormat) / 8;
-            int byteCount = bitmapData.Stride * getPixelBitmap.Height;
-            byte[] pixels = new byte[byteCount];
-            IntPtr ptrFirstPixel = bitmapData.Scan0;
-            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
-            int heightInPixels = bitmapData.Height;
-            int widthInBytes = bitmapData.Width * bytesPerPixel;
+            //
+            //Get image pixels array and stride of image
+            byte[] pixels = bitmapInput.GetBytes();
+            int stride = bitmapInput.GetStride();
+            
+            int bytesPerPixel = Bitmap.GetPixelFormatSize(bitmapInput.PixelFormat) / 8;
+            int heightInPixels = bitmapInput.Height;
+            int widthInBytes = bitmapInput.Width * bytesPerPixel;
 
             for (int y = 0; y < heightInPixels; y++)
             {
-                int currentLine = y * bitmapData.Stride;
+                int currentLine = y * stride;
                 for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
                 {
                     colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x];
@@ -44,7 +46,38 @@ namespace ImageBinarizerLib
                 }
             }
 
-            getPixelBitmap.UnlockBits(bitmapData);
+            return colorData;
+        }
+
+        /// <summary>
+        /// Get Pixels data on Linux
+        /// </summary>
+        /// <param name="bitmapInput"></param>
+        /// <returns></returns>
+        private protected double[,,] GetPixelsColorsOnLinux(SKBitmap bitmapInput)
+        {
+            double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];            
+
+            //
+            //Get image pixels array and stride of image
+            byte[] pixels = bitmapInput.Bytes;
+            int stride = bitmapInput.Info.RowBytes;
+
+            int bytesPerPixel = bitmapInput.Info.BytesPerPixel;
+            int heightInPixels = bitmapInput.Height;
+            int widthInBytes = bitmapInput.Width * bytesPerPixel;
+
+            for (int y = 0; y < heightInPixels; y++)
+            {
+                int currentLine = y * stride;
+                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
+                {
+                    colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x];
+                    colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
+                    colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x + 2];
+                }
+            }
+
             return colorData;
         }
 
@@ -54,11 +87,11 @@ namespace ImageBinarizerLib
         /// <param name="data"></param>
         private protected Bitmap SetPixelsColors(double[,,] data)
         {
-            Bitmap processedBitmap = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
-            BitmapData bitmapData = processedBitmap.LockBits(new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height), ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
+            Bitmap bitmapOutput = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
+            BitmapData bitmapData = bitmapOutput.LockBits(new Rectangle(0, 0, bitmapOutput.Width, bitmapOutput.Height), ImageLockMode.ReadWrite, bitmapOutput.PixelFormat);
 
-            int bytesPerPixel = Bitmap.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
-            int byteCount = bitmapData.Stride * processedBitmap.Height;
+            int bytesPerPixel = Bitmap.GetPixelFormatSize(bitmapOutput.PixelFormat) / 8;
+            int byteCount = bitmapData.Stride * bitmapOutput.Height;
             byte[] pixels = new byte[byteCount];
             IntPtr ptrFirstPixel = bitmapData.Scan0;
             int heightInPixels = bitmapData.Height;
@@ -78,8 +111,8 @@ namespace ImageBinarizerLib
 
             // copy modified bytes back
             Marshal.Copy(pixels, 0, ptrFirstPixel, pixels.Length);
-            processedBitmap.UnlockBits(bitmapData);
-            return processedBitmap;
+            bitmapOutput.UnlockBits(bitmapData);
+            return bitmapOutput;
         }
     }
 }

@@ -10,7 +10,6 @@ namespace ImageBinarizerLib
     /// </summary>
     public static class ImageBinarizerExtension
     {       
-
         /// <summary>
         /// Creating Object of Image Binarization in this method and adding it to Api
         /// </summary>

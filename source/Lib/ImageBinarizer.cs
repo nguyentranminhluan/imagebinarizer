@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using LearningFoundation;
+using SkiaSharp;
 
 namespace ImageBinarizerLib
 {
@@ -61,7 +62,7 @@ namespace ImageBinarizerLib
                 if (this.m_TargetSize != null)
                     img = new Bitmap(img, this.m_TargetSize.Value);
 
-                double[,,] resizedData = GetPixelsColors(img);
+                double[,,] resizedData = GetPixelsColorsOnWin(img);
                 return GetBinaryWithDataArray(resizedData);
             }               
 
@@ -187,7 +188,7 @@ namespace ImageBinarizerLib
         }
 
         /// <summary>
-        /// method to call Binarizer on window
+        /// method to call Binarizer on Window
         /// </summary>
         public void RunBinarizerOnWin()
         {
@@ -202,7 +203,34 @@ namespace ImageBinarizerLib
                 bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);                
             }
 
-            double[,,] inputData = GetPixelsColors(bitmap);
+            double[,,] inputData = GetPixelsColorsOnWin(bitmap);
+
+            double[,,] outputData = GetBinary(inputData, false);
+
+            StringBuilder stringArray = CreateTextFromBinary(outputData);
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
+            {
+                writer.Write(stringArray.ToString());
+            }
+        }
+        /// <summary>
+        /// method to call Binarizer on Linux
+        /// </summary>
+        public void RunBinarizerOnLinux()
+        {
+            SKBitmap bitmap = SKBitmap.Decode(this.configuration.InputImagePath);
+
+            int imgWidth = bitmap.Width;
+            int imgHeight = bitmap.Height;
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                SKImageInfo info = new SKImageInfo(this.m_TargetSize.Value.Width, this.m_TargetSize.Value.Height, SKColorType.Rgba8888);
+                bitmap = SKBitmap.Decode(bitmap.Bytes, info);
+            }
+
+            double[,,] inputData = GetPixelsColorsOnLinux(bitmap);
 
             double[,,] outputData = GetBinary(inputData, false);
 
