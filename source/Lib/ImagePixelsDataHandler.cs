@@ -18,6 +18,9 @@ namespace ImageBinarizerLib
         /// <returns></returns>
         private protected double[,,] GetPixelsColors(Bitmap getPixelBitmap)
         {
+            if (getPixelBitmap.PixelFormat == PixelFormat.Format8bppIndexed)
+                getPixelBitmap = new Bitmap(getPixelBitmap, getPixelBitmap.Width, getPixelBitmap.Height);
+
             BitmapData bitmapData = getPixelBitmap.LockBits(new Rectangle(0, 0, getPixelBitmap.Width, getPixelBitmap.Height), ImageLockMode.ReadOnly, getPixelBitmap.PixelFormat);
 
             double[,,] colorData = new double[getPixelBitmap.Width, getPixelBitmap.Height, 3];
@@ -58,7 +61,6 @@ namespace ImageBinarizerLib
             int byteCount = bitmapData.Stride * processedBitmap.Height;
             byte[] pixels = new byte[byteCount];
             IntPtr ptrFirstPixel = bitmapData.Scan0;
-            Marshal.Copy(ptrFirstPixel, pixels, 0, pixels.Length);
             int heightInPixels = bitmapData.Height;
             int widthInBytes = bitmapData.Width * bytesPerPixel;
 
