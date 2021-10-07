@@ -37,14 +37,15 @@ namespace ImageBinarizerApp
 
         //    }
         //}
-
+        //
+        //private string AppLogo = "00000111000001";
         /// <summary>
         /// Main entry point for Program
         /// </summary>
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-
+           
             //PrintData();
             //Console.WriteLine(".------------------------------------------------------------------------------------------.");
             Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.1.0]");
@@ -74,8 +75,8 @@ namespace ImageBinarizerApp
 
             try
             {
-                ImageBinarizer img = new ImageBinarizer(configuration as BinarizerParams);
-                img.RunBinarizerOnWin();
+                ImageBinarizer img = new ImageBinarizer(configuration);
+                img.Run();
             }
             catch (Exception e)
             {
