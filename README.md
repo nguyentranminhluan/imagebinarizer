@@ -73,3 +73,5 @@ There are more interesting features (WHY it is intersting) to look into in this 
 Even image contour recognition can also be done with some tries in thresholds setup as shown below.
 
 <img src="/images/Contour.png">
+
+### Create image in a custom scale
