@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizer", "ImageBinarizer\ImageBinarizer.csproj", "{DD113A82-8548-4AA4-AC9A-6563C864DE89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinarizerUnitTest", "BinarizerUnitTest\BinarizerUnitTest.csproj", "{8D56153A-839C-40DF-BA72-6310FC7D925E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD113A82-8548-4AA4-AC9A-6563C864DE89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D56153A-839C-40DF-BA72-6310FC7D925E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D56153A-839C-40DF-BA72-6310FC7D925E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D56153A-839C-40DF-BA72-6310FC7D925E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D56153A-839C-40DF-BA72-6310FC7D925E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
