@@ -81,6 +81,7 @@ namespace ImageBinarizerLib
             return colorData;
         }
 
+        
         /// <summary>
         /// Set Pixel data in faster way
         /// </summary>
