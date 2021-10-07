@@ -2,7 +2,7 @@
   "profiles": {
     "ImageBinarizerApp": {
       "commandName": "Project",
-      "commandLineArgs": "--input-image \"C:\\Users\\DamirDobric\\OneDrive - DAENET GmbH\\Photos\\Damir\\_A099898_Christina_Maechler Kopie 2.jpg\" --output-image out.txt"
+      "commandLineArgs": "--input-image .\\CommonFiles\\daenet.png --output-image .\\CommonFiles\\out.txt"
     }
   }
 }
