@@ -4,11 +4,24 @@ Performs binarization of images. It converts an image to the 2D representation o
 
 ## Example:
 
-This is the logo of Daenet:
+This is the original logo of daenet:
 
 ![](/images/daenet.png)         
 
-Use this image as an input and set the custom width to be 120, the Binarized image is generated as below:
+If you want to create the binrized representation of the same image you can execute following command:
+
+~~~
+command
+~~~
+
+This command will create th esame image in binarized form by using threshold values ..... TODO. and save it to the folfder/file...
+If you want to change the size of the image you can try follosing command....
+
+~~~
+command
+~~~
+
+!!!!Use this image as an input and set the custom width to be 120, the Binarized image is generated as below:
 
 ```
 111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
@@ -46,11 +59,16 @@ This binarize image then can be used for many purposes, such as being used in co
 
 ![](/images/console.png)
 
+### Inverted Image
 Another option to binarize the image is to get the inverse of it. The pictures below compare the normal binarized image (left) with the inverted binarized image (right):
 
 <img src="/images/NormalConvert.png" width="400"><img src="/images/InverseConvert.png" width="400">
 
-There are more interesting features to look into in this project: width and height of image customing, gray scale binarizing, color recognizing with thresholds setup, ...
+### Gray Scale
+
+Describe which issues we have with binarization. Then introduce gray-scale. Excplain how gray-scale can solve the issue.
+
+There are more interesting features (WHY it is intersting) to look into in this project: width and height of image customing, gray scale binarizing, color recognizing with thresholds setup, ...
 
 Even image contour recognition can also be done with some tries in thresholds setup as shown below.
 
