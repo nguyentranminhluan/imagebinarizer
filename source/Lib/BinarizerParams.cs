@@ -5,7 +5,7 @@ using System.Text;
 namespace ImageBinarizerLib
 {
     /// <summary>
-    /// Object contains binarizer parameters for the Image
+    /// Object contains binarizer parameters used for binarization.
     /// </summary>
     public class BinarizerParams
     {

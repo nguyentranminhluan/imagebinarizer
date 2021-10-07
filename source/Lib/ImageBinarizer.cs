@@ -35,49 +35,75 @@ namespace ImageBinarizerLib
             }
         }
 
+        #region Public Methods
+
         /// <summary>
-        /// Method of Interface Ipipline
+        /// If you use the binarizer inside of the LearningApiPipeline, you should use this method.
         /// </summary>
         /// <param name="data">this is the double data coming from unitest.</param>
         /// <param name="ctx">this define the Interface IContext for Data descriptor</param>
         /// <returns></returns>
         public double[,,] Run(double[,,] data, IContext ctx)
         {
-            return GetBinary(data);
+            return GetBinary(ResizeImageData(data));
         }
 
         /// <summary>
-        /// Gets double array representation of the image.I.E.: 010000111000
+        /// Runs the binarization of the image.
         /// </summary>
-        /// <params name="img">Image instance. Typically bitmap.</params>
-        /// <returns></returns>
-        public double[,,] GetBinary(double[,,] data, bool needResize = true)
+        public void Run()
         {
-            if (needResize)
-            {                
-                Bitmap img = SetPixelsColors(data);
+            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
 
-                this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
-                if (this.m_TargetSize != null)
-                    img = new Bitmap(img, this.m_TargetSize.Value);
+            int imgWidth = bitmap.Width;
+            int imgHeight = bitmap.Height;
 
-                double[,,] resizedData = GetPixelsColors(img);
-                return GetBinaryWithDataArray(resizedData);
-            }               
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
+            }
 
-            return GetBinaryWithDataArray(data);
+            double[,,] inputData = GetPixelsColors(bitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            StringBuilder sb = CreateTextFromBinary(outputData);
+
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
+            {
+                writer.Write(sb.ToString());
+            }
         }
-        
+
+        #endregion
+
+
+        private double[,,] ResizeImageData(double[,,] data)
+        {
+            Bitmap img = SetPixelsColors(data);
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
+
+            if (this.m_TargetSize != null)
+                img = new Bitmap(img, this.m_TargetSize.Value);
+
+            double[,,] resizedData = GetPixelsColors(img);
+
+            data = resizedData;
+            return data;
+        }
+
         /// <summary>
         /// Get Binary array with input array double
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private double[,,] GetBinaryWithDataArray(double[,,] data)
+        private double[,,] GetBinary(double[,,] data)
         {
 
-            //The average is calculated taking the parameters.
-            //When no thresholds are given, they will be assigned automatically the average values.            
+            // The average is calculated taking the parameters.
+            // When no thresholds are given, they will be assigned automatically the average values.            
             CalcAverageRGBGrey(data);
 
             if (!this.configuration.GreyScale)
@@ -87,11 +113,11 @@ namespace ImageBinarizerLib
 
             return GreyScaleBinarize(data);
         }
-        
+
         /// <summary>
         /// Average values calculation 
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="data">xz\vxxvcc</param>
         private void CalcAverageRGBGrey(double[,,] data)
         {
             int hg = data.GetLength(1);
@@ -161,7 +187,7 @@ namespace ImageBinarizerLib
 
             return outArray;
         }
-        
+
         /// <summary>
         /// Binarize usign RGB threshold
         /// </summary>
@@ -186,32 +212,7 @@ namespace ImageBinarizerLib
             return outArray;
         }
 
-        /// <summary>
-        /// method to call Binarizer on window
-        /// </summary>
-        public void RunBinarizerOnWin()
-        {
-            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
 
-            int imgWidth = bitmap.Width;
-            int imgHeight = bitmap.Height;
-
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
-            if (this.m_TargetSize != null)
-            {
-                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);                
-            }
-
-            double[,,] inputData = GetPixelsColors(bitmap);
-
-            double[,,] outputData = GetBinary(inputData, false);
-
-            StringBuilder stringArray = CreateTextFromBinary(outputData);
-            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
-            {
-                writer.Write(stringArray.ToString());
-            }
-        }
 
         /// <summary>
         /// create string array from output
@@ -233,6 +234,38 @@ namespace ImageBinarizerLib
 
             return stringArray;
         }
+
+        /// <summary>
+        /// method to call Binarizer on window
+        /// </summary>
+        public void RunBinarizerOnWin()
+        {
+            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
+
+            int imgWidth = bitmap.Width;
+            int imgHeight = bitmap.Height;
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
+            }
+
+            double[,,] inputData = GetPixelsColors(bitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            StringBuilder stringArray = CreateTextFromBinary(outputData);
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
+            {
+                writer.Write(stringArray.ToString());
+            }
+        }
+
+        //private Size? GetTargetSizeFromConfigOrDefault2(int width = 1200, int height = 1000)
+        //{
+
+        //}
 
         /// <summary>
         /// Get size of binarized image
