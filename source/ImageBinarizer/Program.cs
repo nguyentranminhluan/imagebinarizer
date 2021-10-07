@@ -76,7 +76,8 @@ namespace ImageBinarizerApp
             try
             {
                 ImageBinarizer img = new ImageBinarizer(configuration);
-                img.Run();
+                img.RunBinarizerOnLinux();
+                Console.WriteLine($"{configuration.BlueThreshold}, {configuration.GreenThreshold}, {configuration.RedThreshold}");
             }
             catch (Exception e)
             {

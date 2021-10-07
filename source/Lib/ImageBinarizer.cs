@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using LearningFoundation;
+using SkiaSharp;
 
 namespace ImageBinarizerLib
 {
@@ -73,6 +74,61 @@ namespace ImageBinarizerLib
             using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
             {
                 writer.Write(sb.ToString());
+            }
+        }
+
+        /// <summary>
+        /// method to call Binarizer on window
+        /// </summary>
+        public void RunBinarizerOnWin()
+        {
+            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
+
+            int imgWidth = bitmap.Width;
+            int imgHeight = bitmap.Height;
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
+            }
+
+            double[,,] inputData = GetPixelsColors(bitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            StringBuilder stringArray = CreateTextFromBinary(outputData);
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
+            {
+                writer.Write(stringArray.ToString());
+            }
+        }
+
+        /// <summary>
+        /// method to call Binarizer on Linux
+        /// </summary>
+        public void RunBinarizerOnLinux()
+        {
+            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
+
+            int imgWidth = skBitmap.Width;
+            int imgHeight = skBitmap.Height;
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                SKImageInfo info = new SKImageInfo(this.m_TargetSize.Value.Width, this.m_TargetSize.Value.Height, SKColorType.Rgba8888);
+                skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
+            }
+
+            double[,,] inputData = GetPixelsColors(skBitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            StringBuilder stringArray = CreateTextFromBinary(outputData);
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
+            {
+                writer.Write(stringArray.ToString());
             }
         }
 
@@ -233,40 +289,8 @@ namespace ImageBinarizerLib
             }
 
             return stringArray;
-        }
-
-        /// <summary>
-        /// method to call Binarizer on window
-        /// </summary>
-        public void RunBinarizerOnWin()
-        {
-            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
-
-            int imgWidth = bitmap.Width;
-            int imgHeight = bitmap.Height;
-
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
-            if (this.m_TargetSize != null)
-            {
-                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);
-            }
-
-            double[,,] inputData = GetPixelsColors(bitmap);
-
-            double[,,] outputData = GetBinary(inputData);
-
-            StringBuilder stringArray = CreateTextFromBinary(outputData);
-            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
-            {
-                writer.Write(stringArray.ToString());
-            }
-        }
-
-        //private Size? GetTargetSizeFromConfigOrDefault2(int width = 1200, int height = 1000)
-        //{
-
-        //}
-
+        }       
+        
         /// <summary>
         /// Get size of binarized image
         /// </summary>
@@ -285,15 +309,15 @@ namespace ImageBinarizerLib
             int defaultWidth = 1200;
 
             if (this.configuration.ImageHeight > 0)
-                return new Size((int)(this.configuration.ImageHeight * 2 / ratio), this.configuration.ImageHeight);
+                return new Size((int)(this.configuration.ImageHeight / ratio), this.configuration.ImageHeight);
 
             if (this.configuration.ImageWidth > 0)
-                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio / 2));
+                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
 
             if (defaultWidth > width)
-                return new Size(width, height / 2);
+                return new Size(width, height);
 
-            return new Size(defaultWidth, (int)(defaultWidth * ratio / 2));
+            return new Size(defaultWidth, (int)(defaultWidth * ratio));
         }
     }
 }

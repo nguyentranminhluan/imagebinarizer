@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -48,7 +49,38 @@ namespace ImageBinarizerLib
             return colorData;
         }
 
-        
+        /// <summary>
+        /// Get Pixels data on Linux
+        /// </summary>
+        /// <param name="bitmapInput"></param>
+        /// <returns></returns>
+        private protected double[,,] GetPixelsColors(SKBitmap bitmapInput)
+        {
+            double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
+
+            //
+            //Get image pixels array and stride of image
+            byte[] pixels = bitmapInput.Bytes;
+            int stride = bitmapInput.Info.RowBytes;
+
+            int bytesPerPixel = bitmapInput.Info.BytesPerPixel;
+            int heightInPixels = bitmapInput.Height;
+            int widthInBytes = bitmapInput.Width * bytesPerPixel;
+
+            for (int y = 0; y < heightInPixels; y++)
+            {
+                int currentLine = y * stride;
+                for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
+                {
+                    colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x];
+                    colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
+                    colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x + 2];
+                }
+            }
+
+            return colorData;
+        }
+
         /// <summary>
         /// Set Pixel data in faster way
         /// </summary>
