@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace ImageBinarizerLib
+namespace ImageBinarizerLib.ExtensionMethod
 {
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace ImageBinarizerLib
         /// <summary>
         /// Get Bytes array of Image
         /// </summary>
-        /// <param name="bitmapInput"></param>
+        /// <param name="bitmapInput">this bitmap object</param>
         /// <returns></returns>
         public static byte[] GetBytes(this Bitmap bitmapInput)
         {
@@ -30,9 +30,9 @@ namespace ImageBinarizerLib
         }
 
         /// <summary>
-        /// Get stride of Image
+        /// Get stride of Image (number of bit per row
         /// </summary>
-        /// <param name="bitmapInput"></param>
+        /// <param name="bitmapInput">this bitmap object</param>
         /// <returns></returns>
         public static int GetStride(this Bitmap bitmapInput)
         {

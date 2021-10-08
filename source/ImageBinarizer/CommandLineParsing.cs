@@ -44,17 +44,18 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Constructor to pass the arguments
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">input arguments</param>
         public CommandLineParsing(string[] args)
         {
             command = args.ToList();
         }
 
         /// <summary>
-        /// Conducting parsing process
+        /// Conducting parsing process that map the input argument to ImageBinarizerApp.Entities.BinarizerConfiguration object.
         /// </summary>
-        /// <param name="Configurations"></param>
-        /// <returns></returns>
+        /// <param name="Configurations">assign output BinarizerConfiguration object to this variable.</param>
+        /// <param name="errMsg">assign output error message to this variable.</param>
+        /// <returns>True if no error and false if error exit or help argument called.</returns>
         public bool Parse(out BinarizerConfiguration Configurations, out string errMsg)
         {
             Configurations = new BinarizerConfiguration();
@@ -84,19 +85,22 @@ namespace ImageBinarizerApp
 
         }
 
+        /// <summary>
+        /// Corect the arguments input that received type boolean.
+        /// </summary>
         private void CorrectArgsIfRequired()
         {
             //
             //Check if help, inverse, or Geryscale argument was called
-            CheckHelp();
-            CheckInverse();
-            CheckGreyScale();
+            CheckAndCorrectHelpArgument();
+            CheckAndCorrectInverseArgument();
+            CheckAndCorrectGreyScaleArgument();
         }
 
         /// <summary>
-        /// Checking GreyScale argument
+        /// Checking GreyScale argument.
         /// </summary>
-        private void CheckGreyScale()
+        private void CheckAndCorrectGreyScaleArgument()
         {
             bool greyScale = false;
             while (command.Contains("-gs"))
@@ -112,9 +116,9 @@ namespace ImageBinarizerApp
         }
 
         /// <summary>
-        /// Checking inverse argument
+        /// Checking inverse argument.
         /// </summary>
-        private void CheckInverse()
+        private void CheckAndCorrectInverseArgument()
         {
             bool inverse = false;
             while (command.Contains("-inv"))
@@ -130,9 +134,9 @@ namespace ImageBinarizerApp
         }
 
         /// <summary>
-        /// Checking help argument
+        /// Checking help argument.
         /// </summary>
-        private void CheckHelp()
+        private void CheckAndCorrectHelpArgument()
         {
             bool help = false;
             foreach (var arg in HelpArguments)
@@ -151,10 +155,10 @@ namespace ImageBinarizerApp
         }
 
         /// <summary>
-        /// Check validation of arguments
+        /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object as input and check if user input arguments are correct.
         /// </summary>
-        /// <param name="Configurations"></param>
-        /// <param name="errMsg"></param>
+        /// <param name="Configurations">Configuration for binarization</param>
+        /// <param name="errMsg">output error message</param>
         /// <returns></returns>
         private bool ValidateArgs(BinarizerConfiguration Configurations, out string errMsg)
         {
@@ -183,8 +187,9 @@ namespace ImageBinarizerApp
                 {
                     errMsg = "Output Directory doesn't exist.";
                     return false;
-                }
+                }                
             }
+            Configurations.OutputImagePath = Path.GetFullPath(Configurations.OutputImagePath);
 
             //
             //Check if width or height input is valid

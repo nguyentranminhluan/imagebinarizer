@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ImageBinarizerLib
+namespace ImageBinarizerLib.Entities
 {
     /// <summary>
     /// Object contains binarizer parameters used for binarization.
@@ -10,52 +10,52 @@ namespace ImageBinarizerLib
     public class BinarizerParams
     {
         /// <summary>
-        /// Input path
+        /// Input path of the input image
         /// </summary>
         public string InputImagePath { get; set; } = "";
 
         /// <summary>
-        /// Output path
+        /// Output path where the binarized image file are save
         /// </summary>
         public string OutputImagePath { get; set; } = "";
 
         /// <summary>
-        /// image width
+        /// Custom width for binarization
         /// </summary>
         public int ImageWidth { get; set; } = 0;
 
         /// <summary>
-        /// image height
+        /// Custom height for binarization
         /// </summary>
         public int ImageHeight { get; set; } = 0;
 
         /// <summary>
-        /// Red threshold
+        /// Red threshold for binarization
         /// </summary>
         public int RedThreshold { get; set; } = -1;
 
         /// <summary>
-        /// Green threshold
+        /// Green threshold for binarization
         /// </summary>
         public int GreenThreshold { get; set; } = -1;
 
         /// <summary>
-        /// Blue threshold
+        /// Blue threshold for binarization
         /// </summary>
         public int BlueThreshold { get; set; } = -1;
 
         /// <summary>
-        /// Grey threshold
+        /// Grey threshold for binarization
         /// </summary>
         public int GreyThreshold { get; set; } = -1;
 
         /// <summary>
-        /// Inverse of the image
+        /// Determine if Inverse of the image is requested
         /// </summary>
         public bool Inverse { get; set; } = false;
 
         /// <summary>
-        /// Calculate base on grey scale threshold
+        /// Determine if binarization base on grey scale threshold
         /// </summary>
         public bool GreyScale { get; set; } = false;
     }

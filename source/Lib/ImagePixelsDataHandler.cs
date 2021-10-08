@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using ImageBinarizerLib.ExtensionMethod;
+using SkiaSharp;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -13,10 +14,10 @@ namespace ImageBinarizerLib
     {
 
         /// <summary>
-        /// Get Pixels data on Win
+        /// Get Pixels data from System.Drawing.Bitmap object.
         /// </summary>
-        /// <param name="bitmapInput"></param>
-        /// <returns></returns>
+        /// <param name="bitmapInput">input Bitmap</param>
+        /// <returns>3D array of color data</returns>
         private protected double[,,] GetPixelsColors(Bitmap bitmapInput)
         {
             double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
@@ -50,10 +51,10 @@ namespace ImageBinarizerLib
         }
 
         /// <summary>
-        /// Get Pixels data on Linux
+        /// Get Pixels data from SkiaSharp.SKBitmap object.
         /// </summary>
-        /// <param name="bitmapInput"></param>
-        /// <returns></returns>
+        /// <param name="bitmapInput">input Bitmap</param>
+        /// <returns>3D array of color data</returns>
         private protected double[,,] GetPixelsColors(SKBitmap bitmapInput)
         {
             double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
@@ -82,9 +83,10 @@ namespace ImageBinarizerLib
         }
 
         /// <summary>
-        /// Set Pixel data in faster way
+        /// Set Pixel data to System.Drawing.Bitmap object
         /// </summary>
         /// <param name="data"></param>
+        /// <returns>System.Drawing.Bitmap object</returns>
         private protected Bitmap SetPixelsColors(double[,,] data)
         {
             Bitmap bitmapOutput = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
