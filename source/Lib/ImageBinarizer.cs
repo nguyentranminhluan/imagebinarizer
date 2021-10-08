@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using ImageBinarizerLib.Entities;
 using LearningFoundation;
 using SkiaSharp;
 
@@ -24,8 +25,9 @@ namespace ImageBinarizerLib
         private Size? m_TargetSize;
 
         /// <summary>
-        /// By default constructor without parameter
+        /// Constructor that takes BinarizerParams as input to assign the binarizer configuration to the object.
         /// </summary>
+        /// <param name="configuration"></param>
         public ImageBinarizer(BinarizerParams configuration)
         {
             this.configuration = configuration;
@@ -36,49 +38,81 @@ namespace ImageBinarizerLib
             }
         }
 
+        #region Public Methods
+
         /// <summary>
-        /// Method of Interface Ipipline
+        /// If you use the binarizer inside of the LearningApiPipeline, you should use this method.
         /// </summary>
         /// <param name="data">this is the double data coming from unitest.</param>
         /// <param name="ctx">this define the Interface IContext for Data descriptor</param>
         /// <returns></returns>
         public double[,,] Run(double[,,] data, IContext ctx)
         {
-            return GetBinary(data);
+            return GetBinary(ResizeImageData(data));
         }
 
         /// <summary>
-        /// Gets double array representation of the image.I.E.: 010000111000
+        /// Method to call Binarizer outside the LearningApiPipeline
         /// </summary>
-        /// <params name="img">Image instance. Typically bitmap.</params>
-        /// <returns></returns>
-        public double[,,] GetBinary(double[,,] data, bool needResize = true)
+        public void Run()
         {
-            if (needResize)
-            {                
-                Bitmap img = SetPixelsColors(data);
+            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
 
-                this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
-                if (this.m_TargetSize != null)
-                    img = new Bitmap(img, this.m_TargetSize.Value);
+            int imgWidth = skBitmap.Width;
+            int imgHeight = skBitmap.Height;
+            SKImageInfo info = new SKImageInfo(imgWidth, imgHeight, SKColorType.Rgba8888);
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                info.Width = this.m_TargetSize.Value.Width;
+                info.Height = this.m_TargetSize.Value.Height;                
+            }
+            skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
 
-                double[,,] resizedData = GetPixelsColors(img);
-                return GetBinaryWithDataArray(resizedData);
-            }               
+            double[,,] inputData = GetPixelsColors(skBitmap);
 
-            return GetBinaryWithDataArray(data);
+            double[,,] outputData = GetBinary(inputData);
+
+            StringBuilder sb = CreateTextFromBinary(outputData);
+            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
+            {
+                writer.Write(sb.ToString());
+            }
         }
-        
+
+        #endregion
+
         /// <summary>
-        /// Get Binary array with input array double
+        /// Resize the bimap with provide input. The method take 3D array of color data as input
+        /// and assigns these to the bitmap to peform resizing process
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        private double[,,] GetBinaryWithDataArray(double[,,] data)
+        /// <param name="data">Data of bitmap for binarization</param>
+        /// <returns>3D resized array for binarization</returns>
+        private double[,,] ResizeImageData(double[,,] data)
+        {
+            Bitmap img = SetPixelsColors(data);
+
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
+
+            if (this.m_TargetSize != null)
+                img = new Bitmap(img, this.m_TargetSize.Value);
+
+            double[,,] resizedData = GetPixelsColors(img);
+
+            return resizedData;             
+        }
+
+        /// <summary>
+        /// Get Binary array with input array double. The method take 3D array of color data as input
+        /// and perform the binarization.
+        /// </summary>
+        /// <param name="data">Data of bitmap for binarization</param>
+        /// <returns>3D binarized array</returns>
+        private double[,,] GetBinary(double[,,] data)
         {
 
-            //The average is calculated taking the parameters.
-            //When no thresholds are given, they will be assigned automatically the average values.            
+            // The average is calculated taking the parameters.
+            // When no thresholds are given, they will be assigned automatically the average values.            
             CalcAverageRGBGrey(data);
 
             if (!this.configuration.GreyScale)
@@ -88,11 +122,13 @@ namespace ImageBinarizerLib
 
             return GreyScaleBinarize(data);
         }
-        
+
         /// <summary>
-        /// Average values calculation 
+        /// Average values calculation. The method take 3D array of color data as input 
+        /// to set the threshold for Red, Green, Blue, and Grey automatically
+        /// if these data are not provided by user.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="data">Data of bitmap for binarization</param>
         private void CalcAverageRGBGrey(double[,,] data)
         {
             int hg = data.GetLength(1);
@@ -101,6 +137,8 @@ namespace ImageBinarizerLib
             const int constWidth = 4000;
             const int constHeight = 4000;
 
+            //
+            //divide the bitmap into supbitmap before calculating sum to avoid overflow
             double[,] sumR = new double[wg / constWidth + 1, hg / constHeight + 1];
             double[,] sumG = new double[wg / constWidth + 1, hg / constHeight + 1];
             double[,] sumB = new double[wg / constWidth + 1, hg / constHeight + 1];
@@ -141,10 +179,11 @@ namespace ImageBinarizerLib
         }
 
         /// <summary>
-        /// Binarize using grey scale threshold
+        /// Binarize using grey scale threshold. The method take 3D array of color data as input 
+        /// and return the 3D binarized array as output.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">Data of bitmap for binarization</param>
+        /// <returns>3D binarized array</returns>
         private double[,,] GreyScaleBinarize(double[,,] data)
         {
             int hg = data.GetLength(1);
@@ -155,6 +194,7 @@ namespace ImageBinarizerLib
             {
                 for (int j = 0; j < wg; j++)
                 {
+                    //Compare value to Grey threshold for binarization  
                     outArray[i, j, 0] = ((0.299 * data[j, i, 0] + 0.587 * data[j, i, 1] +
                        0.114 * data[j, i, 2]) > this.configuration.GreyThreshold) ? this.m_white : this.m_black;
                 }
@@ -162,12 +202,13 @@ namespace ImageBinarizerLib
 
             return outArray;
         }
-        
+
         /// <summary>
-        /// Binarize usign RGB threshold
+        /// Binarize using RGB threshold. The method take 3D array of color data as input and 
+        /// return the 3D binarized array as output 
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">Data of bitmap for binarization</param>
+        /// <returns>3D binarized array</returns>
         private double[,,] RgbScaleBinarize(double[,,] data)
         {
             int hg = data.GetLength(1);
@@ -178,6 +219,7 @@ namespace ImageBinarizerLib
             {
                 for (int j = 0; j < wg; j++)
                 {
+                    //Compare value to RGB threshold for binarization                    
                     outArray[i, j, 0] = (data[j, i, 0] > this.configuration.RedThreshold &&
                                          data[j, i, 1] > this.configuration.GreenThreshold &&
                                          data[j, i, 2] > this.configuration.BlueThreshold) ? this.m_white : this.m_black;
@@ -187,109 +229,60 @@ namespace ImageBinarizerLib
             return outArray;
         }
 
-        /// <summary>
-        /// method to call Binarizer on Window
-        /// </summary>
-        public void RunBinarizerOnWin()
-        {
-            Bitmap bitmap = new Bitmap(this.configuration.InputImagePath);
 
-            int imgWidth = bitmap.Width;
-            int imgHeight = bitmap.Height;
-
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
-            if (this.m_TargetSize != null)
-            {
-                bitmap = new Bitmap(bitmap, this.m_TargetSize.Value);                
-            }
-
-            double[,,] inputData = GetPixelsColors(bitmap);
-
-            double[,,] outputData = GetBinary(inputData, false);
-
-            StringBuilder stringArray = CreateTextFromBinary(outputData);
-            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
-            {
-                writer.Write(stringArray.ToString());
-            }
-        }
 
         /// <summary>
-        /// method to call Binarizer on Linux
+        /// Create string builder from output data
         /// </summary>
-        public void RunBinarizerOnLinux()
-        {
-            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
-
-            int imgWidth = skBitmap.Width;
-            int imgHeight = skBitmap.Height;
-
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
-            if (this.m_TargetSize != null)
-            {
-                SKImageInfo info = new SKImageInfo(this.m_TargetSize.Value.Width, this.m_TargetSize.Value.Height, SKColorType.Rgba8888);
-                skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
-            }
-
-            double[,,] inputData = GetPixelsColors(skBitmap);
-
-            double[,,] outputData = GetBinary(inputData, false);
-
-            StringBuilder stringArray = CreateTextFromBinary(outputData);
-            using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
-            {
-                writer.Write(stringArray.ToString());
-            }
-        }
-
-        /// <summary>
-        /// create string array from output
-        /// </summary>
-        /// <param name="outputData"></param>
-        /// <returns></returns>
+        /// <param name="outputData">Data after binarization</param>
+        /// <returns>String builder</returns>
         private static StringBuilder CreateTextFromBinary(double[,,] outputData)
         {
-            StringBuilder stringArray = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             for (int i = 0; i < outputData.GetLength(0); i++)
             {
                 for (int j = 0; j < outputData.GetLength(1); j++)
                 {
-                    stringArray.Append(outputData[i, j, 0]);
+                    sb.Append(outputData[i, j, 0]);
                 }
-                stringArray.AppendLine();
+                sb.AppendLine();
             }
 
-            return stringArray;
-        }
-
+            return sb;
+        }       
+        
         /// <summary>
-        /// Get size of binarized image
+        /// Get size of binarized image. The method takes the width and height of bitmap (image) 
+        /// to calculate the aspect ratio. 
+        /// Base on this ratio, if user gives only width or height as custom configuration for binarized image, 
+        /// the other value will be calculated automatically.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        private Size? GetTargetSizeFromConfigOrDefault(int width, int height)
+        /// <param name="imageOriginalWidth">Bitmap width</param>
+        /// <param name="imageOriginalHeight">Bitmap Height</param>
+        /// <returns>Object contains the size for resizing image, null if bitmap is null or no resizing process required</returns>
+        private Size? GetTargetSizeFromConfigOrDefault(int imageOriginalWidth, int imageOriginalHeight)
         {
             if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
                 return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
 
-            if (width == 0 || height == 0)
+            if (imageOriginalWidth == 0 || imageOriginalHeight == 0)
                 return null;
 
-            double ratio = (double)height / width;
-            int defaultWidth = 1200;
+            double ratio = (double)imageOriginalHeight / imageOriginalWidth;
 
             if (this.configuration.ImageHeight > 0)
-                return new Size((int)(this.configuration.ImageHeight * 2 / ratio), this.configuration.ImageHeight);
+                return new Size((int)(this.configuration.ImageHeight / ratio), this.configuration.ImageHeight);
 
             if (this.configuration.ImageWidth > 0)
-                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio / 2));
+                return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
 
-            if (defaultWidth > width)
-                return new Size(width, height / 2);
+            int defaultWidth = 1200;
 
-            return new Size(defaultWidth, (int)(defaultWidth * ratio / 2));
+            if (defaultWidth > imageOriginalWidth)
+                return null;
+
+            return new Size(defaultWidth, (int)(defaultWidth * ratio));
         }
     }
 }

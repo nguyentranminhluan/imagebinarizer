@@ -37,18 +37,19 @@ namespace ImageBinarizerApp
 
         //    }
         //}
-
+        //
+        //private string AppLogo = "00000111000001";
         /// <summary>
         /// Main entry point for Program
         /// </summary>
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-
+           
             //PrintData();
             //Console.WriteLine(".------------------------------------------------------------------------------------------.");
-            Console.WriteLine("\n    Welcome to Image Binarizer Application [Version 1.1.0]");
-            Console.WriteLine("    Copyright <c> daenet GmbH, All rights reserved.");
+            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.1.0]");
+            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.");
 
 
             //for (int i = 1; i < 4; i++)
@@ -74,8 +75,8 @@ namespace ImageBinarizerApp
 
             try
             {
-                ImageBinarizer img = new ImageBinarizer(configuration as BinarizerParams);
-                img.RunBinarizerOnWin();
+                ImageBinarizer img = new ImageBinarizer(configuration);
+                img.Run();                
             }
             catch (Exception e)
             {
@@ -84,7 +85,8 @@ namespace ImageBinarizerApp
                 return;
             }
 
-            PrintMessage("\nImage Binarization completed.");
+            PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}");
+            
         }
 
         /// <summary>
