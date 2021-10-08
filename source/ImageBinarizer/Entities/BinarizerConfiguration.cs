@@ -3,12 +3,12 @@
 namespace ImageBinarizerApp.Entities
 {
     /// <summary>
-    /// Collect requested Binarization data
+    /// Collect requested Binarize data
     /// </summary>
     public class BinarizerConfiguration : BinarizerParams
     {
         /// <summary>
-        /// Enable to print help function.
+        /// Enable to print help function
         /// </summary>
         public bool Help { get; set; } = false;
 

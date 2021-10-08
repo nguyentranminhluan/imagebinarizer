@@ -27,7 +27,7 @@ namespace ImageBinarizerLib
         /// <summary>
         /// Constructor that takes BinarizerParams as input to assign the binarizer configuration to the object.
         /// </summary>
-        /// <param name="configuration"></param>
+        /// <param name="configuration">BinarizerParams object</param>
         public ImageBinarizer(BinarizerParams configuration)
         {
             this.configuration = configuration;
