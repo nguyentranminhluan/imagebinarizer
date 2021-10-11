@@ -11,33 +11,7 @@ namespace ImageBinarizerApp
     /// Program Class of Console App
     /// </summary>
     class Program
-    {
-        //public static void PrintData()
-        //{
-        //    var clr = Console.ForegroundColor;
-        //    using (StreamReader readtext = new StreamReader("out1.txt"))
-        //    {
-        //        string readMeText = readtext.ReadLine();
-        //        while (readMeText != null)
-        //        {
-        //            for (int i = 0; i < readMeText.Length; i++)
-        //            {
-        //                if (readMeText[i] == '0')
-        //                {
-        //                    Console.ForegroundColor = ConsoleColor.Blue;
-        //                }
-
-        //                Console.Write(readMeText[i]);
-        //                Console.ForegroundColor = clr;
-        //            }
-
-        //            Console.WriteLine();
-        //            readMeText = readtext.ReadLine();
-        //        }
-
-        //    }
-        //}
-        //
+    {        
         private static string appLogo = "11111100033330\n" +
                                     "00110000033033\n" +
                                     "00110000033033\n" +                                    
