@@ -37,8 +37,8 @@ namespace ImageBinarizerApp
                 { "-blue", "blueThreshold"},
                 { "-grey", "greyThreshold"},
                 { "-help", "help"},
-                { "-inv", "inverse"},
-                { "-gs", "greyScale"}
+                { "--inv", "inverse"},
+                { "--gs", "greyScale"}
             };
         }
 
@@ -107,14 +107,14 @@ namespace ImageBinarizerApp
         private void CheckAndCorrectGreyScaleArgument()
         {
             bool greyScale = false;
-            while (command.Contains("-gs"))
+            while (command.Contains("--gs"))
             {
-                command.Remove("-gs");
+                command.Remove("--gs");
                 greyScale = true;
             }
             if (greyScale)
             {
-                command.Add("-gs");
+                command.Add("--gs");
                 command.Add("true");
             }
         }
@@ -125,14 +125,14 @@ namespace ImageBinarizerApp
         private void CheckAndCorrectInverseArgument()
         {
             bool inverse = false;
-            while (command.Contains("-inv"))
+            while (command.Contains("--inv"))
             {
-                command.Remove("-inv");
+                command.Remove("--inv");
                 inverse = true;
             }
             if (inverse)
             {
-                command.Add("-inv");
+                command.Add("--inv");
                 command.Add("true");
             }
         }
@@ -252,11 +252,11 @@ namespace ImageBinarizerApp
             Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\", \"--greenThreshold\"}");
             Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\", \"--blueThreshold\"}");
             Console.WriteLine("\t- Grey threshold: {\"-grey\", \"--greyThreshold\"}");
-            Console.WriteLine("\t- Inverse the contrast: {\"-inv\"}");
-            Console.WriteLine("\t- Grey scale: {\"-grey\"}");
+            Console.WriteLine("\t- Inverse enable: {\"--inv\"}");
+            Console.WriteLine("\t- Grey scale enable: {\"--gs\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
-            Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
-            Console.WriteLine("\nAdding \"-gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grey\" or " +
+            Console.WriteLine("\nAdding \"--inv\" to indicate the optional of inversing the contrast of the binarized picture.");
+            Console.WriteLine("\nAdding \"--gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grey\" or " +
                                     "\"--greyThreshold\" along with this to set threshold for grey scale binarizer.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
