@@ -12,9 +12,10 @@ namespace ImageBinarizerApp
     /// <summary>
     /// This class is use to Parse the arguments of the Application
     /// </summary>
-    class CommandLineParsing
+    public class CommandLineParsing
     {
         public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
+
         private List<string> command;
         private static Dictionary<string, string> GetCommandLineMap()
         {
@@ -41,6 +42,7 @@ namespace ImageBinarizerApp
             };
         }
 
+        #region Public methods
         /// <summary>
         /// Constructor to pass the arguments
         /// </summary>
@@ -84,7 +86,9 @@ namespace ImageBinarizerApp
 
 
         }
+        #endregion
 
+        #region Private methods
         /// <summary>
         /// Corect the arguments input that received type boolean.
         /// </summary>
@@ -250,22 +254,23 @@ namespace ImageBinarizerApp
             Console.WriteLine("\t- Grey threshold: {\"-grey\", \"--greyThreshold\"}");
             Console.WriteLine("\t- Inverse the contrast: {\"-inv\"}");
             Console.WriteLine("\t- Grey scale: {\"-grey\"}");
-            Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automaticaly if not specified.");
+            Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
             Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
             Console.WriteLine("\nAdding \"-gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grey\" or " +
                                     "\"--greyThreshold\" along with this to set threshold for grey scale binarizer.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
-            Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
-            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -height 32");
+            Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
+            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -height 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
-                                "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
+                                "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
             Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
-                           "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
+                           "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
             Console.WriteLine("\n\t+ Passing all arguments with grey scale calculation: " +
-                          "\n\t\tdotnet ImageBinarizerApp --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-grey 100 -gs");
+                          "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-grey 100 -gs");
         }
+        #endregion
     }
 
 

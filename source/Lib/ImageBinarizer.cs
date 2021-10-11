@@ -79,9 +79,9 @@ namespace ImageBinarizerLib
                 writer.Write(sb.ToString());
             }
         }
-
         #endregion
 
+        #region Private methods
         /// <summary>
         /// Resize the bimap with provide input. The method take 3D array of color data as input
         /// and assigns these to the bitmap to peform resizing process
@@ -284,5 +284,6 @@ namespace ImageBinarizerLib
 
             return new Size(defaultWidth, (int)(defaultWidth * ratio));
         }
+        #endregion
     }
 }
