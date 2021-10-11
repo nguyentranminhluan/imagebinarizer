@@ -25,7 +25,7 @@ This command will create the same image in binarized form by using threshold val
 ### Resize
 #### Only width or height is provided.
 
-If you want to change the size of the image to get a specific width or height (that fit to some frame), the other side will be calculated base on the aspect ratio of the original image. you can try following command:
+If you want to change one of the sides of the image to get a specific width or height (that fit to some frame), the other side will be calculated base on the aspect ratio of the original image. you can try following command:
 
 ``` shell
 dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120
@@ -100,7 +100,7 @@ The resization can be done with a custom of both width and height with the follo
 ~~~
 dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 120
 ~~~
-This binarize image then can be used for many purposes, such as being used in to be console application logo. To draw to console from binarized image file, with C# language, the following code can be use:
+The binarize image then can be used for many purposes, such as to be used as a console application logo. To draw to console from binarized image file, with C# language, the following code can be use:
 ~~~csharp
 public static void PrintData()
 {
@@ -154,27 +154,29 @@ dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputIma
 
 
 ### Thresholds customization
-One interesting feature of this project is to customize the threshold for each color when perform binarization to have a better binarized result. Use the following command to setup thresholds' values:
+One interesting feature of this project is to customize the thresholds for each primary color when perform binarization to have a better binarized result. Use the following command to setup thresholds' values:
 ~~~shell
 dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --redthreshold 100 --greenthreshold 100 --bluethreshold 100
 ~~~
-The image below shows the differences between Normal Binarization (the left one) and customized Thresholds Binarization (the right one):
+The image below shows the differences between Normal Binarization (the left one) and Customized Thresholds Binarization (the right one):
 <img src="/images/thresholdCustomize.png">
 
-Customized Gray threshold can also be provided while performing binarization with the following command:
+Customized Gray Threshold can also be provided while performing binarization with the following command:
 ~~~shell
 dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --gs --greythreshold 100
 ~~~
 
 
 ### Futher development
-Image contour recognition is an interesting subject. Right now it can be done with some tries in thresholds setup and give the result as shown below.
+Image Contour Recognition is an interesting subject. It helps users to get the shape of objects to apply to other applications such as object detection in machine learning. Right now, Image Contour Recognition can be done with some tries in thresholds setup and give the result as shown below.
 
 <img src="/images/Contour.png">
 
-In the future development, a new function can be created to detect the contour automatically without trying different sets of threshold setup.
+For future development, a new function will be created to detect the contour automatically without trying different sets of threshold setup.
 
 ## Another Examples for Image Binarization
+Below are some more examples for image binarization.
+
 <img src="/images/flower.png" width="400">   <img src="/images/Car.png" width="400">
 <img src="/images/house.png">
 
