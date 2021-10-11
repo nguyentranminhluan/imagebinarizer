@@ -23,7 +23,7 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Draw App Logo to console
         /// </summary>
-        private static void PrintAppLogo(ConsoleColor clr) {            
+        private static void PrintAppLogoAndWelcomeMessage(ConsoleColor clr) {            
             var letter = (char)20;
             foreach (var c in appLogo)
             {
@@ -51,6 +51,17 @@ namespace ImageBinarizerApp
                         break;
                 }                    
             }
+
+            int cursorLeft = Console.GetCursorPosition().Left;
+            int cursorTop = Console.GetCursorPosition().Top;
+
+            Console.SetCursorPosition(15, 2);
+            Console.WriteLine("Welcome to Image Binarizer Application [Version 1.1.0]");
+
+            Console.SetCursorPosition(15, 4);
+            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
+
+            Console.SetCursorPosition(cursorLeft, cursorTop);
         }
 
         /// <summary>
@@ -60,10 +71,7 @@ namespace ImageBinarizerApp
         static void Main(string[] args)
         {
             var clr = Console.ForegroundColor;
-
-            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.1.0]");
-            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
-            PrintAppLogo(clr);     
+            PrintAppLogoAndWelcomeMessage(clr);            
 
             BinarizerConfiguration configuration;
 
