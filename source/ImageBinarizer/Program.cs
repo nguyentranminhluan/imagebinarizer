@@ -38,40 +38,70 @@ namespace ImageBinarizerApp
         //    }
         //}
         //
-        //private string AppLogo = "00000111000001";
+        private static string appLogo = "11111100033330\n" +
+                                    "00110000033033\n" +
+                                    "00110000033033\n" +                                    
+                                    "00110222223330\n" +
+                                    "00110202023033\n" +
+                                    "00110202023033\n" +                                    
+                                    "11111102023330\n";
+
+        /// <summary>
+        /// Draw App Logo to console
+        /// </summary>
+        private static void PrintAppLogo(ConsoleColor clr) {            
+            var letter = (char)20;
+            foreach (var c in appLogo)
+            {
+                switch (c)
+                {
+                    case '0':
+                        Console.ForegroundColor = clr;
+                        Console.Write(' ');
+                        break;
+                    case '1':
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write(letter);
+                        break;
+                    case '2':
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.Write(letter);
+                        break;
+                    case '3':
+                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        Console.Write(letter);
+                        break;
+                    default:
+                        Console.ForegroundColor = clr;
+                        Console.Write(c);
+                        break;
+                }                    
+            }
+        }
+
         /// <summary>
         /// Main entry point for Program
         /// </summary>
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-           
-            //PrintData();
-            //Console.WriteLine(".------------------------------------------------------------------------------------------.");
+            var clr = Console.ForegroundColor;
+
             Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.1.0]");
-            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.");
-
-
-            //for (int i = 1; i < 4; i++)
-            //{
-            //    Console.SetCursorPosition(0, i);
-            //    Console.WriteLine("|");
-            //    Console.SetCursorPosition(91, i);
-            //    Console.WriteLine("|");
-            //}
-
-            //Console.WriteLine("\'------------------------------------------------------------------------------------------\'");          
+            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
+            PrintAppLogo(clr);     
 
             BinarizerConfiguration configuration;
 
             if (!(TryParseConfiguration(args, out configuration, out string errMsg)))
             {
                 errMsg = errMsg == null ? null : "\nError: " + errMsg;
-                PrintMessage(errMsg, true);
+                PrintMessage(errMsg, true, ConsoleColor.Red);
                 return;
             }
-
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("\nImage Binarization in progress...");
+            Console.ForegroundColor = clr;
 
             try
             {
@@ -81,36 +111,38 @@ namespace ImageBinarizerApp
             catch (Exception e)
             {
                 Console.WriteLine("Image Binarization failed.\n");
-                PrintMessage($"\nError: {e.Message}", true);
+                PrintMessage($"\nError: {e.Message}", true, ConsoleColor.Red);
                 return;
             }
 
-            PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}");
+            PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}",false, ConsoleColor.Green);
             
         }
 
         /// <summary>
         /// Print message with 
         /// </summary>
-        /// <param name="errMsg"></param>
+        /// <param name="msg"></param>
         /// <param name="isError"></param>
-        private static void PrintMessage(string errMsg = null, bool isError = false)
-        {
-            var clr = Console.ForegroundColor;
-
-            if (!string.IsNullOrEmpty(errMsg))
+        private static void PrintMessage(string msg = null, bool isError = false, ConsoleColor clr = ConsoleColor.White)
+        {            
+            if (!string.IsNullOrEmpty(msg))
             {
                 if (isError)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(errMsg + "\n");
                     Console.ForegroundColor = clr;
+                    Console.Write(msg + "\n");
+                    Console.ForegroundColor = ConsoleColor.White;
                     string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
                     Console.WriteLine($"\nInsert one of these [{printedHelpArgs}] to following command for help:");
                     Console.WriteLine("\n\t\tdotnet imagebinarizer [command]\n");
                 }
                 else
-                    Console.Write(errMsg + "\n");
+                {
+                    Console.ForegroundColor = clr;
+                    Console.Write(msg + "\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
 
             Console.WriteLine("\nPress any key to exit the application.");
