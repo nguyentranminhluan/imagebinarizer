@@ -78,7 +78,7 @@ namespace ImageBinarizerApp
             if (!(TryParseConfiguration(args, out configuration, out string errMsg)))
             {
                 errMsg = errMsg == null ? null : "\nError: " + errMsg;
-                PrintMessage(errMsg, true, ConsoleColor.Red);
+                PrintMessage(errMsg, ConsoleColor.Red, true);
                 return;
             }
             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -93,20 +93,20 @@ namespace ImageBinarizerApp
             catch (Exception e)
             {
                 Console.WriteLine("Image Binarization failed.\n");
-                PrintMessage($"\nError: {e.Message}", true, ConsoleColor.Red);
+                PrintMessage($"\nError: {e.Message}", ConsoleColor.Red, true);
                 return;
             }
 
-            PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}",false, ConsoleColor.Green);
+            PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}", ConsoleColor.Green);
             
         }
 
         /// <summary>
-        /// Print message with 
+        /// Print message 
         /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="isError"></param>
-        private static void PrintMessage(string msg = null, bool isError = false, ConsoleColor clr = ConsoleColor.White)
+        /// <param name="msg">string of message</param>
+        /// <param name="isError">to check if this is an error message</param>
+        private static void PrintMessage(string msg = null, ConsoleColor clr = ConsoleColor.White, bool isError = false)
         {            
             if (!string.IsNullOrEmpty(msg))
             {
@@ -134,16 +134,16 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Check validation of arguments
         /// </summary>
-        /// <param name="args"></param>
-        /// <param name="configurationDatas"></param>
+        /// <param name="args">in put arguments</param>
+        /// <param name="configurationData">Configurations provided</param>
         /// <returns></returns>
-        private static bool TryParseConfiguration(string[] args, out BinarizerConfiguration configurationDatas, out string errMsg)
+        private static bool TryParseConfiguration(string[] args, out BinarizerConfiguration configurationData, out string errMsg)
         {
             var parsingObject = new CommandLineParsing(args);
 
             //
-            // Check if datas Parsed is correct
-            return parsingObject.Parse(out configurationDatas, out errMsg);
+            // Check if Parsed data is correct
+            return parsingObject.Parse(out configurationData, out errMsg);
         }
 
     }
