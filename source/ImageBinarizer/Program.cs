@@ -125,10 +125,7 @@ namespace ImageBinarizerApp
                     Console.Write(msg + "\n");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
-            }
-
-            Console.WriteLine("\nPress any key to exit the application.");
-            Console.ReadLine();
+            }           
         }
 
         /// <summary>
