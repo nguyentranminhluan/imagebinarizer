@@ -7,7 +7,7 @@ The purpose of this project is to performs binarization of images. It converts a
 ~~~
 The following command gives information for the arguments anh how to use them when running the project.
 ~~~ shell
-dotnet ImageBinarizer.dll --help
+imgbin --help
 ~~~
 ## Example:
 This is the original logo of DAENET:
@@ -17,7 +17,7 @@ This is the original logo of DAENET:
 If you want to create the binrized representation of the same image you can execute following command:
 
 ~~~ shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)>
+imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)>
 ~~~
 
 This command will create the same image in binarized form by using threshold values for each color that equal to average values of them. and save it to the given folder with the provided filename with "--output-image" argument.
@@ -28,11 +28,11 @@ This command will create the same image in binarized form by using threshold val
 If you want to change one of the sides of the image to get a specific width or height (that fit to some frame), the other side will be calculated base on the aspect ratio of the original image. you can try following command:
 
 ``` shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120
 ```
 or
 ~~~ shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --imageheight 120
+imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --imageheight 120
 ~~~
 
 The Binarized image is generated as below with a custom width of 120, height is automatically calculated when using the DAENET logo as the input image:
@@ -98,7 +98,7 @@ The Binarized image is generated as below with a custom width of 120, height is 
 #### Create image in a custom scale
 The resization can be done with a custom of both width and height with the following command:
 ~~~
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 120
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 120
 ~~~
 The binarize image then can be used for many purposes, such as to be used as a console application logo. To draw to console from binarized image file, with C# language, the following code can be use:
 ~~~csharp
@@ -135,7 +135,7 @@ After calling this function in main, the image is then drawn as shown in the pic
 ### Inverted Image
 Another option to binarize the image is to get the inverse of it. The following command provides required argument (--inv) to perform Inverse Binarization:
 ~~~shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --inv
+imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> -inv
 ~~~
 The pictures below compare the normal binarized image (left) with the inverted binarized image (right):
 
@@ -149,21 +149,21 @@ grayValue = 0.299*redValue + 0.587*greenValue + 0.114*blueValue
 ~~~
 To enable gray scale, required argument (--gs) need to be provided as shown in below command:
 ~~~shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --gs
+imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> -gs
 ~~~
 
 
 ### Thresholds customization
 One interesting feature of this project is to customize the thresholds for each primary color when perform binarization to have a better binarized result. Use the following command to setup thresholds' values:
 ~~~shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --redthreshold 100 --greenthreshold 100 --bluethreshold 100
+imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --redthreshold 100 --greenthreshold 100 --bluethreshold 100
 ~~~
 The image below shows the differences between Normal Binarization (the left one) and Customized Thresholds Binarization (the right one):
 <img src="/images/thresholdCustomize.png">
 
 Customized Gray Threshold can also be provided while performing binarization with the following command:
 ~~~shell
-dotnet ImageBinarizer.dll --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --gs --greythreshold 100
+imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --gs --greythreshold 100
 ~~~
 
 
