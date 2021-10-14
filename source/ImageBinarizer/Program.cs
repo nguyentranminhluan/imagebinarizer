@@ -117,7 +117,7 @@ namespace ImageBinarizerApp
                     Console.ForegroundColor = ConsoleColor.White;
                     string printedHelpArgs = string.Join(", ", CommandLineParsing.HelpArguments.Select(helpArg => $"\"{helpArg}\""));
                     Console.WriteLine($"\nInsert one of these [{printedHelpArgs}] to following command for help:");
-                    Console.WriteLine("\n\t\tdotnet imagebinarizer [command]\n");
+                    Console.WriteLine("\n\t\timgbin [command]\n");
                 }
                 else
                 {
@@ -134,7 +134,7 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Check validation of arguments
         /// </summary>
-        /// <param name="args">in put arguments</param>
+        /// <param name="args">input arguments</param>
         /// <param name="configurationData">Configurations provided</param>
         /// <returns></returns>
         private static bool TryParseConfiguration(string[] args, out BinarizerConfiguration configurationData, out string errMsg)
@@ -149,4 +149,4 @@ namespace ImageBinarizerApp
     }
 }
 
-// --input-image D:\DAENET\image\daenet.png --output-image D:\DAENET\image\out.txt -width 800 -height 225 -red 100 -green 100 -blue 100
+// --input-image D:\DAENET\image\daenet.png --output-image D:\DAENET\image\out.txt -iw 800 -ih 225 -rt 100 -gt 100 -bt 100

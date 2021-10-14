@@ -14,7 +14,9 @@ namespace ImageBinarizerApp
     /// </summary>
     public class CommandLineParsing
     {
-        public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
+        public readonly static List<string> HelpArguments = new List<string> { "-h", "--help" };
+        private readonly List<string> inverseArguments = new List<string> { "-inv", "--inverse" };
+        private readonly List<string> greyScaleArguments = new List<string> { "-gs", "--greyscale" };
 
         private List<string> command;
         private static Dictionary<string, string> GetCommandLineMap()
@@ -25,20 +27,15 @@ namespace ImageBinarizerApp
                 { "--input-image", "inputImagePath"},
                 { "-oip", "outputImagePath" },
                 { "--output-image", "outputImagePath" },
-                { "-iw", "imageWidth" },
-                { "-width", "imageWidth" },
-                { "-ih", "imageHeight"},
-                { "-height", "imageHeight"},
-                { "-rt", "redThreshold" },
-                { "-red", "redThreshold" },
-                { "-gt", "greenThreshold" },
-                { "-green", "greenThreshold" },
-                { "-bt", "blueThreshold"},
-                { "-blue", "blueThreshold"},
-                { "-grey", "greyThreshold"},
-                { "-help", "help"},
-                { "--inv", "inverse"},
-                { "--gs", "greyScale"}
+                { "-iw", "imageWidth" },                
+                { "-ih", "imageHeight"},                
+                { "-rt", "redThreshold" },                
+                { "-gt", "greenThreshold" },                
+                { "-bt", "blueThreshold"},                
+                { "-grt", "greyThreshold"},
+                { "-h", "help"},
+                { "-inv", "inverse"},
+                { "-gs", "greyScale"}
             };
         }
 
@@ -107,14 +104,17 @@ namespace ImageBinarizerApp
         private void CheckAndCorrectGreyScaleArgument()
         {
             bool greyScale = false;
-            while (command.Contains("--gs"))
+            foreach (var arg in greyScaleArguments)
             {
-                command.Remove("--gs");
-                greyScale = true;
+                while (command.Contains(arg))
+                {
+                    command.Remove(arg);
+                    greyScale = true;
+                }
             }
             if (greyScale)
             {
-                command.Add("--gs");
+                command.Add("-gs");
                 command.Add("true");
             }
         }
@@ -125,16 +125,20 @@ namespace ImageBinarizerApp
         private void CheckAndCorrectInverseArgument()
         {
             bool inverse = false;
-            while (command.Contains("--inv"))
+            foreach (var arg in inverseArguments)
             {
-                command.Remove("--inv");
-                inverse = true;
+                while (command.Contains(arg))
+                {
+                    command.Remove(arg);
+                    inverse = true;
+                }
             }
             if (inverse)
             {
                 command.Add("--inv");
                 command.Add("true");
             }
+
         }
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace ImageBinarizerApp
             }
             if (help)
             {
-                command.Add("-help");
+                command.Add("-h");
                 command.Add("true");
             }
         }
@@ -246,29 +250,29 @@ namespace ImageBinarizerApp
             Console.WriteLine("\nHelp:");
             Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\", \"--inputImagePath\"}");
             Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\", \"--outputImagePath\"}");
-            Console.WriteLine("\t- Image width: {\"-iw\", \"-width\", \"--imageWidth\"}");
-            Console.WriteLine("\t- Image height: {\"-ih\", \"-height\", \"--imageHeight\"}");
-            Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\", \"--redThreshold\"}");
-            Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\", \"--greenThreshold\"}");
-            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\", \"--blueThreshold\"}");
-            Console.WriteLine("\t- Grey threshold: {\"-grey\", \"--greyThreshold\"}");
-            Console.WriteLine("\t- Inverse enable: {\"--inv\"}");
-            Console.WriteLine("\t- Grey scale enable: {\"--gs\"}");
+            Console.WriteLine("\t- Image width: {\"-iw\", \"--imageWidth\"}");
+            Console.WriteLine("\t- Image height: {\"-ih\", \"--imageHeight\"}");
+            Console.WriteLine("\t- Red threshold: {\"-rt\", \"--redThreshold\"}");
+            Console.WriteLine("\t- Green threshold: {\"-gt\", \"--greenThreshold\"}");
+            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"--blueThreshold\"}");
+            Console.WriteLine("\t- Grey threshold: {\"-grt\", \"--greyThreshold\"}");
+            Console.WriteLine("\t- Inverse enable: {\"-inv\"}");
+            Console.WriteLine("\t- Grey scale enable: {\"-gs\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
-            Console.WriteLine("\nAdding \"--inv\" to indicate the optional of inversing the contrast of the binarized picture.");
-            Console.WriteLine("\nAdding \"--gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grey\" or " +
+            Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
+            Console.WriteLine("\nAdding \"-gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grt\" or " +
                                     "\"--greyThreshold\" along with this to set threshold for grey scale binarizer.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
-            Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
-            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -height 32");
+            Console.WriteLine("\t+ With automatic RGB: \n\t\timgbin--input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
+            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -ih 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
-                                "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
+                                "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100");
             Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
-                           "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
+                           "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100 -inv");
             Console.WriteLine("\n\t+ Passing all arguments with grey scale calculation: " +
-                          "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-grey 100 -gs");
+                          "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-grt 100 -gs");
         }
         #endregion
     }
