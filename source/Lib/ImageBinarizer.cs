@@ -65,7 +65,7 @@ namespace ImageBinarizerLib
             if (this.m_TargetSize != null)
             {
                 info.Width = this.m_TargetSize.Value.Width;
-                info.Height = this.m_TargetSize.Value.Height;                
+                info.Height = this.m_TargetSize.Value.Height;
             }
             skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
 
@@ -99,7 +99,7 @@ namespace ImageBinarizerLib
 
             double[,,] resizedData = GetPixelsColors(img);
 
-            return resizedData;             
+            return resizedData;
         }
 
         /// <summary>
@@ -250,8 +250,8 @@ namespace ImageBinarizerLib
             }
 
             return sb;
-        }       
-        
+        }
+
         /// <summary>
         /// Get size of binarized image. The method takes the width and height of bitmap (image) 
         /// to calculate the aspect ratio. 
@@ -263,11 +263,11 @@ namespace ImageBinarizerLib
         /// <returns>Object contains the size for resizing image, null if bitmap is null or no resizing process required</returns>
         private Size? GetTargetSizeFromConfigOrDefault(int imageOriginalWidth, int imageOriginalHeight)
         {
-            if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
-                return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
-
             if (imageOriginalWidth == 0 || imageOriginalHeight == 0)
                 return null;
+
+            if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
+                return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
 
             double ratio = (double)imageOriginalHeight / imageOriginalWidth;
 
@@ -277,12 +277,7 @@ namespace ImageBinarizerLib
             if (this.configuration.ImageWidth > 0)
                 return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
 
-            int defaultWidth = 1200;
-
-            if (defaultWidth > imageOriginalWidth)
-                return null;
-
-            return new Size(defaultWidth, (int)(defaultWidth * ratio));
+            return null;
         }
         #endregion
     }
