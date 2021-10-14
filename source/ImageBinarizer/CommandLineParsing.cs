@@ -265,7 +265,7 @@ namespace ImageBinarizerApp
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
-            Console.WriteLine("\t+ With automatic RGB: \n\t\timgbin--input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
+            Console.WriteLine("\t+ With automatic RGB: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
             Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -ih 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
                                 "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100");
