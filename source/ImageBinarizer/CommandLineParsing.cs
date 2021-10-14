@@ -135,7 +135,7 @@ namespace ImageBinarizerApp
             }
             if (inverse)
             {
-                command.Add("--inv");
+                command.Add("-inv");
                 command.Add("true");
             }
 
