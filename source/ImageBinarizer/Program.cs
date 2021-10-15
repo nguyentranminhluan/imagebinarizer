@@ -18,9 +18,14 @@ namespace ImageBinarizerApp
         private static void createBotLogo()
         {
             BinarizerConfiguration configuration = new BinarizerConfiguration();
-            configuration.InputImagePath = ".\\Logo\\dotnetbot.png";
-            configuration.OutputImagePath = ".\\Logo\\dotnetbot.txt";
+            configuration.InputImagePath = ".\\Logo\\Logo.png";
+            configuration.OutputImagePath = ".\\Logo\\Logo.txt";
             configuration.ImageWidth = 60;
+
+            if (!(File.Exists(configuration.InputImagePath)))
+            {
+                return;
+            }
 
             ImageBinarizer img = new ImageBinarizer(configuration);
             img.Run();
