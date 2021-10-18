@@ -10,9 +10,6 @@ The following command gives information for the arguments anh how to use them wh
 imgbin --help
 ~~~
 ## Example:
-This is the original logo of DAENET:
-
-![](/images/daenet.png) 
 
 If you want to create the binrized representation of the same image you can execute following command:
 
@@ -20,10 +17,17 @@ If you want to create the binrized representation of the same image you can exec
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)>
 ~~~
 
-This command will create the same image in binarized form by using threshold values for each color that equal to average values of them. and save it to the given folder with the provided filename with "--output-image" argument.
+This command will create the same image in binarized form by using threshold values for each color that equal to average values of them. and save it to the given folder with the provided filename with "--output-image" argument. Below images are some examples:
+
+<img src="/images/flower.png" width="400">   <img src="/images/Car.png" width="400">
+<img src="/images/house.png" width="800">
 
 ### Resize
 #### Only width or height is provided.
+This is the original logo of DAENET:
+
+![](/images/daenet.png) 
+
 
 If you want to change one of the sides of the image to get a specific width or height (that fit to some frame), the other side will be calculated base on the aspect ratio of the original image. you can try following command:
 
@@ -98,9 +102,9 @@ The Binarized image is generated as below with a custom width of 120, height is 
 #### Create image in a custom scale
 The resization can be done with a custom of both width and height with the following command:
 ~~~
-imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 120
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 28
 ~~~
-The binarize image then can be used for many purposes, such as to be used as a console application logo. To draw to console from binarized image file, with C# language, the following code can be use:
+This command generates a binarized image with size of 120x28. The binarized image then can be used for many purposes, such as to be used as a console application logo. To draw to console from binarized image file, with C# language, the following code can be use:
 ~~~csharp
 public static void PrintData()
 {
@@ -173,11 +177,5 @@ Image Contour Recognition is an interesting subject. It helps users to get the s
 <img src="/images/Contour.png">
 
 For future development, a new function will be created to detect the contour automatically without trying different sets of threshold setup.
-
-## Another Examples for Image Binarization
-Below are some more examples for image binarization.
-
-<img src="/images/flower.png" width="400">   <img src="/images/Car.png" width="400">
-<img src="/images/house.png">
 
 
