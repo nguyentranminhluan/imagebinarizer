@@ -104,37 +104,25 @@ The resization can be done with a custom of both width and height with the follo
 ~~~
 imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 28
 ~~~
-This command generates a binarized image with size of 120x28. The binarized image then can be used for many purposes, such as to be used as a console application logo. To draw to console from binarized image file, with C# language, the following code can be use:
-~~~csharp
-public static void PrintData()
-{
-    var clr = Console.ForegroundColor;
-    using (StreamReader readtext = new StreamReader(<your binarized image path as string>))
-    {
-         string readMeText = readtext.ReadLine();
-         while (readMeText != null)
-         {
-               for (int i = 0; i < readMeText.Length; i++)
-               {
-                    if (readMeText[i] == '0')
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                    }
+This command generates a binarized image with size of 120x28. 
 
-                    Console.Write(readMeText[i]);
-                    Console.ForegroundColor = clr;
-                }
+### Create LogoPrinter code
 
-                Console.WriteLine();
-                readMeText = readtext.ReadLine();
-         }
+The binarized image can be used for many purposes, one of them is a console application logo. To get the code for printing the logo to console, use following command:
 
-    }
-}
+~~~shell
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --create-code
 ~~~
-After calling this function in main, the image is then drawn as shown in the picture below:
-![](/images/console.png)
+Then, copy the .cs file to your project and use code below to run it:
+~~~csharp
+LogoBinarizer.LogoPrinter logo = new LogoPrinter();
+logo.Print();
+~~~
+The picture below is an example logo:
 
+<p align="center">
+    <img src="/images/console.png" width="600" height="800">
+</p>
 
 ### Inverted Image
 Another option to binarize the image is to get the inverse of it. The following command provides required argument (--inv) to perform Inverse Binarization:
