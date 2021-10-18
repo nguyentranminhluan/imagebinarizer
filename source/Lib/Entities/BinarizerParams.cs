@@ -58,6 +58,11 @@ namespace ImageBinarizerLib.Entities
         /// Determine if binarization base on grey scale threshold
         /// </summary>
         public bool GreyScale { get; set; } = false;
+
+        /// <summary>
+        /// Create .cs file instead of text file for printing Logo
+        /// </summary>
+        public bool CreateCode { get; set; } = false;
     }
 
 }
