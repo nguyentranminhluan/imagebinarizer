@@ -1,23 +1,23 @@
-# Imagebinarizer  [![.NET Core Desktop](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml)
-Image binarization is the process of taking an image and convert it into black and with image. This process uses thresholds of RBG or Gray to assign black (0) or white (1) to a pixel. Binarization is usually use when trying to extract object from picture.
+# ImageBinarizer  [![.NET Core Desktop](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml)
+Image binarization is the process of taking an image and convert it into black and white image. This process uses thresholds of RBG or Gray to assign black (0) or white (1) to a pixel. Binarization is usually use when trying to extract object from picture.
 
-The purpose of this project is to performs binarization of images. It converts a color image to the 2D representation of 01 bits (with 0 and 1). Binarized image is then saved at the provided path with the given name in output path argument:
+The purpose of ImageBinarizer is to performs binarization of images. It converts a color image to the 2D representation of 01 bits (with 0 and 1). Binarized image is then saved at the provided path with the given name in output path argument:
 ~~~ shell
 --output-image <your image output path>
 ~~~
-The following command gives information for the arguments anh how to use them when running the project.
+The following command gives information for the arguments and how to use them when running ImageBinarizer.
 ~~~ shell
 imgbin --help
 ~~~
 ## Example:
 
-If you want to create the binrized representation of the same image you can execute following command:
+If you want to create the binrized representation of the same image, execute following command:
 
 ~~~ shell
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)>
 ~~~
 
-This command will create the same image in binarized form by using threshold values for each color that equal to average values of them. and save it to the given folder with the provided filename with "--output-image" argument. Below images are some examples:
+This command will create the same size image in binarized form by using threshold values for each color that equal to average values of them, and then save it to the given folder with the provided filename in "--output-image" argument. Below images are some examples:
 
 <img src="/images/flower.png" width="400">   <img src="/images/Car.png" width="400">
 <img src="/images/house.png" width="800">
@@ -29,7 +29,7 @@ This is the original logo of DAENET:
 ![](/images/daenet.png) 
 
 
-If you want to change one of the sides of the image to get a specific width or height (that fit to some frame), the other side will be calculated base on the aspect ratio of the original image. you can try following command:
+If you want to change one of the sides of the image to get a specific width or height (that fit to some frame), the other side will be calculated base on the aspect ratio of the original image. You can try following command:
 
 ``` shell
 imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120
@@ -100,29 +100,41 @@ The Binarized image is generated as below with a custom width of 120, height is 
 
 ```
 #### Create image in a custom scale
-The resization can be done with a custom of both width and height with the following command:
+The resization can be done with a custom of both width and height by executing the following command:
 ~~~
-imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 28
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 50
 ~~~
-This command generates a binarized image with size of 120x28. 
-
-### Create LogoPrinter code
-
-The binarized image can be used for many purposes, one of them is a console application logo. To get the code for printing the logo to console, use following command:
-
-~~~shell
-imgbin --input-image <your image input path (c:\path\DAENET.png)> --create-code
+A binarized image with size of 120x50 is generated as shown below:
 ~~~
-Then, copy the .cs file to your project and use code below to run it:
-~~~csharp
-LogoBinarizer.LogoPrinter logo = new LogoPrinter();
-logo.Print();
+111111111111111111111111111111100111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111110000011111111111111111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111000000111111111111111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111000000000011111111111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111100000000000011111111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111100000000000000011111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111100000000000000000011111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111100000000000000000000011111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111000000000000000000000000011111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111110000000000000000000000000000011111111111111111111111111111111111111111111111111111110000
+111111111111111111111111111111100000000000000110000000000000000011111111111111111111111111111111111111111111111110000000
+111111111111111111111111111111100000000000000110000000000000000000011000001111111000000000011111111110000111111000011000
+111111111111111111111111111110000000000000001100000000000000000000000000000001110000000000000011000000000000100000111000
+111111111111111111111111111100000000110000111100000010000011000000011000011000100011100001100000001100001100000001110000
+111111111111111111111111110000000011100000011000000000000011000000110000001100000011000001100000011000000110000001100001
+111111111111111111111111100000000011000000011000000010000111000001111000001000000110000001100000011100000100000001100111
+111111111111111111111110000000000011000000110000001100000110000001100000000000000110000001000000011000000000000001000001
+111111111111111111111000000000000001110001110000001110001110000000010000110000001100000011000110001100001000000011100001
+111111111111111111100000000000000000000000000000000000000000000000000000000000000000000000001111000000000001110000000001
+111111111111111110000000000000000000000000000000000000000000000000000000000000000000000000001111111100111111111111111111
+111111111111110000000000000000000000000000000011111111111111111111111111000000000000000000000001111111111111111111111111
+111111111111000000000000000000000000111111111111111111111111111111111111111111111100000000000000001111111111111111111111
+111111111100000000000000000011111111111111111111111111111111111111111111111111111111111111000000000001111111111111111111
+111111100000000000000011111111111111111111111111111111111111111111111111111111111111111111111110000000000111111111111111
+111110000000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111100000000111111111111
+111000000011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111
+100000111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111100001111111
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 ~~~
-The picture below is an example logo:
-
-<p align="center">
-    <img src="/images/console.png" width="600" height="800">
-</p>
 
 ### Inverted Image
 Another option to binarize the image is to get the inverse of it. The following command provides required argument (--inv) to perform Inverse Binarization:
@@ -158,8 +170,102 @@ Customized Gray Threshold can also be provided while performing binarization wit
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --gs --greythreshold 100
 ~~~
 
+### Create LogoPrinter.cs file code
 
-### Futher development
+ImageBinarizer can be used to create a console application logo. Making a logo from this image as an example:
+
+<p align="center">
+    <img src="/images/triangle.png" width="300">
+</p>
+
+To get the code for printing the logo to console, use following command:
+~~~shell
+imgbin --input-image <your image input path (c:\path\triangle.png)> --create-code
+~~~
+The size of logo can also be customized, such as setting the width of the logo to 30 by using below command:
+~~~shell
+imgbin --input-image <your image input path (c:\path\triangle.png)> --create-code -iw 30
+~~~
+Below is an example of the code in LogoPrinter.cs that ImageBinarizer created, with a custom width of logo is 30:
+~~~csharp
+using System;
+
+namespace LogoBinarizer
+{
+    public class LogoPrinter
+    {
+        private string logo = @"
+111111111111111111111111111111
+111111111111111111111111111111
+111111111111001111111111111111
+111111111111001111111111111111
+111111111110000111111111111111
+111111111100000100111111111111
+111111111100110100011111111111
+111111111000001000011111111111
+111111111000001001001111111111
+111111110000000000001111111111
+111111110000000100100111111111
+111111100100110000000011111111
+111111000000000000000011111111
+111111000001001001001001111111
+111110000000011000000001111111
+111110000000011100100100111111
+111100100100111110000000011111
+111000000000111110000010011111
+111001000001111111011000001111
+110000000000000000000001001111
+110000000000000000000000100111
+111100100000000000110110000011
+111000000000000000000010000011
+111001111111111111111001111111
+110000000000000000000001111111
+110000000000000000000000111111
+111111111111111111111111111111
+";
+
+        /// <summary>
+        /// Print Logo to console
+        /// </summary>
+        public void Print()
+        {
+            Console.WriteLine(logo);
+        }
+    }
+}
+~~~
+Then, copy this file to your project and use code below to run it:
+~~~csharp
+LogoBinarizer.LogoPrinter logo = new LogoPrinter();
+logo.Print();
+~~~
+For example, calling it in Main():
+~~~csharp
+using LogoBinarizer;
+using System;
+using System.IO;
+
+namespace Testing
+{
+    class Program
+    {     
+        static void Main(string[] args)
+        {
+            LogoPrinter logo = new();
+            logo.Print();
+        }
+    }
+   
+}
+~~~
+The picture below is an example logo:
+
+<p align="center">
+    <img src="/images/console.png" >
+</p>
+
+
+### Further development
 Image Contour Recognition is an interesting subject. It helps users to get the shape of objects to apply to other applications such as object detection in machine learning. Right now, Image Contour Recognition can be done with some tries in thresholds setup and give the result as shown below.
 
 <img src="/images/Contour.png">
