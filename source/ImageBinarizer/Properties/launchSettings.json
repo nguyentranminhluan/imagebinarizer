@@ -1,8 +1,7 @@
 {
   "profiles": {
     "ImageBinarizerApp": {
-      "commandName": "Project",
-      "commandLineArgs": "--input-image ..\\..\\..\\..\\CommonFiles\\daenet.png -cc"
+      "commandName": "Project"
     }
   }
 }

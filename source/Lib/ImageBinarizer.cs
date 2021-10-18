@@ -1,5 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using ImageBinarizerLib.Entities;
 using LearningFoundation;
@@ -12,16 +16,14 @@ namespace ImageBinarizerLib
     /// </summary>
     public class ImageBinarizer : ImagePixelsDataHandler, IPipelineModule<double[,,], double[,,]>
     {
-        #region Private members
+
         private BinarizerParams configuration;
 
         private int m_white = 1;
         private int m_black = 0;
 
         private Size? m_TargetSize;
-        #endregion
 
-        #region Constructor
         /// <summary>
         /// Constructor that takes BinarizerParams as input to assign the binarizer configuration to the object.
         /// </summary>
@@ -35,9 +37,9 @@ namespace ImageBinarizerLib
                 this.m_black = 1;
             }
         }
-        #endregion
 
         #region Public Methods
+
         /// <summary>
         /// If you use the binarizer inside of the LearningApiPipeline, you should use this method.
         /// </summary>
@@ -71,15 +73,7 @@ namespace ImageBinarizerLib
 
             double[,,] outputData = GetBinary(inputData);
 
-            StringBuilder sb = CreateTextFromBinary(outputData); //TODO: add check for create code
-
-            if (this.configuration.CreateCode) // check if code file need to be created
-            {
-                CodeCreator code = new CodeCreator(sb, this.configuration.OutputImagePath);
-                code.Create();
-                return;
-            }
-
+            StringBuilder sb = CreateTextFromBinary(outputData);
             using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
             {
                 writer.Write(sb.ToString());
@@ -235,6 +229,8 @@ namespace ImageBinarizerLib
             return outArray;
         }
 
+
+
         /// <summary>
         /// Create string builder from output data
         /// </summary>
@@ -280,10 +276,6 @@ namespace ImageBinarizerLib
 
             if (this.configuration.ImageWidth > 0)
                 return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
-
-            int logoWidth = 70;
-            if (this.configuration.CreateCode && imageOriginalWidth > logoWidth)
-                return new Size(logoWidth, (int)(logoWidth * ratio));
 
             return null;
         }
