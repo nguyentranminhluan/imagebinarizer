@@ -158,17 +158,16 @@ imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-i
 
 
 ### Thresholds customization
-One interesting feature of this project is to customize the thresholds for each primary color when perform binarization to have a better binarized result. Use the following command to setup thresholds' values:
+One interesting feature of this project is to customize the thresholds for each primary color when perform binarization to have a better binarized result. Use the following command to setup thresholds' values for RBG colors:
 ~~~shell
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --redthreshold 100 --greenthreshold 100 --bluethreshold 100
 ~~~
-The image below shows the differences between Normal Binarization (the left one) and Customized Thresholds Binarization (the right one):
-<img src="/images/thresholdCustomize.png">
-
 Customized Gray Threshold can also be provided while performing binarization with the following command:
 ~~~shell
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> --gs --greythreshold 100
 ~~~
+The image below shows the differences between Normal Binarization (the left one) and Customized Thresholds Binarization (the right one):
+<img src="/images/thresholdCustomize.png">
 
 ### Create LogoPrinter.cs file code
 
