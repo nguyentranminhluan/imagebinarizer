@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageBinarizerApp
 {
@@ -14,9 +12,11 @@ namespace ImageBinarizerApp
     /// </summary>
     public class CommandLineParsing
     {
+        #region Private members
         public readonly static List<string> HelpArguments = new List<string> { "-h", "--help" };
         private readonly List<string> inverseArguments = new List<string> { "-inv", "--inverse" };
         private readonly List<string> greyScaleArguments = new List<string> { "-gs", "--greyscale" };
+        private readonly List<string> createCodeArguments = new List<string> { "-cc", "--createcode", "--create-code" };
 
         private List<string> command;
         private static Dictionary<string, string> GetCommandLineMap()
@@ -35,11 +35,14 @@ namespace ImageBinarizerApp
                 { "-grt", "greyThreshold"},
                 { "-h", "help"},
                 { "-inv", "inverse"},
-                { "-gs", "greyScale"}
+                { "-gs", "greyScale"},
+                { "-cc", "createCode"},
+                { "--create-code", "createCode"}
             };
         }
+        #endregion
 
-        #region Public methods
+        #region Constructor
         /// <summary>
         /// Constructor to pass the arguments
         /// </summary>
@@ -48,7 +51,9 @@ namespace ImageBinarizerApp
         {
             command = args.ToList();
         }
+        #endregion
 
+        #region Public methods
         /// <summary>
         /// Conducting parsing process that map the input argument to ImageBinarizerApp.Entities.BinarizerConfiguration object.
         /// </summary>
@@ -96,6 +101,28 @@ namespace ImageBinarizerApp
             CheckAndCorrectHelpArgument();
             CheckAndCorrectInverseArgument();
             CheckAndCorrectGreyScaleArgument();
+            CheckAndCorrectCreateCodeArgument();
+        }
+
+        /// <summary>
+        /// Checking CreateCode argument.
+        /// </summary>
+        private void CheckAndCorrectCreateCodeArgument()
+        {
+            bool createCode = false;
+            foreach (var arg in createCodeArguments)
+            {
+                while (command.Contains(arg))
+                {
+                    command.Remove(arg);
+                    createCode = true;
+                }
+            }
+            if (createCode)
+            {
+                command.Add("-cc");
+                command.Add("true");
+            }
         }
 
         /// <summary>
@@ -187,6 +214,14 @@ namespace ImageBinarizerApp
                 return false;
             }
 
+            //
+            //Check to resize when code create is required
+            if (Configurations.CreateCode)
+            {                
+                if (Configurations.OutputImagePath.Equals(""))
+                    Configurations.OutputImagePath = ".\\LogoPrinter.cs";
+            }
+
             if (Path.GetDirectoryName(Configurations.OutputImagePath) != String.Empty)
             {
                 //
@@ -195,9 +230,9 @@ namespace ImageBinarizerApp
                 {
                     errMsg = "Output Directory doesn't exist.";
                     return false;
-                }                
-            }
-            Configurations.OutputImagePath = Path.GetFullPath(Configurations.OutputImagePath);
+                }
+                Configurations.OutputImagePath = Path.GetFullPath(Configurations.OutputImagePath);
+            }            
 
             //
             //Check if width or height input is valid
@@ -256,15 +291,20 @@ namespace ImageBinarizerApp
             Console.WriteLine("\t- Green threshold: {\"-gt\", \"--greenThreshold\"}");
             Console.WriteLine("\t- Blue threshold: {\"-bt\", \"--blueThreshold\"}");
             Console.WriteLine("\t- Grey threshold: {\"-grt\", \"--greyThreshold\"}");
-            Console.WriteLine("\t- Inverse enable: {\"-inv\"}");
-            Console.WriteLine("\t- Grey scale enable: {\"-gs\"}");
+            Console.WriteLine("\t- Inverse enable: {\"-inv\", \"--inverse\"}");
+            Console.WriteLine("\t- Grey scale enable: {\"-gs\", \"--greyscale\"}");
+            Console.WriteLine("\t- Create code enable: {\"-cc\", \"--createcode\", \"--create-code\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
-            Console.WriteLine("\nAdding \"-inv\" to indicate the optional of inversing the contrast of the binarized picture.");
-            Console.WriteLine("\nAdding \"-gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grt\" or " +
+            Console.WriteLine("\nAdding \"-inv\" to indicate the option of inversing the contrast of the binarized picture.");
+            Console.WriteLine("\nAdding \"-gs\" to indicate the option of calculating threshold base on grey scale. Using \"-grt\" or " +
                                     "\"--greyThreshold\" along with this to set threshold for grey scale binarizer.");
+            Console.WriteLine("\nAdding \"-cc\" to indicate the option of creating code file for printing Logo to console.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
+            Console.WriteLine("\t+ Create code file with default width of 70: \n\t\timgbin --input-image c:\\a.png --create-code");
+            Console.WriteLine("\t+ Create code file with custom width or height: \n\t\timgbin --input-image c:\\a.png -iw 150 --create-code" +
+                                "\n\t   or \n\t\timgbin --input-image c:\\a.png -ih 150 --create-code");
             Console.WriteLine("\t+ With automatic RGB: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
             Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -ih 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +

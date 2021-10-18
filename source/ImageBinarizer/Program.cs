@@ -1,9 +1,9 @@
 ﻿using ImageBinarizerApp.Entities;
 using ImageBinarizerLib;
+using LogoBinarizer;
 using System;
-using System.IO;
 using System.Linq;
-using System.Text;
+
 
 namespace ImageBinarizerApp
 {
@@ -13,66 +13,18 @@ namespace ImageBinarizerApp
     class Program
     {
         /// <summary>
-        /// Use ImageBinarizerLib to create binarized Logo
-        /// </summary>
-        private static void createBotLogo()
-        {
-            BinarizerConfiguration configuration = new BinarizerConfiguration();
-            configuration.InputImagePath = ".\\Logo\\Logo.png";
-            configuration.OutputImagePath = ".\\Logo\\Logo.txt";
-            configuration.ImageWidth = 60;
-
-            if (!(File.Exists(configuration.InputImagePath)))
-            {
-                return;
-            }
-
-            ImageBinarizer img = new ImageBinarizer(configuration);
-            img.Run();
-        }
-
-        private static string botLogo = File.ReadAllText(".\\Logo\\dotnetbot.txt");
-
-        /// <summary>
-        /// Draw App Logo to console
-        /// </summary>
-        private static void PrintAppLogoAndWelcomeMessage(ConsoleColor clr, string logo)
-        {
-            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.1.0]");
-            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
-
-            var letter = (char)20;
-
-            foreach (var c in logo)
-            {
-                switch (c)
-                {
-                    case '0':
-                        Console.Write(letter);
-                        break;
-                    case '1':                        
-                        Console.Write(' ');
-                        break;
-                    default:
-                        Console.Write(c);
-                        break;
-                }
-            }
-
-            //Console.WriteLine(logo);
-
-        }
-
-        /// <summary>
         /// Main entry point for Program
         /// </summary>
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-            createBotLogo();
+            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.1.0]");
+            Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
+
+            LogoPrinter logo = new LogoPrinter();
+            logo.Print();
 
             var clr = Console.ForegroundColor;
-            PrintAppLogoAndWelcomeMessage(clr, botLogo);
 
             if (args.Length == 0)
             {
@@ -104,8 +56,13 @@ namespace ImageBinarizerApp
                 return;
             }
 
-            PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}", ConsoleColor.Green);
+            if (!configuration.CreateCode)
+            {
+                PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}", ConsoleColor.Green);
+                return;
+            }
 
+            PrintMessage($"\nCode file created. Your file is saved at:\n\t{configuration.OutputImagePath}", ConsoleColor.Green);
         }
 
         /// <summary>

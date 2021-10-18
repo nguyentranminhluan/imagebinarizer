@@ -31,12 +31,6 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Update="Logo\Logo.png">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
 
 
 </Project>
