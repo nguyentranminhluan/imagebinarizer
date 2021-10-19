@@ -102,9 +102,9 @@ The Binarized image is generated as below with a custom width of 120, height is 
 #### Create image in a custom scale
 The resization can be done with a custom of both width and height by executing the following command:
 ~~~
-imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 50
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --output-image <your image output path (c:\path\output.txt)> --imagewidth 120 --imageheight 28
 ~~~
-A binarized image with size of 120x50 is generated as shown below:
+A binarized image with size of 120x28 is generated as shown below:
 ~~~
 111111111111111111111111111111100111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 111111111111111111111111111111110000011111111111111111111111111111111111111111111111111111111111111111111111111111111111
@@ -181,13 +181,13 @@ The image below shows the differences between Normal Binarization (the left one)
 
 To get the code for printing the logo to console, use following command:
 ~~~shell
-imgbin --input-image <your image input path (c:\path\triangle.png)> --create-code
+imgbin --input-image <your image input path (c:\path\square.png)> --create-code
 ~~~
 The size of logo can also be customized, such as setting the width of the logo to 30 by using below command:
 ~~~shell
-imgbin --input-image <your image input path (c:\path\triangle.png)> --create-code -iw 30
+imgbin --input-image <your image input path (c:\path\square.png)> --create-code -iw 30
 ~~~
-Below is an example of the code in LogoPrinter.cs that **ImageBinarizer** created, with a custom width of logo is 30:
+Here is an example of the code in LogoPrinter.cs that **ImageBinarizer** created:
 ~~~csharp
 using System;
 
@@ -272,7 +272,7 @@ namespace Testing
    
 }
 ~~~
-The picture below is an example logo:
+The picture below is the result of the above example:
 
 <p align="center">
     <img src="/images/console.png" >
