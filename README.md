@@ -1,11 +1,11 @@
-# ImageBinarizer  [![.NET Core Desktop](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml)
+# **ImageBinarizer**  [![.NET Core Desktop](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/UniversityOfAppliedSciencesFrankfurt/imagebinarizer/actions/workflows/dotnet-desktop.yml)
 Image binarization is the process of taking an image and convert it into black and white image. This process uses thresholds of RBG or Gray to assign black (0) or white (1) to a pixel. Binarization is usually use when trying to extract object from picture.
 
-The purpose of ImageBinarizer is to performs binarization of images. It converts a color image to the 2D representation of 01 bits (with 0 and 1). Binarized image is then saved at the provided path with the given name in output path argument:
+The purpose of **ImageBinarizer** is to performs binarization of images. It converts a color image to the 2D representation of 01 bits (with 0 and 1). Binarized image is then saved at the provided path with the given name in output path argument:
 ~~~ shell
 --output-image <your image output path>
 ~~~
-The following command gives information for the arguments and how to use them when running ImageBinarizer.
+The following command gives information for the arguments and how to use them when running **ImageBinarizer**.
 ~~~ shell
 imgbin --help
 ~~~
@@ -137,7 +137,7 @@ A binarized image with size of 120x50 is generated as shown below:
 ~~~
 
 ### Inverted Image
-Another option to binarize the image is to get the inverse of it. The following command provides required argument (--inv) to perform Inverse Binarization:
+Another option to binarize the image is to get the inverse of it. The next command provides required argument (--inv) to perform Inverse Binarization:
 ~~~shell
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> -inv
 ~~~
@@ -147,7 +147,7 @@ The pictures below compare the normal binarized image (left) with the inverted b
 
 
 ### Gray Scale
-In real life, human eyes have different sensitivities with different colors. According to research, Green, Red, then Blue are the order of the sensitivities of the eyes from high to low to the primary light color. To the have a better performence in binarization according to human eyes, the image should be converted to Gray Scale befor binarizing. NTSC formula is used to convert the image:
+In real life, human eyes have different sensitivities with different colors. According to research, Green, Red, then Blue is the order of the sensitivities of the eyes from high to low to the primary light colors. To the have a better performence in binarization according to human eyes, the image should be converted to Gray Scale before binarizing. NTSC formula is used to convert the image:
 ~~~
 grayValue = 0.299*redValue + 0.587*greenValue + 0.114*blueValue
 ~~~
@@ -155,7 +155,11 @@ To enable gray scale, required argument (--gs) need to be provided as shown in b
 ~~~shell
 imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-image <your image output path (c:\path\output.txt)> -gs
 ~~~
+The picture below illustrates the different between RBG scale binarization (the left one) and Gray Scale binarization (the right one) when using the middle image as input:
 
+<p align="center">
+    <img src="/images/grayexample.png" >
+</p>
 
 ### Thresholds customization
 One interesting feature of this project is to customize the thresholds for each primary color when perform binarization to have a better binarized result. Use the following command to setup thresholds' values for RBG colors:
@@ -171,7 +175,7 @@ The image below shows the differences between Normal Binarization (the left one)
 
 ### Create LogoPrinter.cs file code
 
-ImageBinarizer can be used to create a console application logo. Making a logo from this image as an example:
+**ImageBinarizer** can be used to create a console application logo. Making a logo from this image as an example:
 
 <p align="center">
     <img src="/images/triangle.png" width="300">
@@ -185,7 +189,7 @@ The size of logo can also be customized, such as setting the width of the logo t
 ~~~shell
 imgbin --input-image <your image input path (c:\path\triangle.png)> --create-code -iw 30
 ~~~
-Below is an example of the code in LogoPrinter.cs that ImageBinarizer created, with a custom width of logo is 30:
+Below is an example of the code in LogoPrinter.cs that **ImageBinarizer** created, with a custom width of logo is 30:
 ~~~csharp
 using System;
 
