@@ -2,6 +2,7 @@
 using ImageBinarizerLib;
 using LogoBinarizer;
 using System;
+using System.IO;
 using System.Linq;
 
 
@@ -58,18 +59,18 @@ namespace ImageBinarizerApp
 
             if (!configuration.CreateCode)
             {
-                PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{configuration.OutputImagePath}", ConsoleColor.Green);
+                PrintMessage($"\nImage Binarization completed. Your Binarized Image is saved at:\n\t{Path.GetFullPath(configuration.OutputImagePath)}", ConsoleColor.Green);
                 return;
             }
 
-            PrintMessage($"\nCode file created. Your file is saved at:\n\t{configuration.OutputImagePath}", ConsoleColor.Green);
+            PrintMessage($"\nCode file created. Your file is saved at:\n\t{Path.GetFullPath(configuration.OutputImagePath)}", ConsoleColor.Green);
         }
 
         /// <summary>
         /// Print message 
         /// </summary>
-        /// <param name="msg">string of message</param>
-        /// <param name="isError">to check if this is an error message</param>
+        /// <param name="msg">String of message</param>
+        /// <param name="isError">Check if this is an error message</param>
         private static void PrintMessage(string msg = null, ConsoleColor clr = ConsoleColor.White, bool isError = false)
         {
             if (!string.IsNullOrEmpty(msg))
@@ -95,7 +96,7 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Check validation of arguments
         /// </summary>
-        /// <param name="args">input arguments</param>
+        /// <param name="args">Input arguments</param>
         /// <param name="configurationData">Configurations provided</param>
         /// <returns></returns>
         private static bool TryParseConfiguration(string[] args, out BinarizerConfiguration configurationData, out string errMsg)

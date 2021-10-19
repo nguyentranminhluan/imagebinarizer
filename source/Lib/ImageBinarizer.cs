@@ -21,7 +21,7 @@ namespace ImageBinarizerLib
         private Size? m_TargetSize;
         #endregion
 
-        #region Constructor
+        #region Constructors
         /// <summary>
         /// Constructor that takes BinarizerParams as input to assign the binarizer configuration to the object.
         /// </summary>
@@ -40,17 +40,20 @@ namespace ImageBinarizerLib
         #region Public Methods
         /// <summary>
         /// If you use the binarizer inside of the LearningApiPipeline, you should use this method.
+        /// It takes the 3D array as input and start binarization base on provided arguments.
         /// </summary>
-        /// <param name="data">this is the double data coming from unitest.</param>
-        /// <param name="ctx">this define the Interface IContext for Data descriptor</param>
-        /// <returns></returns>
+        /// <param name="data">This is the double data coming from unitest.</param>
+        /// <param name="ctx">This defines the Interface IContext for Data descriptor</param>
+        /// <returns>3D array with 1 bit element (0 or 1)</returns>
         public double[,,] Run(double[,,] data, IContext ctx)
         {
+            this.configuration.CreateCode = false;
             return GetBinary(ResizeImageData(data));
         }
 
         /// <summary>
-        /// Method to call Binarizer outside the LearningApiPipeline
+        /// Method to call Binarizer outside the LearningApiPipeline. 
+        /// It receives the image as input and produce .txt file or .cs base on provided arguments from user.
         /// </summary>
         public void Run()
         {
@@ -261,6 +264,8 @@ namespace ImageBinarizerLib
         /// to calculate the aspect ratio. 
         /// Base on this ratio, if user gives only width or height as custom configuration for binarized image, 
         /// the other value will be calculated automatically.
+        /// The width of the logo if not specified the customization will be 70 by default when the width is larger than 70,
+        /// for fitting to console window, as user chooses to create code file. 
         /// </summary>
         /// <param name="imageOriginalWidth">Bitmap width</param>
         /// <param name="imageOriginalHeight">Bitmap Height</param>

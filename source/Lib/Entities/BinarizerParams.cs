@@ -9,6 +9,7 @@ namespace ImageBinarizerLib.Entities
     /// </summary>
     public class BinarizerParams
     {
+        #region Public properties
         /// <summary>
         /// Input path of the input image
         /// </summary>
@@ -63,6 +64,7 @@ namespace ImageBinarizerLib.Entities
         /// Create .cs file instead of text file for printing Logo
         /// </summary>
         public bool CreateCode { get; set; } = false;
+        #endregion
     }
 
 }

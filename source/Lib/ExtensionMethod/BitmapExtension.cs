@@ -13,9 +13,9 @@ namespace ImageBinarizerLib.ExtensionMethod
     {
 
         /// <summary>
-        /// Get Bytes array of Image
+        /// Get Bytes array that contains color info of Image
         /// </summary>
-        /// <param name="bitmapInput">this bitmap object</param>
+        /// <param name="bitmapInput">This bitmap object</param>
         /// <returns></returns>
         public static byte[] GetBytes(this Bitmap bitmapInput)
         {
@@ -32,7 +32,7 @@ namespace ImageBinarizerLib.ExtensionMethod
         /// <summary>
         /// Get stride of Image (number of bit per row
         /// </summary>
-        /// <param name="bitmapInput">this bitmap object</param>
+        /// <param name="bitmapInput">This bitmap object</param>
         /// <returns></returns>
         public static int GetStride(this Bitmap bitmapInput)
         {

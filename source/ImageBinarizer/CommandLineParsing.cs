@@ -42,11 +42,11 @@ namespace ImageBinarizerApp
         }
         #endregion
 
-        #region Constructor
+        #region Constructors
         /// <summary>
         /// Constructor to pass the arguments
         /// </summary>
-        /// <param name="args">input arguments</param>
+        /// <param name="args">Input arguments</param>
         public CommandLineParsing(string[] args)
         {
             command = args.ToList();
@@ -57,8 +57,8 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Conducting parsing process that map the input argument to ImageBinarizerApp.Entities.BinarizerConfiguration object.
         /// </summary>
-        /// <param name="Configurations">assign output BinarizerConfiguration object to this variable.</param>
-        /// <param name="errMsg">assign output error message to this variable.</param>
+        /// <param name="Configurations">Assign output BinarizerConfiguration object to this variable.</param>
+        /// <param name="errMsg">Assign output error message to this variable.</param>
         /// <returns>True if no error and false if error exit or help argument called.</returns>
         public bool Parse(out BinarizerConfiguration Configurations, out string errMsg)
         {
@@ -190,10 +190,11 @@ namespace ImageBinarizerApp
         }
 
         /// <summary>
-        /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object as input and check if user input arguments are correct.
+        /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object 
+        /// as input and check if user input arguments are correct.
         /// </summary>
         /// <param name="Configurations">Configuration for binarization</param>
-        /// <param name="errMsg">output error message</param>
+        /// <param name="errMsg">Output error message</param>
         /// <returns></returns>
         private bool ValidateArgs(BinarizerConfiguration Configurations, out string errMsg)
         {
@@ -215,7 +216,7 @@ namespace ImageBinarizerApp
             }
 
             //
-            //Check to resize when code create is required
+            //Check to set output path when code create is required
             if (Configurations.CreateCode)
             {                
                 if (Configurations.OutputImagePath.Equals(""))
@@ -230,8 +231,7 @@ namespace ImageBinarizerApp
                 {
                     errMsg = "Output Directory doesn't exist.";
                     return false;
-                }
-                Configurations.OutputImagePath = Path.GetFullPath(Configurations.OutputImagePath);
+                }                
             }            
 
             //
@@ -302,9 +302,7 @@ namespace ImageBinarizerApp
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
-            Console.WriteLine("\t+ Create code file with default width of 70: \n\t\timgbin --input-image c:\\a.png --create-code");
-            Console.WriteLine("\t+ Create code file with custom width or height: \n\t\timgbin --input-image c:\\a.png -iw 150 --create-code" +
-                                "\n\t   or \n\t\timgbin --input-image c:\\a.png -ih 150 --create-code");
+            Console.WriteLine("\t+ Binarize with default arguments: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt");
             Console.WriteLine("\t+ With automatic RGB: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
             Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -ih 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
@@ -313,6 +311,9 @@ namespace ImageBinarizerApp
                            "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100 -inv");
             Console.WriteLine("\n\t+ Passing all arguments with grey scale calculation: " +
                           "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-grt 100 -gs");
+            Console.WriteLine("\t+ Create code file with default width of 70: \n\t\timgbin --input-image c:\\a.png --create-code");
+            Console.WriteLine("\t+ Create code file with custom width or height: \n\t\timgbin --input-image c:\\a.png -iw 150 --create-code" +
+                                "\n\t   or \n\t\timgbin --input-image c:\\a.png -ih 150 --create-code");
         }
         #endregion
     }

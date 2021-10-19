@@ -17,6 +17,10 @@ namespace ImageBinarizerLib
         private static readonly string openedBracket = "{";
         private static readonly string closedBracket = "}";
 
+        /// <summary>
+        /// produce the string of code to write to .cs file
+        /// </summary>
+        /// <returns></returns>
         private string codeField()
         {
             return $@"using System;
@@ -40,30 +44,33 @@ namespace LogoBinarizer
         }
         #endregion
 
-        #region Constructor
+        #region Constructors
         /// <summary>
-        /// Constructor with text file input
+        /// Constructor that receives text file and output path as inputs, 
+        /// then create code file base on the string that built from stringBuilder and save it to the output path
         /// </summary>
-        /// <param name="path"></param>
-        public CodeCreator(string path)
+        /// <param name="inputPath">Input file .txt to make logo</param>
+        /// <param name="outputPath">Path to save code file</param>
+        public CodeCreator(string inputPath, string outputPath = ".\\LogoPrinter.cs")
         {
-            logoString = File.ReadAllText(path);
-            filePath = ".\\LogoPrinter.cs";
+            logoString = File.ReadAllText(inputPath);
+            filePath = outputPath;
         }
 
         /// <summary>
-        /// Constructor with stringBuilder input and output path
+        /// Constructor that receives stringBuilder and output path as inputs, 
+        /// then create code file base on the stringfrom stringBuilder and save it to the output path
         /// </summary>
-        /// <param name="logo"></param>
-        /// <param name="path"></param>
-        public CodeCreator(StringBuilder logo, string path = ".\\LogoPrinter.cs")
+        /// <param name="logo">String logo</param>
+        /// <param name="outputPath">Path to save code file</param>
+        public CodeCreator(StringBuilder logo, string outputPath = ".\\LogoPrinter.cs")
         {
             logoString = logo.ToString();
-            filePath = path;
+            filePath = outputPath;
         }
         #endregion
 
-        #region Public method
+        #region Public methods
         /// <summary>
         /// Method to create code file
         /// </summary>
