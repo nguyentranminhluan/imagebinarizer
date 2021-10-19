@@ -18,9 +18,9 @@ namespace ImageBinarizerLib
         private static readonly string closedBracket = "}";
 
         /// <summary>
-        /// produce the string of code to write to .cs file
+        /// Produce the string of code to write to .cs file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String of code</returns>
         private string codeField()
         {
             return $@"using System;

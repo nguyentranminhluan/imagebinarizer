@@ -11,12 +11,11 @@ namespace ImageBinarizerLib.ExtensionMethod
     /// </summary>
     public static class BitmapExtension
     {
-
         /// <summary>
         /// Get Bytes array that contains color info of Image
         /// </summary>
         /// <param name="bitmapInput">This bitmap object</param>
-        /// <returns></returns>
+        /// <returns>1D array of bitmap data</returns>
         public static byte[] GetBytes(this Bitmap bitmapInput)
         {
             BitmapData bitmapData = bitmapInput.LockBits(new Rectangle(0, 0, bitmapInput.Width, bitmapInput.Height), ImageLockMode.ReadOnly, bitmapInput.PixelFormat);
@@ -33,7 +32,7 @@ namespace ImageBinarizerLib.ExtensionMethod
         /// Get stride of Image (number of bit per row
         /// </summary>
         /// <param name="bitmapInput">This bitmap object</param>
-        /// <returns></returns>
+        /// <returns>Stride of bitmap</returns>
         public static int GetStride(this Bitmap bitmapInput)
         {
             BitmapData bitmapData = bitmapInput.LockBits(new Rectangle(0, 0, bitmapInput.Width, bitmapInput.Height), ImageLockMode.ReadOnly, bitmapInput.PixelFormat);

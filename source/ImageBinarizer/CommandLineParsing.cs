@@ -18,28 +18,7 @@ namespace ImageBinarizerApp
         private readonly List<string> greyScaleArguments = new List<string> { "-gs", "--greyscale" };
         private readonly List<string> createCodeArguments = new List<string> { "-cc", "--createcode", "--create-code" };
 
-        private List<string> command;
-        private static Dictionary<string, string> GetCommandLineMap()
-        {
-            return new Dictionary<string, string>()
-            {
-                { "-iip", "inputImagePath"},
-                { "--input-image", "inputImagePath"},
-                { "-oip", "outputImagePath" },
-                { "--output-image", "outputImagePath" },
-                { "-iw", "imageWidth" },                
-                { "-ih", "imageHeight"},                
-                { "-rt", "redThreshold" },                
-                { "-gt", "greenThreshold" },                
-                { "-bt", "blueThreshold"},                
-                { "-grt", "greyThreshold"},
-                { "-h", "help"},
-                { "-inv", "inverse"},
-                { "-gs", "greyScale"},
-                { "-cc", "createCode"},
-                { "--create-code", "createCode"}
-            };
-        }
+        private List<string> command;        
         #endregion
 
         #region Constructors
@@ -92,6 +71,32 @@ namespace ImageBinarizerApp
 
         #region Private methods
         /// <summary>
+        /// Get Dictionary for mapping command line
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> GetCommandLineMap()
+        {
+            return new Dictionary<string, string>()
+            {
+                { "-iip", "inputImagePath"},
+                { "--input-image", "inputImagePath"},
+                { "-oip", "outputImagePath" },
+                { "--output-image", "outputImagePath" },
+                { "-iw", "imageWidth" },
+                { "-ih", "imageHeight"},
+                { "-rt", "redThreshold" },
+                { "-gt", "greenThreshold" },
+                { "-bt", "blueThreshold"},
+                { "-grt", "greyThreshold"},
+                { "-h", "help"},
+                { "-inv", "inverse"},
+                { "-gs", "greyScale"},
+                { "-cc", "createCode"},
+                { "--create-code", "createCode"}
+            };
+        }
+
+        /// <summary>
         /// Corect the arguments input that received type boolean.
         /// </summary>
         private void CorrectArgsIfRequired()
@@ -116,6 +121,8 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Check if boolean argument called.
         /// </summary>
+        /// <param name="Arguments">List of the arguments for one condition</param>
+        /// <param name="argCommand">The argument command to set the condition to true when user use one of the arguments in the parameter Arguments</param>
         private void CheckAndCorrectArgument(List<string> Arguments, string argCommand)
         {
             bool hasArg = false;

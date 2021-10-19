@@ -44,7 +44,7 @@ namespace ImageBinarizerLib
         /// </summary>
         /// <param name="data">This is the double data coming from unitest.</param>
         /// <param name="ctx">This defines the Interface IContext for Data descriptor</param>
-        /// <returns>3D array with 1 bit element (0 or 1)</returns>
+        /// <returns>3D array of 1 bit element (0 or 1)</returns>
         public double[,,] Run(double[,,] data, IContext ctx)
         {
             this.configuration.CreateCode = false;
