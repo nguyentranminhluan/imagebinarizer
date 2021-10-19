@@ -95,99 +95,44 @@ namespace ImageBinarizerApp
         /// Corect the arguments input that received type boolean.
         /// </summary>
         private void CorrectArgsIfRequired()
-        {
+        {            
             //
-            //Check if help, inverse, or Geryscale argument was called
-            CheckAndCorrectHelpArgument();
-            CheckAndCorrectInverseArgument();
-            CheckAndCorrectGreyScaleArgument();
-            CheckAndCorrectCreateCodeArgument();
+            //Check help argument
+            CheckAndCorrectArgument(HelpArguments, "-h");
+
+            //
+            //Check inverse argument
+            CheckAndCorrectArgument(inverseArguments, "-inv");
+
+            //
+            //Check greyscale argument
+            CheckAndCorrectArgument(greyScaleArguments, "-gs");
+
+            //
+            //Check createcode argument
+            CheckAndCorrectArgument(createCodeArguments, "-cc");
         }
 
         /// <summary>
-        /// Checking CreateCode argument.
+        /// Check if boolean argument called.
         /// </summary>
-        private void CheckAndCorrectCreateCodeArgument()
+        private void CheckAndCorrectArgument(List<string> Arguments, string argCommand)
         {
-            bool createCode = false;
-            foreach (var arg in createCodeArguments)
+            bool hasArg = false;
+            foreach (var arg in Arguments)
             {
                 while (command.Contains(arg))
                 {
                     command.Remove(arg);
-                    createCode = true;
+                    hasArg = true;
                 }
             }
-            if (createCode)
+            if (hasArg)
             {
-                command.Add("-cc");
+                command.Add(argCommand);
                 command.Add("true");
             }
-        }
-
-        /// <summary>
-        /// Checking GreyScale argument.
-        /// </summary>
-        private void CheckAndCorrectGreyScaleArgument()
-        {
-            bool greyScale = false;
-            foreach (var arg in greyScaleArguments)
-            {
-                while (command.Contains(arg))
-                {
-                    command.Remove(arg);
-                    greyScale = true;
-                }
-            }
-            if (greyScale)
-            {
-                command.Add("-gs");
-                command.Add("true");
-            }
-        }
-
-        /// <summary>
-        /// Checking inverse argument.
-        /// </summary>
-        private void CheckAndCorrectInverseArgument()
-        {
-            bool inverse = false;
-            foreach (var arg in inverseArguments)
-            {
-                while (command.Contains(arg))
-                {
-                    command.Remove(arg);
-                    inverse = true;
-                }
-            }
-            if (inverse)
-            {
-                command.Add("-inv");
-                command.Add("true");
-            }
-
-        }
-
-        /// <summary>
-        /// Checking help argument.
-        /// </summary>
-        private void CheckAndCorrectHelpArgument()
-        {
-            bool help = false;
-            foreach (var arg in HelpArguments)
-            {
-                while (command.Contains(arg))
-                {
-                    command.Remove(arg);
-                    help = true;
-                }
-            }
-            if (help)
-            {
-                command.Add("-h");
-                command.Add("true");
-            }
-        }
+        }        
 
         /// <summary>
         /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object 
