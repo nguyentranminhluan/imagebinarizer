@@ -17,6 +17,7 @@ namespace Daenet.ImageBinarizerApp
         private readonly List<string> inverseArguments = new List<string> { "-inv", "--inverse" };
         private readonly List<string> greyScaleArguments = new List<string> { "-gs", "--greyscale" };
         private readonly List<string> createCodeArguments = new List<string> { "-cc", "--createcode", "--create-code" };
+        private readonly List<string> getContourArguments = new List<string> { "-gc", "--getcontour" };
 
         private List<string> command;        
         #endregion
@@ -93,6 +94,7 @@ namespace Daenet.ImageBinarizerApp
                 { "-gs", "greyScale"},
                 { "-cc", "createCode"},
                 { "--create-code", "createCode"}
+                { "-gc", "getContour"},
             };
         }
 
@@ -116,6 +118,11 @@ namespace Daenet.ImageBinarizerApp
             //
             //Check createcode argument
             CheckAndCorrectArgument(createCodeArguments, "-cc");
+
+            //
+            //Check getcontour argument
+            CheckAndCorrectArgument(getContourArguments, "-gc");
+
         }
 
         /// <summary>
@@ -246,6 +253,7 @@ namespace Daenet.ImageBinarizerApp
             Console.WriteLine("\t- Inverse enable: {\"-inv\", \"--inverse\"}");
             Console.WriteLine("\t- Grey scale enable: {\"-gs\", \"--greyscale\"}");
             Console.WriteLine("\t- Create code enable: {\"-cc\", \"--createcode\", \"--create-code\"}");
+            Console.WriteLine("\t- Create code enable: {\"-gc\", \"--getcontour\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
             Console.WriteLine("\nAdding \"-inv\" to indicate the option of inversing the contrast of the binarized picture.");
             Console.WriteLine("\nAdding \"-gs\" to indicate the option of calculating threshold base on grey scale. Using \"-grt\" or " +
@@ -259,8 +267,11 @@ namespace Daenet.ImageBinarizerApp
             Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -ih 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
                                 "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100");
-            Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
+            Console.WriteLine("\n\t+ Passing all arguments with inversion: " +
                            "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100 -inv");
+            Console.WriteLine("\n\t+ Get contour with inversion: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -inv -gc");
+            Console.WriteLine("\n\t+ Passing all arguments with get contour: " +
+                           "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100 -gc");
             Console.WriteLine("\n\t+ Passing all arguments with grey scale calculation: " +
                           "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-grt 100 -gs");
             Console.WriteLine("\t+ Create code file with default width of 70: \n\t\timgbin --input-image c:\\a.png --create-code");

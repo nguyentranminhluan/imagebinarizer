@@ -19,12 +19,12 @@ namespace Sample
 
             // GreyThreshold is only be used when GreyScale is set to true.
 
-            // These parameters: ImageWidth, ImageHeight, RedThreshold, GreenThreshold, BlueThreshold, Inverse can be used together as custom setting for Binarizing.
-            // These parameters: ImageWidth, ImageHeight, GreyScale, GreyThreshold, Inverse can be used together as custom setting for Binarizing.
+            // These parameters: ImageWidth, ImageHeight, RedThreshold, GreenThreshold, BlueThreshold, Inverse, GetContour can be used together as custom setting for Binarizing.
+            // These parameters: ImageWidth, ImageHeight, GreyScale, GreyThreshold, Inverse, GetContour can be used together as custom setting for Binarizing.
             // CreateCode can be combined with above parameters for creating C# code after binarizing image with custom settup.
 
             // When assign CreateCode to true, the OutputImagePath parameter does not need to be provided.
-            
+
 
 
             // Uncomment one of these lines of code to run sample
@@ -37,16 +37,23 @@ namespace Sample
             //Sample7();
             //Sample8();
             //Sample9();
+            //Sample10();
+            //Sample11();
+            //Sample12();
         }
 
         /// <summary>
-        /// This sample demonstrates how to create the image binary as a string that can be used in the application.
+        /// This sample demonstrates how to create the image binary as a string that can be used in the application. 
+        /// Some arguments will be set in this samples for demo.
         /// </summary>
         public static void Sample1()
         {
-            Console.WriteLine("Create the image binary as a string that can be used in the application.");
+            Console.WriteLine("Create the image binary as a string that can be used in the application with preset arguments.");
             var config = new BinarizerParams{
-                InputImagePath = "..\\..\\..\\..\\CommonFiles\\daenet.png"
+                InputImagePath = "..\\..\\..\\..\\CommonFiles\\daenet.png",
+                ImageWidth = 100,
+                Inverse = true,
+                GetContour = true                
             };
 
             var img = new ImageBinarizer(config);
@@ -206,6 +213,46 @@ namespace Sample
                 InputImagePath = "..\\..\\..\\..\\CommonFiles\\daenet.png",
                 ImageWidth = 100,
                 CreateCode = true
+            };
+
+            var img = new ImageBinarizer(config);
+            img.Run();
+        }
+
+        /// <summary>
+        /// This sample demonstrates how to get contour after binarizing image with inversion then save it to a text file.
+        /// </summary>
+        public static void Sample11()
+        {
+            Console.WriteLine("Create the image binary that show contour with custom width, height and custom RGB thresholds then save it to a text file.");
+            var config = new BinarizerParams
+            {
+                InputImagePath = "..\\..\\..\\..\\CommonFiles\\daenet.png",
+                OutputImagePath = ".\\daenet.txt",
+                Inverse = true,
+                GetContour = true
+            };
+
+            var img = new ImageBinarizer(config);
+            img.Run();
+        }
+
+        /// <summary>
+        /// This sample demonstrates how to get contour after binarizing image with custom width, height and custom RGB thresholds then save it to a text file.
+        /// </summary>
+        public static void Sample12()
+        {
+            Console.WriteLine("Create the image binary that show contour with custom width, height and custom RGB thresholds then save it to a text file.");
+            var config = new BinarizerParams
+            {
+                InputImagePath = "..\\..\\..\\..\\CommonFiles\\daenet.png",
+                OutputImagePath = ".\\daenet.txt",
+                ImageWidth = 120,
+                ImageHeight = 50,
+                RedThreshold = 100,
+                BlueThreshold = 80,
+                GreenThreshold = 200,
+                GetContour = true
             };
 
             var img = new ImageBinarizer(config);

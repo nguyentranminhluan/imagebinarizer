@@ -64,6 +64,11 @@ namespace Daenet.ImageBinarizerLib.Entities
         /// Create .cs file instead of text file for printing Logo
         /// </summary>
         public bool CreateCode { get; set; } = false;
+
+        /// <summary>
+        /// Get contour of the image
+        /// </summary>
+        public bool GetContour { get; set; } = false;
         #endregion
     }
 
