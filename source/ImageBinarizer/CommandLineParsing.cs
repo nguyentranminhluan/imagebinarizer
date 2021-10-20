@@ -55,12 +55,12 @@ namespace ImageBinarizerApp
         /// <summary>
         /// Conducting parsing process that map the input argument to ImageBinarizerApp.Entities.BinarizerConfiguration object.
         /// </summary>
-        /// <param name="Configurations">assign output BinarizerConfiguration object to this variable.</param>
+        /// <param name="config">assign output BinarizerConfiguration object to this variable.</param>
         /// <param name="errMsg">assign output error message to this variable.</param>
         /// <returns>True if no error and false if error exit or help argument called.</returns>
-        public bool Parse(out BinarizerConfiguration Configurations, out string errMsg)
+        public bool Parse(out BinarizerConfiguration config, out string errMsg)
         {
-            Configurations = new BinarizerConfiguration();
+            config = new BinarizerConfiguration();
 
             CorrectArgsIfRequired();
 
@@ -69,8 +69,8 @@ namespace ImageBinarizerApp
             try
             {
                 var builder = new ConfigurationBuilder().AddCommandLine(command.ToArray(), switchMappings);
-                var config = builder.Build();
-                config.Bind(Configurations);
+                var configRoot = builder.Build();
+                configRoot.Bind(config);
 
             }
             catch (Exception e)
@@ -79,7 +79,7 @@ namespace ImageBinarizerApp
                 return false;
             }
             //Console.WriteLine(Configurations.Inverse);
-            if (!ValidateArgs(Configurations, out errMsg))
+            if (!ValidateArgs(config, out errMsg))
                 return false;
             errMsg = null;
             return true;
