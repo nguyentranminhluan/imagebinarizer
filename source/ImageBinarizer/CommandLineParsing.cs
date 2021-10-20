@@ -78,9 +78,9 @@ namespace Daenet.ImageBinarizerApp
         {
             return new Dictionary<string, string>()
             {
-                { "-iip", "inputImagePath"},
+                { "-ip", "inputImagePath"},
                 { "--input-image", "inputImagePath"},
-                { "-oip", "outputImagePath" },
+                { "-op", "outputImagePath" },
                 { "--output-image", "outputImagePath" },
                 { "-iw", "imageWidth" },
                 { "-ih", "imageHeight"},
@@ -235,8 +235,8 @@ namespace Daenet.ImageBinarizerApp
         private void PrintHelp()
         {
             Console.WriteLine("\nHelp:");
-            Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\", \"--inputImagePath\"}");
-            Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\", \"--outputImagePath\"}");
+            Console.WriteLine("\n\t- Input image path: {\"-ip\", \"--input-image\", \"--inputImagePath\"}");
+            Console.WriteLine("\t- Output image path: {\"-op\", \"--output-image\", \"--outputImagePath\"}");
             Console.WriteLine("\t- Image width: {\"-iw\", \"--imageWidth\"}");
             Console.WriteLine("\t- Image height: {\"-ih\", \"--imageHeight\"}");
             Console.WriteLine("\t- Red threshold: {\"-rt\", \"--redThreshold\"}");
