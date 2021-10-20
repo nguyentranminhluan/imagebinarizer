@@ -21,13 +21,13 @@ namespace Daenet.ImageBinarizerApp
             Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.5.0]");
             Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
 
-            LogoPrinter logo = new LogoPrinter();
-            logo.Print();
-
             var clr = Console.ForegroundColor;
 
             if (args.Length == 0)
             {
+                LogoPrinter logo = new LogoPrinter();
+                logo.Print();
+
                 PrintMessage(" ", ConsoleColor.White, true);
                 return;
             }

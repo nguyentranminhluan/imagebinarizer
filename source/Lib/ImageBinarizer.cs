@@ -74,11 +74,11 @@ namespace Daenet.ImageBinarizerLib
 
             double[,,] outputData = GetBinary(inputData);
 
-            StringBuilder sb = CreateTextFromBinary(outputData); //TODO: add check for create code
+            StringBuilder sb = CreateTextFromBinary(outputData);
 
             if (this.configuration.CreateCode) // check if code file need to be created
             {
-                CodeCreator code = new CodeCreator(sb, this.configuration.OutputImagePath);
+                CodeCreator code = new CodeCreator(sb, this.configuration.OutputImagePath ?? ".\\LogoPrinter.cs");
                 code.Create();
                 return;
             }
@@ -87,6 +87,34 @@ namespace Daenet.ImageBinarizerLib
             {
                 writer.Write(sb.ToString());
             }
+        }
+
+        /// <summary>
+        /// Method to call Binarizer outside the LearningApiPipeline. 
+        /// It receives the image as input and return the binary string
+        /// </summary>
+        /// <returns>Binary data as string</returns>
+        public string GetStringBinariy()
+        {
+            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
+
+            int imgWidth = skBitmap.Width;
+            int imgHeight = skBitmap.Height;
+            SKImageInfo info = new SKImageInfo(imgWidth, imgHeight, SKColorType.Rgba8888);
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                info.Width = this.m_TargetSize.Value.Width;
+                info.Height = this.m_TargetSize.Value.Height;
+            }
+            skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
+
+            double[,,] inputData = GetPixelsColors(skBitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            StringBuilder sb = CreateTextFromBinary(outputData);
+            return sb.ToString();
         }
         #endregion
 
