@@ -1,6 +1,6 @@
-﻿using ImageBinarizerLib.Entities;
+﻿using Daenet.ImageBinarizerLib.Entities;
 
-namespace ImageBinarizerApp.Entities
+namespace Daenet.ImageBinarizerApp.Entities
 {
     /// <summary>
     /// Collect requested Binarize data

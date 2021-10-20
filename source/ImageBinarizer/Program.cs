@@ -1,12 +1,11 @@
-﻿using ImageBinarizerApp.Entities;
-using ImageBinarizerLib;
-using LogoBinarizer;
+﻿using Daenet.ImageBinarizerApp.Entities;
+using Daenet.ImageBinarizerLib;
 using System;
 using System.IO;
 using System.Linq;
 
 
-namespace ImageBinarizerApp
+namespace Daenet.ImageBinarizerApp
 {
     /// <summary>
     /// Program Class of Console App
@@ -19,7 +18,7 @@ namespace ImageBinarizerApp
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.1.0]");
+            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.5.0]");
             Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
 
             LogoPrinter logo = new LogoPrinter();

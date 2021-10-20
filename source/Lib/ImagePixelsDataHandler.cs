@@ -1,11 +1,11 @@
-﻿using ImageBinarizerLib.ExtensionMethod;
+﻿using Daenet.ImageBinarizerLib.ExtensionMethod;
 using SkiaSharp;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace ImageBinarizerLib
+namespace Daenet.ImageBinarizerLib
 {
     /// <summary>
     /// Get Set pixels data

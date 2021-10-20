@@ -1,11 +1,11 @@
 ﻿using System.Drawing;
 using System.IO;
 using System.Text;
-using ImageBinarizerLib.Entities;
+using Daenet.ImageBinarizerLib.Entities;
 using LearningFoundation;
 using SkiaSharp;
 
-namespace ImageBinarizerLib
+namespace Daenet.ImageBinarizerLib
 {
     /// <summary>
     /// Main class for the Image Binarizer algorithm using Ipipeline

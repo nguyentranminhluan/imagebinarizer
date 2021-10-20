@@ -1,11 +1,11 @@
-﻿using ImageBinarizerApp.Entities;
+﻿using Daenet.ImageBinarizerApp.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ImageBinarizerApp
+namespace Daenet.ImageBinarizerApp
 {
     /// <summary>
     /// This class is use to Parse the arguments of the Application
@@ -145,14 +145,14 @@ namespace ImageBinarizerApp
         /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object 
         /// as input and check if user input arguments are correct.
         /// </summary>
-        /// <param name="Configurations">Configuration for binarization</param>
+        /// <param name="Configuration">Configuration for binarization</param>
         /// <param name="errMsg">Output error message</param>
         /// <returns></returns>
-        private bool ValidateArgs(BinarizerConfiguration Configurations, out string errMsg)
+        private bool ValidateArgs(BinarizerConfiguration Configuration, out string errMsg)
         {
             //
             //Check if help is call
-            if (Configurations.Help)
+            if (Configuration.Help)
             {
                 PrintHelp();
                 errMsg = null;
@@ -161,7 +161,7 @@ namespace ImageBinarizerApp
 
             //
             //Check if input file is valid
-            if (!(File.Exists(Configurations.InputImagePath)))
+            if (!(File.Exists(Configuration.InputImagePath)))
             {
                 errMsg = "Input file doesn't exist.";
                 return false;
@@ -169,17 +169,17 @@ namespace ImageBinarizerApp
 
             //
             //Check to set output path when code create is required
-            if (Configurations.CreateCode)
+            if (Configuration.CreateCode)
             {                
-                if (Configurations.OutputImagePath.Equals(""))
-                    Configurations.OutputImagePath = ".\\LogoPrinter.cs";
+                if (Configuration.OutputImagePath.Equals(""))
+                    Configuration.OutputImagePath = ".\\LogoPrinter.cs";
             }
 
-            if (Path.GetDirectoryName(Configurations.OutputImagePath) != String.Empty)
+            if (Path.GetDirectoryName(Configuration.OutputImagePath) != String.Empty)
             {
                 //
                 //Check if output dir is valid
-                if (!(Directory.Exists(Path.GetDirectoryName(Configurations.OutputImagePath))))
+                if (!(Directory.Exists(Path.GetDirectoryName(Configuration.OutputImagePath))))
                 {
                     errMsg = "Output Directory doesn't exist.";
                     return false;
@@ -188,7 +188,7 @@ namespace ImageBinarizerApp
 
             //
             //Check if width or height input is valid
-            if (Configurations.ImageHeight < 0 || Configurations.ImageWidth < 0)
+            if (Configuration.ImageHeight < 0 || Configuration.ImageWidth < 0)
             {
                 errMsg = "Height and Width should be larger than 0";
                 return false;
@@ -196,7 +196,7 @@ namespace ImageBinarizerApp
 
             //
             //Check if red threshold is valid
-            if ((Configurations.RedThreshold < -1 || Configurations.RedThreshold > 255))
+            if ((Configuration.RedThreshold < -1 || Configuration.RedThreshold > 255))
             {
                 errMsg = "Red Threshold should be in between 0 and 255.";
                 return false;
@@ -204,7 +204,7 @@ namespace ImageBinarizerApp
 
             //
             //Check if green threshold is valid
-            if ((Configurations.GreenThreshold < -1 || Configurations.GreenThreshold > 255))
+            if ((Configuration.GreenThreshold < -1 || Configuration.GreenThreshold > 255))
             {
                 errMsg = "Green Threshold should be in between 0 and 255.";
                 return false;
@@ -212,7 +212,7 @@ namespace ImageBinarizerApp
 
             //
             //Check if blue threshold is valid
-            if ((Configurations.BlueThreshold < -1 || Configurations.BlueThreshold > 255))
+            if ((Configuration.BlueThreshold < -1 || Configuration.BlueThreshold > 255))
             {
                 errMsg = "Blue Threshold should be in between 0 and 255.";
                 return false;
@@ -220,7 +220,7 @@ namespace ImageBinarizerApp
 
             //
             //Check if grey threshold is valid
-            if ((Configurations.GreyThreshold < -1 || Configurations.GreyThreshold > 255))
+            if ((Configuration.GreyThreshold < -1 || Configuration.GreyThreshold > 255))
             {
                 errMsg = "Grey Threshold should be in between 0 and 255.";
                 return false;
