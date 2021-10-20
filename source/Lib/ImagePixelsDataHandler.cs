@@ -16,7 +16,7 @@ namespace ImageBinarizerLib
         /// <summary>
         /// Get Pixels data from System.Drawing.Bitmap object.
         /// </summary>
-        /// <param name="bitmapInput">input Bitmap</param>
+        /// <param name="bitmapInput">Input Bitmap</param>
         /// <returns>3D array of color data</returns>
         private protected double[,,] GetPixelsColors(Bitmap bitmapInput)
         {
@@ -53,7 +53,7 @@ namespace ImageBinarizerLib
         /// <summary>
         /// Get Pixels data from SkiaSharp.SKBitmap object.
         /// </summary>
-        /// <param name="bitmapInput">input Bitmap</param>
+        /// <param name="bitmapInput">Input Bitmap</param>
         /// <returns>3D array of color data</returns>
         private protected double[,,] GetPixelsColors(SKBitmap bitmapInput)
         {
@@ -85,7 +85,7 @@ namespace ImageBinarizerLib
         /// <summary>
         /// Set Pixel data to System.Drawing.Bitmap object
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="data">3D array of image data</param>
         /// <returns>System.Drawing.Bitmap object</returns>
         private protected Bitmap SetPixelsColors(double[,,] data)
         {

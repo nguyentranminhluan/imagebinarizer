@@ -9,6 +9,7 @@ namespace ImageBinarizerLib.Entities
     /// </summary>
     public class BinarizerParams
     {
+        #region Public properties
         /// <summary>
         /// Input path of the input image
         /// </summary>
@@ -58,6 +59,12 @@ namespace ImageBinarizerLib.Entities
         /// Determine if binarization base on grey scale threshold
         /// </summary>
         public bool GreyScale { get; set; } = false;
+
+        /// <summary>
+        /// Create .cs file instead of text file for printing Logo
+        /// </summary>
+        public bool CreateCode { get; set; } = false;
+        #endregion
     }
 
 }

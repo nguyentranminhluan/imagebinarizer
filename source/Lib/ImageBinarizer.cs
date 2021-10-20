@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using ImageBinarizerLib.Entities;
 using LearningFoundation;
@@ -16,14 +12,16 @@ namespace ImageBinarizerLib
     /// </summary>
     public class ImageBinarizer : ImagePixelsDataHandler, IPipelineModule<double[,,], double[,,]>
     {
-
+        #region Private members
         private BinarizerParams configuration;
 
         private int m_white = 1;
         private int m_black = 0;
 
         private Size? m_TargetSize;
+        #endregion
 
+        #region Constructors
         /// <summary>
         /// Constructor that takes BinarizerParams as input to assign the binarizer configuration to the object.
         /// </summary>
@@ -37,22 +35,25 @@ namespace ImageBinarizerLib
                 this.m_black = 1;
             }
         }
+        #endregion
 
         #region Public Methods
-
         /// <summary>
         /// If you use the binarizer inside of the LearningApiPipeline, you should use this method.
+        /// It takes the 3D array as input and start binarization base on provided arguments.
         /// </summary>
-        /// <param name="data">this is the double data coming from unitest.</param>
-        /// <param name="ctx">this define the Interface IContext for Data descriptor</param>
-        /// <returns></returns>
+        /// <param name="data">This is the double data coming from unitest.</param>
+        /// <param name="ctx">This defines the Interface IContext for Data descriptor</param>
+        /// <returns>3D array of 1 bit element (0 or 1)</returns>
         public double[,,] Run(double[,,] data, IContext ctx)
         {
+            this.configuration.CreateCode = false;
             return GetBinary(ResizeImageData(data));
         }
 
         /// <summary>
-        /// Method to call Binarizer outside the LearningApiPipeline
+        /// Method to call Binarizer outside the LearningApiPipeline. 
+        /// It receives the image as input and produce .txt file or .cs base on provided arguments from user.
         /// </summary>
         public void Run()
         {
@@ -65,7 +66,7 @@ namespace ImageBinarizerLib
             if (this.m_TargetSize != null)
             {
                 info.Width = this.m_TargetSize.Value.Width;
-                info.Height = this.m_TargetSize.Value.Height;                
+                info.Height = this.m_TargetSize.Value.Height;
             }
             skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
 
@@ -73,7 +74,15 @@ namespace ImageBinarizerLib
 
             double[,,] outputData = GetBinary(inputData);
 
-            StringBuilder sb = CreateTextFromBinary(outputData);
+            StringBuilder sb = CreateTextFromBinary(outputData); //TODO: add check for create code
+
+            if (this.configuration.CreateCode) // check if code file need to be created
+            {
+                CodeCreator code = new CodeCreator(sb, this.configuration.OutputImagePath);
+                code.Create();
+                return;
+            }
+
             using (StreamWriter writer = File.CreateText(this.configuration.OutputImagePath))
             {
                 writer.Write(sb.ToString());
@@ -99,7 +108,7 @@ namespace ImageBinarizerLib
 
             double[,,] resizedData = GetPixelsColors(img);
 
-            return resizedData;             
+            return resizedData;
         }
 
         /// <summary>
@@ -229,8 +238,6 @@ namespace ImageBinarizerLib
             return outArray;
         }
 
-
-
         /// <summary>
         /// Create string builder from output data
         /// </summary>
@@ -250,24 +257,26 @@ namespace ImageBinarizerLib
             }
 
             return sb;
-        }       
-        
+        }
+
         /// <summary>
         /// Get size of binarized image. The method takes the width and height of bitmap (image) 
         /// to calculate the aspect ratio. 
         /// Base on this ratio, if user gives only width or height as custom configuration for binarized image, 
         /// the other value will be calculated automatically.
+        /// The width of the logo if not specified the customization will be 70 by default when the width is larger than 70,
+        /// for fitting to console window, as user chooses to create code file. 
         /// </summary>
         /// <param name="imageOriginalWidth">Bitmap width</param>
         /// <param name="imageOriginalHeight">Bitmap Height</param>
         /// <returns>Object contains the size for resizing image, null if bitmap is null or no resizing process required</returns>
         private Size? GetTargetSizeFromConfigOrDefault(int imageOriginalWidth, int imageOriginalHeight)
         {
-            if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
-                return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
-
             if (imageOriginalWidth == 0 || imageOriginalHeight == 0)
                 return null;
+
+            if (this.configuration.ImageHeight > 0 && this.configuration.ImageWidth > 0)
+                return new Size(this.configuration.ImageWidth, this.configuration.ImageHeight);
 
             double ratio = (double)imageOriginalHeight / imageOriginalWidth;
 
@@ -277,12 +286,11 @@ namespace ImageBinarizerLib
             if (this.configuration.ImageWidth > 0)
                 return new Size(this.configuration.ImageWidth, (int)(this.configuration.ImageWidth * ratio));
 
-            int defaultWidth = 1200;
+            int logoWidth = 70;
+            if (this.configuration.CreateCode && imageOriginalWidth > logoWidth)
+                return new Size(logoWidth, (int)(logoWidth * ratio));
 
-            if (defaultWidth > imageOriginalWidth)
-                return null;
-
-            return new Size(defaultWidth, (int)(defaultWidth * ratio));
+            return null;
         }
         #endregion
     }

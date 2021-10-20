@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageBinarizerApp
 {
@@ -14,44 +12,27 @@ namespace ImageBinarizerApp
     /// </summary>
     public class CommandLineParsing
     {
-        public static List<string> HelpArguments = new List<string> { "-help", "-h", "--h", "--help" };
+        #region Private members
+        public readonly static List<string> HelpArguments = new List<string> { "-h", "--help" };
+        private readonly List<string> inverseArguments = new List<string> { "-inv", "--inverse" };
+        private readonly List<string> greyScaleArguments = new List<string> { "-gs", "--greyscale" };
+        private readonly List<string> createCodeArguments = new List<string> { "-cc", "--createcode", "--create-code" };
 
-        private List<string> command;
-        private static Dictionary<string, string> GetCommandLineMap()
-        {
-            return new Dictionary<string, string>()
-            {
-                { "-iip", "inputImagePath"},
-                { "--input-image", "inputImagePath"},
-                { "-oip", "outputImagePath" },
-                { "--output-image", "outputImagePath" },
-                { "-iw", "imageWidth" },
-                { "-width", "imageWidth" },
-                { "-ih", "imageHeight"},
-                { "-height", "imageHeight"},
-                { "-rt", "redThreshold" },
-                { "-red", "redThreshold" },
-                { "-gt", "greenThreshold" },
-                { "-green", "greenThreshold" },
-                { "-bt", "blueThreshold"},
-                { "-blue", "blueThreshold"},
-                { "-grey", "greyThreshold"},
-                { "-help", "help"},
-                { "--inv", "inverse"},
-                { "--gs", "greyScale"}
-            };
-        }
+        private List<string> command;        
+        #endregion
 
-        #region Public methods
+        #region Constructors
         /// <summary>
         /// Constructor to pass the arguments
         /// </summary>
-        /// <param name="args">input arguments</param>
+        /// <param name="args">Input arguments</param>
         public CommandLineParsing(string[] args)
         {
             command = args.ToList();
         }
+        #endregion
 
+        #region Public methods
         /// <summary>
         /// Conducting parsing process that map the input argument to ImageBinarizerApp.Entities.BinarizerConfiguration object.
         /// </summary>
@@ -90,79 +71,82 @@ namespace ImageBinarizerApp
 
         #region Private methods
         /// <summary>
+        /// Get Dictionary for mapping command line
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> GetCommandLineMap()
+        {
+            return new Dictionary<string, string>()
+            {
+                { "-iip", "inputImagePath"},
+                { "--input-image", "inputImagePath"},
+                { "-oip", "outputImagePath" },
+                { "--output-image", "outputImagePath" },
+                { "-iw", "imageWidth" },
+                { "-ih", "imageHeight"},
+                { "-rt", "redThreshold" },
+                { "-gt", "greenThreshold" },
+                { "-bt", "blueThreshold"},
+                { "-grt", "greyThreshold"},
+                { "-h", "help"},
+                { "-inv", "inverse"},
+                { "-gs", "greyScale"},
+                { "-cc", "createCode"},
+                { "--create-code", "createCode"}
+            };
+        }
+
+        /// <summary>
         /// Corect the arguments input that received type boolean.
         /// </summary>
         private void CorrectArgsIfRequired()
-        {
+        {            
             //
-            //Check if help, inverse, or Geryscale argument was called
-            CheckAndCorrectHelpArgument();
-            CheckAndCorrectInverseArgument();
-            CheckAndCorrectGreyScaleArgument();
+            //Check help argument
+            CheckAndCorrectArgument(HelpArguments, "-h");
+
+            //
+            //Check inverse argument
+            CheckAndCorrectArgument(inverseArguments, "-inv");
+
+            //
+            //Check greyscale argument
+            CheckAndCorrectArgument(greyScaleArguments, "-gs");
+
+            //
+            //Check createcode argument
+            CheckAndCorrectArgument(createCodeArguments, "-cc");
         }
 
         /// <summary>
-        /// Checking GreyScale argument.
+        /// Check if boolean argument called.
         /// </summary>
-        private void CheckAndCorrectGreyScaleArgument()
+        /// <param name="Arguments">List of the arguments for one condition</param>
+        /// <param name="argCommand">The argument command to set the condition to true when user use one of the arguments in the parameter Arguments</param>
+        private void CheckAndCorrectArgument(List<string> Arguments, string argCommand)
         {
-            bool greyScale = false;
-            while (command.Contains("--gs"))
-            {
-                command.Remove("--gs");
-                greyScale = true;
-            }
-            if (greyScale)
-            {
-                command.Add("--gs");
-                command.Add("true");
-            }
-        }
-
-        /// <summary>
-        /// Checking inverse argument.
-        /// </summary>
-        private void CheckAndCorrectInverseArgument()
-        {
-            bool inverse = false;
-            while (command.Contains("--inv"))
-            {
-                command.Remove("--inv");
-                inverse = true;
-            }
-            if (inverse)
-            {
-                command.Add("--inv");
-                command.Add("true");
-            }
-        }
-
-        /// <summary>
-        /// Checking help argument.
-        /// </summary>
-        private void CheckAndCorrectHelpArgument()
-        {
-            bool help = false;
-            foreach (var arg in HelpArguments)
+            bool hasArg = false;
+            foreach (var arg in Arguments)
             {
                 while (command.Contains(arg))
                 {
                     command.Remove(arg);
-                    help = true;
+                    hasArg = true;
                 }
             }
-            if (help)
+            if (hasArg)
             {
-                command.Add("-help");
+                command.Add(argCommand);
                 command.Add("true");
             }
-        }
+        }        
 
         /// <summary>
-        /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object as input and check if user input arguments are correct.
+        /// Check validation of arguments. The method take ImageBinarizerApp.Entities.BinarizerConfiguration object 
+        /// as input and check if user input arguments are correct.
         /// </summary>
         /// <param name="Configurations">Configuration for binarization</param>
-        /// <param name="errMsg">output error message</param>
+        /// <param name="errMsg">Output error message</param>
         /// <returns></returns>
         private bool ValidateArgs(BinarizerConfiguration Configurations, out string errMsg)
         {
@@ -183,6 +167,14 @@ namespace ImageBinarizerApp
                 return false;
             }
 
+            //
+            //Check to set output path when code create is required
+            if (Configurations.CreateCode)
+            {                
+                if (Configurations.OutputImagePath.Equals(""))
+                    Configurations.OutputImagePath = ".\\LogoPrinter.cs";
+            }
+
             if (Path.GetDirectoryName(Configurations.OutputImagePath) != String.Empty)
             {
                 //
@@ -192,8 +184,7 @@ namespace ImageBinarizerApp
                     errMsg = "Output Directory doesn't exist.";
                     return false;
                 }                
-            }
-            Configurations.OutputImagePath = Path.GetFullPath(Configurations.OutputImagePath);
+            }            
 
             //
             //Check if width or height input is valid
@@ -246,29 +237,35 @@ namespace ImageBinarizerApp
             Console.WriteLine("\nHelp:");
             Console.WriteLine("\n\t- Input image path: {\"-iip\", \"--input-image\", \"--inputImagePath\"}");
             Console.WriteLine("\t- Output image path: {\"-oip\", \"--output-image\", \"--outputImagePath\"}");
-            Console.WriteLine("\t- Image width: {\"-iw\", \"-width\", \"--imageWidth\"}");
-            Console.WriteLine("\t- Image height: {\"-ih\", \"-height\", \"--imageHeight\"}");
-            Console.WriteLine("\t- Red threshold: {\"-rt\", \"-red\", \"--redThreshold\"}");
-            Console.WriteLine("\t- Green threshold: {\"-gt\", \"-green\", \"--greenThreshold\"}");
-            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"-blue\", \"--blueThreshold\"}");
-            Console.WriteLine("\t- Grey threshold: {\"-grey\", \"--greyThreshold\"}");
-            Console.WriteLine("\t- Inverse enable: {\"--inv\"}");
-            Console.WriteLine("\t- Grey scale enable: {\"--gs\"}");
+            Console.WriteLine("\t- Image width: {\"-iw\", \"--imageWidth\"}");
+            Console.WriteLine("\t- Image height: {\"-ih\", \"--imageHeight\"}");
+            Console.WriteLine("\t- Red threshold: {\"-rt\", \"--redThreshold\"}");
+            Console.WriteLine("\t- Green threshold: {\"-gt\", \"--greenThreshold\"}");
+            Console.WriteLine("\t- Blue threshold: {\"-bt\", \"--blueThreshold\"}");
+            Console.WriteLine("\t- Grey threshold: {\"-grt\", \"--greyThreshold\"}");
+            Console.WriteLine("\t- Inverse enable: {\"-inv\", \"--inverse\"}");
+            Console.WriteLine("\t- Grey scale enable: {\"-gs\", \"--greyscale\"}");
+            Console.WriteLine("\t- Create code enable: {\"-cc\", \"--createcode\", \"--create-code\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
-            Console.WriteLine("\nAdding \"--inv\" to indicate the optional of inversing the contrast of the binarized picture.");
-            Console.WriteLine("\nAdding \"--gs\" to indicate the optional of calculate threshold base on grey scale. Using \"-grey\" or " +
+            Console.WriteLine("\nAdding \"-inv\" to indicate the option of inversing the contrast of the binarized picture.");
+            Console.WriteLine("\nAdding \"-gs\" to indicate the option of calculating threshold base on grey scale. Using \"-grt\" or " +
                                     "\"--greyThreshold\" along with this to set threshold for grey scale binarizer.");
+            Console.WriteLine("\nAdding \"-cc\" to indicate the option of creating code file for printing Logo to console.");
             Console.WriteLine("\nOthers values need to be larger than 0. If needed, use: \n\t-1 to assign threshold default value. " +
                                                                                         "\n\t 0 to assign width and height default value.");
             Console.WriteLine("\n- Example:");
-            Console.WriteLine("\t+ With automatic RGB: \n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
-            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -height 32");
+            Console.WriteLine("\t+ Binarize with default arguments: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt");
+            Console.WriteLine("\t+ With automatic RGB: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32");
+            Console.WriteLine("\n\t+ Only Height need to be specify: \n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -ih 32");
             Console.WriteLine("\n\t+ Passing all arguments without inversing the contrast: " +
-                                "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100");
+                                "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100");
             Console.WriteLine("\n\t+ Passing all arguments with contrast inversion: " +
-                           "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-red 100 -green 100 -blue 100 -inv");
+                           "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-rt 100 -gt 100 -bt 100 -inv");
             Console.WriteLine("\n\t+ Passing all arguments with grey scale calculation: " +
-                          "\n\t\tdotnet ImageBinarizer --input-image c:\\a.png --output-image d:\\out.txt -width 32 -height 32 \n\t\t-grey 100 -gs");
+                          "\n\t\timgbin --input-image c:\\a.png --output-image d:\\out.txt -iw 32 -ih 32 \n\t\t-grt 100 -gs");
+            Console.WriteLine("\t+ Create code file with default width of 70: \n\t\timgbin --input-image c:\\a.png --create-code");
+            Console.WriteLine("\t+ Create code file with custom width or height: \n\t\timgbin --input-image c:\\a.png -iw 150 --create-code" +
+                                "\n\t   or \n\t\timgbin --input-image c:\\a.png -ih 150 --create-code");
         }
         #endregion
     }
