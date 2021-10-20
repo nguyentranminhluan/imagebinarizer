@@ -14,7 +14,7 @@
 		<ApplicationIcon />
 		<Win32Resource />
 		<RootNamespace>Daenet.ImageBinarizerApp</RootNamespace>
-		<AssemblyName>imgbin</AssemblyName>
+		<AssemblyName>ImageBinarizer</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
