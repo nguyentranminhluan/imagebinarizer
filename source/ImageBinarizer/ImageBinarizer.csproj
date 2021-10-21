@@ -8,7 +8,6 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<AssemblyVersion>1.5.1</AssemblyVersion>
 		<Version>1.5.1</Version>
-		<PackageLicenseFile>license.txt</PackageLicenseFile>
 		<Authors>daenet GmbH, Damir Dobric</Authors>
 		<Description>.NET Global Tool for for image binarization.</Description>
 		<PackageTags>ml, ai, binarization, image, grayscale</PackageTags>
@@ -16,6 +15,9 @@
 		<Win32Resource />
 		<RootNamespace>Daenet.ImageBinarizerApp</RootNamespace>
 		<AssemblyName>ImageBinarizer</AssemblyName>
+		<Copyright>daenet GmbH</Copyright>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,6 +36,8 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-
+	<ItemGroup>
+		<None Include="license.txt" Pack="true" PackagePath="license.txt"/>
+	</ItemGroup>
 
 </Project>
