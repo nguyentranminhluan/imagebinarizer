@@ -173,6 +173,19 @@ imgbin --input-image <your image input path (c:\path\inputImage.png)> --output-i
 The image below shows the differences between Normal Binarization (the left one) and Customized Thresholds Binarization (the right one):
 <img src="/images/thresholdCustomize.png">
 
+
+### Get Contour
+Image Contour Recognition is an interesting subject. It helps users to get the shape of objects to apply to other applications such as object detection in machine learning. In **ImageBinarizer**, to get contour of the binarized image, you can execute the following command:
+~~~shell
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --getcontour
+~~~
+or execute the following one to get contour after inversing and binarizing the image:
+~~~shell
+imgbin --input-image <your image input path (c:\path\DAENET.png)> --getcontour -inv
+~~~
+The image below is the binarized image result of getting contour after inversing:  
+<img src="/images/Contour.png">
+
 ### Create LogoPrinter.cs file code
 
 **ImageBinarizer** can be used to create a console application logo. Making a logo from this image as an example:
@@ -279,11 +292,5 @@ The picture below is the result of the above example:
 </p>
 
 
-### Further development
-Image Contour Recognition is an interesting subject. It helps users to get the shape of objects to apply to other applications such as object detection in machine learning. Right now, Image Contour Recognition can be done with some tries in thresholds setup and give the result as shown below.
-
-<img src="/images/Contour.png">
-
-For future development, a new function will be created to detect the contour automatically without trying different sets of threshold setup.
 
 
