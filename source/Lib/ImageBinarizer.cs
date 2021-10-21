@@ -137,6 +137,8 @@ namespace Daenet.ImageBinarizerLib
             int dataHeight = data.GetLength(1);
             double[,,] contourData = new double[data.GetLength(0), data.GetLength(1), 3];
 
+            //
+            //Init array
             for (int width = 0; width < dataWidth; width++)
             {
                 for (int height = 0; height < dataHeight; height++)
@@ -145,18 +147,22 @@ namespace Daenet.ImageBinarizerLib
                 }
             }
 
+            //
+            // Assign image border value
             for (int width = 0; width < dataWidth; width++)
             {
                 contourData[width, 0, 0] = data[width, 0, 0];
                 contourData[width, dataHeight - 1, 0] = data[width, dataHeight - 1, 0];
             }
 
-            for (int height = 1; height < dataHeight; height++)
+            for (int height = 1; height < dataHeight - 1; height++)
             {
                 contourData[0, height, 0] = data[0, height, 0];
                 contourData[dataWidth - 1, height, 0] = data[dataWidth - 1, height, 0];
             }
 
+            //
+            // Check pixels around on pixel to get contour
             for (int width = 1; width < dataWidth - 1; width++)
             {
                 for (int height = 1; height < dataHeight - 1; height++)

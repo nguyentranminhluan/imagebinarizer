@@ -94,7 +94,7 @@ namespace Daenet.ImageBinarizerApp
                 { "-gs", "greyScale"},
                 { "-cc", "createCode"},
                 { "--create-code", "createCode"},
-                { "-gc", "getContour"},
+                { "-gc", "getContour"}
             };
         }
 
@@ -253,7 +253,7 @@ namespace Daenet.ImageBinarizerApp
             Console.WriteLine("\t- Inverse enable: {\"-inv\", \"--inverse\"}");
             Console.WriteLine("\t- Grey scale enable: {\"-gs\", \"--greyscale\"}");
             Console.WriteLine("\t- Create code enable: {\"-cc\", \"--createcode\", \"--create-code\"}");
-            Console.WriteLine("\t- Create code enable: {\"-gc\", \"--getcontour\"}");
+            Console.WriteLine("\t- Get contour: {\"-gc\", \"--getcontour\"}");
             Console.WriteLine("\nInput path and output path are required arguments, where as others can be set automatically if not specified.");
             Console.WriteLine("\nAdding \"-inv\" to indicate the option of inversing the contrast of the binarized picture.");
             Console.WriteLine("\nAdding \"-gs\" to indicate the option of calculating threshold base on grey scale. Using \"-grt\" or " +
