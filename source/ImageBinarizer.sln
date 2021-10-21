@@ -7,12 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerLib", "Lib\Im
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{228E104E-F497-4B39-ABDF-833813196126}"
 	ProjectSection(SolutionItems) = preProject
+		license.txt = license.txt
 		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizer", "ImageBinarizer\ImageBinarizer.csproj", "{DD113A82-8548-4AA4-AC9A-6563C864DE89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{2EEE749C-C9D1-48E2-BB49-B8197826481A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{2EEE749C-C9D1-48E2-BB49-B8197826481A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
