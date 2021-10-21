@@ -18,7 +18,7 @@ namespace Daenet.ImageBinarizerLib.Entities
         /// <summary>
         /// Output path where the binarized image file are save
         /// </summary>
-        public string OutputImagePath { get; set; } = "";
+        public string OutputImagePath { get; set; }
 
         /// <summary>
         /// Custom width for binarization
@@ -64,6 +64,11 @@ namespace Daenet.ImageBinarizerLib.Entities
         /// Create .cs file instead of text file for printing Logo
         /// </summary>
         public bool CreateCode { get; set; } = false;
+
+        /// <summary>
+        /// Get contour of the image
+        /// </summary>
+        public bool GetContour { get; set; } = false;
         #endregion
     }
 

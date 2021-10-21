@@ -74,11 +74,14 @@ namespace Daenet.ImageBinarizerLib
 
             double[,,] outputData = GetBinary(inputData);
 
-            StringBuilder sb = CreateTextFromBinary(outputData); //TODO: add check for create code
+            if (this.configuration.GetContour)
+                outputData = GetContour(outputData);
+
+            StringBuilder sb = CreateTextFromBinary(outputData);
 
             if (this.configuration.CreateCode) // check if code file need to be created
             {
-                CodeCreator code = new CodeCreator(sb, this.configuration.OutputImagePath);
+                CodeCreator code = new CodeCreator(sb, this.configuration.OutputImagePath ?? ".\\LogoPrinter.cs");
                 code.Create();
                 return;
             }
@@ -88,9 +91,91 @@ namespace Daenet.ImageBinarizerLib
                 writer.Write(sb.ToString());
             }
         }
+
+        /// <summary>
+        /// Method to call Binarizer outside the LearningApiPipeline. 
+        /// It receives the image as input and return the binary string
+        /// </summary>
+        /// <returns>Binary data as string</returns>
+        public string GetStringBinariy()
+        {
+            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
+
+            int imgWidth = skBitmap.Width;
+            int imgHeight = skBitmap.Height;
+            SKImageInfo info = new SKImageInfo(imgWidth, imgHeight, SKColorType.Rgba8888);
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                info.Width = this.m_TargetSize.Value.Width;
+                info.Height = this.m_TargetSize.Value.Height;
+            }
+            skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
+
+            double[,,] inputData = GetPixelsColors(skBitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            if (this.configuration.GetContour)
+                outputData = GetContour(outputData);
+
+            StringBuilder sb = CreateTextFromBinary(outputData);
+            return sb.ToString();
+        }
         #endregion
 
         #region Private methods
+        /// <summary>
+        /// Get Binary array with input array double. The method take 3D array of Binary data as input
+        /// and get contour of this image.
+        /// </summary>
+        /// <param name="data">Data of Binarized image for get contour</param>
+        /// <returns>3D contour result array</returns>
+        private double[,,] GetContour(double[,,] data)
+        {
+            int dataWidth = data.GetLength(0);
+            int dataHeight = data.GetLength(1);
+            double[,,] contourData = new double[data.GetLength(0), data.GetLength(1), 3];
+
+            for (int width = 0; width < dataWidth; width++)
+            {
+                for (int height = 0; height < dataHeight; height++)
+                {
+                    contourData[width, height, 0] = this.m_white;
+                }
+            }
+
+            for (int width = 0; width < dataWidth; width++)
+            {
+                contourData[width, 0, 0] = data[width, 0, 0];
+                contourData[width, dataHeight - 1, 0] = data[width, dataHeight - 1, 0];
+            }
+
+            for (int height = 1; height < dataHeight; height++)
+            {
+                contourData[0, height, 0] = data[0, height, 0];
+                contourData[dataWidth - 1, height, 0] = data[dataWidth - 1, height, 0];
+            }
+
+            for (int width = 1; width < dataWidth - 1; width++)
+            {
+                for (int height = 1; height < dataHeight - 1; height++)
+                {
+                    if (data[width, height, 0] == this.m_white)
+                        continue;
+                    if (data[width - 1, height, 0] == this.m_white || data[width + 1, height, 0] == this.m_white ||
+                        data[width, height - 1, 0] == this.m_white || data[width, height + 1, 0] == this.m_white ||
+                        data[width - 1, height - 1, 0] == this.m_white || data[width + 1, height - 1, 0] == this.m_white ||
+                        data[width - 1, height + 1, 0] == this.m_white || data[width + 1, height + 1, 0] == this.m_white)
+                    {
+                        contourData[width, height, 0] = this.m_black;
+                    }
+                }
+            }
+
+            return contourData;
+        }
+
         /// <summary>
         /// Resize the bimap with provide input. The method take 3D array of color data as input
         /// and assigns these to the bitmap to peform resizing process
