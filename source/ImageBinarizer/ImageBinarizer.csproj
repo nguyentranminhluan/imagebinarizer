@@ -6,8 +6,9 @@
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>imgbin</ToolCommandName>
 		<PackageOutputPath>./nupkg</PackageOutputPath>
-		<AssemblyVersion>1.5.0</AssemblyVersion>
-		<Version>1.5.0</Version>
+		<AssemblyVersion>1.5.1</AssemblyVersion>
+		<Version>1.5.1</Version>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
 		<Authors>daenet GmbH, Damir Dobric</Authors>
 		<Description>.NET Global Tool for for image binarization.</Description>
 		<PackageTags>ml, ai, binarization, image, grayscale</PackageTags>
