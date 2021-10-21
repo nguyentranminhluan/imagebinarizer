@@ -93,8 +93,8 @@ namespace Daenet.ImageBinarizerApp
                 { "-inv", "inverse"},
                 { "-gs", "greyScale"},
                 { "-cc", "createCode"},
-                { "--create-code", "createCode"}
-                { "-gc", "getContour"},
+                { "--create-code", "createCode"},
+                { "-gc", "getContour"}
             };
         }
 
