@@ -178,7 +178,7 @@ namespace Daenet.ImageBinarizerApp
             //Check to set output path when code create is required
             if (Configuration.CreateCode)
             {                
-                if (Configuration.OutputImagePath.Equals(""))
+                if (Configuration.OutputImagePath == null)
                     Configuration.OutputImagePath = ".\\LogoPrinter.cs";
             }
 
