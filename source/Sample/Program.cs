@@ -65,7 +65,7 @@ namespace Sample
             };
 
             var img = new ImageBinarizer(config);
-            Console.WriteLine(img.GetStringBinariy());
+            Console.WriteLine(img.GetStringBinary());
 
         }
 
@@ -330,7 +330,7 @@ namespace Sample
 
             Console.WriteLine(Path.GetFullPath(config.OutputImagePath));
             var img = new ImageBinarizer(config);
-            var stringHtml = img.GetStringBinariy().ToString();
+            var stringHtml = img.GetStringBinary().ToString();
             string quote = "\"";
             string htmlWrite = $@"<!DOCTYPE html> 
 <html>
