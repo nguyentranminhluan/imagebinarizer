@@ -3,7 +3,7 @@ using Daenet.ImageBinarizerLib;
 using System;
 using System.IO;
 using System.Linq;
-
+using System.Reflection;
 
 namespace Daenet.ImageBinarizerApp
 {
@@ -18,7 +18,9 @@ namespace Daenet.ImageBinarizerApp
         /// <param name="args">Argument of main method</param>
         static void Main(string[] args)
         {
-            Console.WriteLine("\nWelcome to Image Binarizer Application [Version 1.5.0]");
+
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Console.WriteLine($"\nWelcome to Image Binarizer Application [{version.Major}.{version.Minor}.{version.Build}]");
             Console.WriteLine("Copyright <c> daenet GmbH, All rights reserved.\n");
 
             var clr = Console.ForegroundColor;
