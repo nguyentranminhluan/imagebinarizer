@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lib\ImageBinarizerLib.csproj" />
+	  <ProjectReference Include="..\ImageBinarizer\ImageBinarizer.csproj" ></ProjectReference>
   </ItemGroup>
 
 </Project>

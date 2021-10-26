@@ -6,9 +6,9 @@
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>imgbin</ToolCommandName>
 		<PackageOutputPath>./nupkg</PackageOutputPath>
-		<AssemblyVersion>1.5.1</AssemblyVersion>
+		<AssemblyVersion>1.5.5</AssemblyVersion>
 		<Version>1.5.1</Version>
-		<Authors>daenet GmbH, Damir Dobric</Authors>
+		<Authors>daenet GmbH</Authors>
 		<Description>.NET Global Tool for for image binarization.</Description>
 		<PackageTags>ml, ai, binarization, image, grayscale, contour, create code</PackageTags>
 		<ApplicationIcon />
@@ -26,7 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Lib\ImageBinarizerLib.csproj" />
+		<ProjectReference Include="..\ImageBinarizer\ImageBinarizer.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,7 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="license.txt" Pack="true" PackagePath="license.txt"/>
+		<None Include="license.txt" Pack="true" PackagePath="license.txt" />
 	</ItemGroup>
 
 </Project>

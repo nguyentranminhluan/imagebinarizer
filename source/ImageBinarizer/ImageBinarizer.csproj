@@ -4,8 +4,8 @@
 		<TargetFramework>net5.0</TargetFramework>
 		<Version>1.5.2</Version>
 		<PackageOutputPath>./nupkg</PackageOutputPath>
-		<AssemblyVersion>1.5.2</AssemblyVersion>
-		<Authors>daenet GmbH, Damir Dobric</Authors>
+		<AssemblyVersion>1.5.5</AssemblyVersion>
+		<Authors>daenet GmbH</Authors>
 		<Description>.NET Nuget Package for image binarization.</Description>
 		<PackageTags>ml, ai, binarization, image, grayscale, contour, create code</PackageTags>
 		<ApplicationIcon />
