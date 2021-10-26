@@ -10,11 +10,11 @@
 		<Version>1.5.1</Version>
 		<Authors>daenet GmbH, Damir Dobric</Authors>
 		<Description>.NET Global Tool for for image binarization.</Description>
-		<PackageTags>ml, ai, binarization, image, grayscale</PackageTags>
+		<PackageTags>ml, ai, binarization, image, grayscale, contour, create code</PackageTags>
 		<ApplicationIcon />
 		<Win32Resource />
 		<RootNamespace>Daenet.ImageBinarizerApp</RootNamespace>
-		<AssemblyName>ImageBinarizer</AssemblyName>
+		<AssemblyName>ImgBin</AssemblyName>
 		<Copyright>daenet GmbH</Copyright>
 		<PackageLicenseFile>license.txt</PackageLicenseFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
