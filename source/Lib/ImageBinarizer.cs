@@ -97,7 +97,7 @@ namespace Daenet.ImageBinarizerLib
         /// It receives the image as input and return the binary string
         /// </summary>
         /// <returns>Binary data as string</returns>
-        public string GetStringBinariy()
+        public string GetStringBinary()
         {
             SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
 
@@ -121,6 +121,36 @@ namespace Daenet.ImageBinarizerLib
 
             StringBuilder sb = CreateTextFromBinary(outputData);
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Method to call Binarizer outside the LearningApiPipeline. 
+        /// It receives the image as input and return the binary array with double type
+        /// </summary>
+        /// <returns>Binary data as double type array</returns>
+        public double [,,] GetArrayBinary()
+        {
+            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
+
+            int imgWidth = skBitmap.Width;
+            int imgHeight = skBitmap.Height;
+            SKImageInfo info = new SKImageInfo(imgWidth, imgHeight, SKColorType.Rgba8888);
+            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
+            if (this.m_TargetSize != null)
+            {
+                info.Width = this.m_TargetSize.Value.Width;
+                info.Height = this.m_TargetSize.Value.Height;
+            }
+            skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
+
+            double[,,] inputData = GetPixelsColors(skBitmap);
+
+            double[,,] outputData = GetBinary(inputData);
+
+            if (this.configuration.GetContour)
+                outputData = GetContour(outputData);
+
+            return outputData;
         }
         #endregion
 
