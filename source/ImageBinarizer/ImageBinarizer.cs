@@ -57,25 +57,7 @@ namespace Daenet.ImageBinarizerLib
         /// </summary>
         public void Run()
         {
-            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
-
-            int imgWidth = skBitmap.Width;
-            int imgHeight = skBitmap.Height;
-            SKImageInfo info = new SKImageInfo(imgWidth, imgHeight, SKColorType.Rgba8888);
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
-            if (this.m_TargetSize != null)
-            {
-                info.Width = this.m_TargetSize.Value.Width;
-                info.Height = this.m_TargetSize.Value.Height;
-            }
-            skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
-
-            double[,,] inputData = GetPixelsColors(skBitmap);
-
-            double[,,] outputData = GetBinary(inputData);
-
-            if (this.configuration.GetContour)
-                outputData = GetContour(outputData);
+            var outputData = GetArrayBinary();
 
             StringBuilder sb = CreateTextFromBinary(outputData);
 
@@ -99,25 +81,7 @@ namespace Daenet.ImageBinarizerLib
         /// <returns>Binary data as string</returns>
         public string GetStringBinary()
         {
-            SKBitmap skBitmap = SKBitmap.Decode(this.configuration.InputImagePath);
-
-            int imgWidth = skBitmap.Width;
-            int imgHeight = skBitmap.Height;
-            SKImageInfo info = new SKImageInfo(imgWidth, imgHeight, SKColorType.Rgba8888);
-            this.m_TargetSize = GetTargetSizeFromConfigOrDefault(imgWidth, imgHeight);
-            if (this.m_TargetSize != null)
-            {
-                info.Width = this.m_TargetSize.Value.Width;
-                info.Height = this.m_TargetSize.Value.Height;
-            }
-            skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
-
-            double[,,] inputData = GetPixelsColors(skBitmap);
-
-            double[,,] outputData = GetBinary(inputData);
-
-            if (this.configuration.GetContour)
-                outputData = GetContour(outputData);
+            var outputData = GetArrayBinary();
 
             StringBuilder sb = CreateTextFromBinary(outputData);
             return sb.ToString();
@@ -318,15 +282,15 @@ namespace Daenet.ImageBinarizerLib
         {
             int hg = data.GetLength(1);
             int wg = data.GetLength(0);
-            double[,,] outArray = new double[hg, wg, 3];
+            double[,,] outArray = new double[wg, hg, 3];
 
-            for (int i = 0; i < hg; i++)
+            for (int i = 0; i < wg; i++)
             {
-                for (int j = 0; j < wg; j++)
+                for (int j = 0; j < hg; j++)
                 {
                     //Compare value to Grey threshold for binarization  
-                    outArray[i, j, 0] = ((0.299 * data[j, i, 0] + 0.587 * data[j, i, 1] +
-                       0.114 * data[j, i, 2]) > this.configuration.GreyThreshold) ? this.m_white : this.m_black;
+                    outArray[i, j, 0] = ((0.299 * data[i, j, 0] + 0.587 * data[i, j, 1] +
+                       0.114 * data[i, j, 2]) > this.configuration.GreyThreshold) ? this.m_white : this.m_black;
                 }
             }
 
@@ -343,16 +307,16 @@ namespace Daenet.ImageBinarizerLib
         {
             int hg = data.GetLength(1);
             int wg = data.GetLength(0);
-            double[,,] outArray = new double[hg, wg, 3];
+            double[,,] outArray = new double[wg, hg, 3];
 
-            for (int i = 0; i < hg; i++)
+            for (int i = 0; i < wg; i++)
             {
-                for (int j = 0; j < wg; j++)
+                for (int j = 0; j < hg; j++)
                 {
                     //Compare value to RGB threshold for binarization                    
-                    outArray[i, j, 0] = (data[j, i, 0] > this.configuration.RedThreshold &&
-                                         data[j, i, 1] > this.configuration.GreenThreshold &&
-                                         data[j, i, 2] > this.configuration.BlueThreshold) ? this.m_white : this.m_black;
+                    outArray[i, j, 0] = (data[i, j, 0] > this.configuration.RedThreshold &&
+                                         data[i, j, 1] > this.configuration.GreenThreshold &&
+                                         data[i, j, 2] > this.configuration.BlueThreshold) ? this.m_white : this.m_black;
                 }
             }
 
@@ -368,11 +332,11 @@ namespace Daenet.ImageBinarizerLib
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < outputData.GetLength(0); i++)
+            for (int i = 0; i < outputData.GetLength(1); i++)
             {
-                for (int j = 0; j < outputData.GetLength(1); j++)
+                for (int j = 0; j < outputData.GetLength(0); j++)
                 {
-                    sb.Append(outputData[i, j, 0]);
+                    sb.Append(outputData[j, i, 0]);
                 }
                 sb.AppendLine();
             }
