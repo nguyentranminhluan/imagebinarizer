@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sample
+namespace VideoBinarizerTool
 {
     public class VideoBinarizer
     {
@@ -172,7 +172,7 @@ namespace Sample
             Console.WriteLine($@"The binerized video can be found at " + fullPath);
             Console.ResetColor();
         }
-        
+
         /// <summary>
         /// Delete two temporary folders after binarizing video
         /// </summary>

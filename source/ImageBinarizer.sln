@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerTool", "Image
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerUnitTest", "ImageBinarizerUnitTest\ImageBinarizerUnitTest.csproj", "{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoBinarizer", "VideoBinarizer\VideoBinarizer.csproj", "{20C94BDB-EA4C-4904-949A-86182590BADD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoBinarizer", "VideoBinarizerTool\VideoBinarizer.csproj", "{678C595D-0F93-4333-81AD-19166ABE47EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20C94BDB-EA4C-4904-949A-86182590BADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20C94BDB-EA4C-4904-949A-86182590BADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20C94BDB-EA4C-4904-949A-86182590BADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20C94BDB-EA4C-4904-949A-86182590BADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678C595D-0F93-4333-81AD-19166ABE47EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678C595D-0F93-4333-81AD-19166ABE47EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678C595D-0F93-4333-81AD-19166ABE47EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678C595D-0F93-4333-81AD-19166ABE47EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

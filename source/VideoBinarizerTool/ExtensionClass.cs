@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sample
+namespace VideoBinarizerTool
 {
     public static class ExtensionClass
     {
@@ -49,6 +49,4 @@ namespace Sample
             return bitmapOutput;
         }
     }
-
-
 }

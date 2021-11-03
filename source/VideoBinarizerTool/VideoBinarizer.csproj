@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -14,8 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\ImageBinarizer\ImageBinarizer.csproj"></ProjectReference>
-	  <ProjectReference Include="..\VideoBinarizerTool\VideoBinarizer.csproj" />
+    <PackageReference Include="FFMediaToolkit" Version="4.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageBinarizerTool\ImageBinarizerTool.csproj" />
+    <ProjectReference Include="..\ImageBinarizer\ImageBinarizer.csproj" />
   </ItemGroup>
 
 </Project>

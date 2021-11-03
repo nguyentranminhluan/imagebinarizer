@@ -1,16 +1,14 @@
 ﻿using Daenet.ImageBinarizerLib;
 using Daenet.ImageBinarizerLib.Entities;
 using Daenet.ImageBinarizerLib.ExtensionMethod;
-using FFMediaToolkit;
-using FFMediaToolkit.Decoding;
-using FFMediaToolkit.Encoding;
-using FFMediaToolkit.Graphics;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using VideoBinarizerTool;
 
 namespace Sample
 {
