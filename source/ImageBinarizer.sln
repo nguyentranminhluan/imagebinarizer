@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31717.71
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizer", "ImageBinarizer\ImageBinarizer.csproj", "{BC6E92C8-C39C-45AA-B5E7-D0AE1ABA3F69}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{2EEE749C-C9D1-48E2-BB49-B8197826481A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerTool", "ImageBinarizerTool\ImageBinarizerTool.csproj", "{FD25598E-B5A1-4B79-A2A2-2D2FB961A4EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBinarizerUnitTest", "ImageBinarizerUnitTest\ImageBinarizerUnitTest.csproj", "{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoBinarizer", "VideoBinarizer\VideoBinarizer.csproj", "{20C94BDB-EA4C-4904-949A-86182590BADD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{FD25598E-B5A1-4B79-A2A2-2D2FB961A4EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD25598E-B5A1-4B79-A2A2-2D2FB961A4EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD25598E-B5A1-4B79-A2A2-2D2FB961A4EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B12F2D72-12CE-47BF-8D55-E04A0A38DAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C94BDB-EA4C-4904-949A-86182590BADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C94BDB-EA4C-4904-949A-86182590BADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C94BDB-EA4C-4904-949A-86182590BADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C94BDB-EA4C-4904-949A-86182590BADD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,11 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FFMediaToolkit" Version="4.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
 	  <ProjectReference Include="..\ImageBinarizer\ImageBinarizer.csproj"></ProjectReference>
+	  <ProjectReference Include="..\VideoBinarizer\VideoBinarizer.csproj" />
   </ItemGroup>
 
 </Project>

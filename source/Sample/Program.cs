@@ -53,7 +53,7 @@ namespace Sample
             //Sample14();
             //Sample15();
             //Sample16();
-            //Sample17();
+            Sample17();
 
         }
 
@@ -371,51 +371,22 @@ namespace Sample
         /// </summary>
         public static void Sample17()
         {
-            var helper = new VidHelper();
+            //string VideoPath = Path.GetFullPath("..\\..\\..\\..\\CommonFiles\\pedestrian.mp4");
             //List<double[,,]> arrayBinerized = new List<double[,,]>();
             //List<String> frameBinerized = new List<string>();
-            string VideoPath = Path.GetFullPath("..\\..\\..\\..\\CommonFiles\\pedestrian.mp4");
-            string sourcePath = Path.GetDirectoryName(VideoPath);
-            string framesPath = sourcePath + "\\frames";
-            string framesBWPath = sourcePath + "\\framesBW";
-            System.IO.Directory.CreateDirectory(framesPath);
-            System.IO.Directory.CreateDirectory(framesBWPath);
-            FFmpegLoader.FFmpegPath = Path.GetFullPath("..\\..\\..\\..\\CommonFiles\\ffmpeg_lib");
-            int frameNum = 0;
-            int width, height;
-            
-            Console.WriteLine("Reading Video as input.....");
-            var file = MediaFile.Open(VideoPath);
-            
-            //
-            //Extract all frames from source video then export them into specified folder.
-            Console.WriteLine("Binerizing all Frames....");
-            while (file.Video.TryGetNextFrame(out var imageData))
+            var vidToBinerize = new VideoBinarizer();
+            var config = new BinarizerParams()
             {
-                imageData.ToBitmap().Save($"{framesPath}\\{frameNum}.png");
-                helper.ToBW($"{framesPath}\\{frameNum}.png", $"{framesBWPath}\\BW{frameNum}.png");
-                frameNum++;
 
-            }
-            //
-            //Get the info of Dimension and Framerate for the output video
-            Console.WriteLine("Getting Video Info....");
-            var duration = file.Info.Duration.TotalSeconds;
-            helper.GetDim($"{framesBWPath}\\BW{frameNum - 1}.png", out width, out height);
-            int frameRate = Convert.ToInt32(frameNum /duration);
-            
-            //Convert all binerized frames to Video.
-            Console.WriteLine("Converting to Video......");            
-            helper.ToVid(width, height,frameRate, framesBWPath);
-            
-            //
-            //After output the binerized video, delete two folder which used to stored frames
-            Console.WriteLine("Delete Folder....");
-            Directory.Delete(framesPath, true);
-            Directory.Delete(framesBWPath, true);
-
+            };
+            vidToBinerize.VidBinarize("..\\..\\..\\..\\CommonFiles\\pedestrian.mp4",config);
 
         }
+
+
+        
+
+
         
     }
 }
