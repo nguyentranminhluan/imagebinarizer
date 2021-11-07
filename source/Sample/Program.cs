@@ -369,16 +369,16 @@ namespace Sample
         /// </summary>
         public static void Sample17()
         {
-            //string VideoPath = Path.GetFullPath("..\\..\\..\\..\\CommonFiles\\pedestrian.mp4");
-            //List<double[,,]> arrayBinerized = new List<double[,,]>();
-            //List<String> frameBinerized = new List<string>();
-            var vidToBinerize = new VideoBinarizer();
+            
+            var vidToBinerize = new VideoBinarizer();            
             var config = new BinarizerParams()
             {
-
+                //RedThreshold = 100,
+                //BlueThreshold = 80,
+                //GreenThreshold = 200,
+                //GetContour = true
             };
             vidToBinerize.VidBinarize("..\\..\\..\\..\\CommonFiles\\pedestrian.mp4",config);
-
         }
 
 

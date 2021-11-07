@@ -15,37 +15,41 @@ using System.Threading.Tasks;
 
 namespace VideoBinarizerTool
 {
+
     public class VideoBinarizer
     {
         private BinarizerParams config { get; set; }
 
-        public bool DeleteFolder { get; set; }
-
-
-
 
         /// <summary>
         /// This method receive the string path of source video as input, use the package FFMediaToolkit to extract all the 
-        /// frames of the video into .png files(Bitmap) in a specified folder. The method then binerize all of them into
-        /// black and white(no grey) using 
+        /// frames of the video into .png files(Bitmap) in a specified folder.
+        /// The frames then go into other private methods in sequences => ToBW() => GetDim() => ToVid() after finishing binerize the 
+        /// source video, the method DeleteFolder() is used to clear temporary data which used for the binerized process.
         /// </summary>
         /// <param name="src">the path to the source video</param>
         /// <param name="config">the configuration of the Video binarizer</param>
         public void VidBinarize(string src, BinarizerParams config)
         {
-            //
-            //Create the temporary folder for frames storage
             this.config = config;
-            string VideoPath = Path.GetFullPath(src);
-            string sourcePath = Path.GetDirectoryName(VideoPath);
+            //
+            //Get the video name, path to the video and path of the directory.
+            string videoName = Path.GetFileName(src);
+            string videoPath = Path.GetFullPath(src);
+            string sourcePath = Path.GetDirectoryName(videoPath);
+            
+            //
+            //Create the temporary folder for storing the frames from video and binarized frames
             string framesPath = sourcePath + "\\frames";
             string framesBWPath = sourcePath + "\\framesBW";
             System.IO.Directory.CreateDirectory(framesPath);
             System.IO.Directory.CreateDirectory(framesBWPath);
+            
+            //Config the path which contain the FFMPEG lib
             FFmpegLoader.FFmpegPath = Path.GetFullPath("..\\..\\..\\..\\CommonFiles\\ffmpeg_lib");
 
             Console.WriteLine("Reading Video as input.....");
-            var file = MediaFile.Open(VideoPath);
+            var file = MediaFile.Open(videoPath);
 
             //
             //Extract all frames from source video then export them into specified folder.
@@ -54,7 +58,6 @@ namespace VideoBinarizerTool
             while (file.Video.TryGetNextFrame(out var imageData))
             {
                 imageData.ToBitmap().Save($"{framesPath}\\{frameNum}.png");
-                //imageData.ToBitmap().To
                 ToBW($"{framesPath}\\{frameNum}.png", $"{framesBWPath}\\BW{frameNum}.png");
                 frameNum++;
             }
@@ -70,52 +73,24 @@ namespace VideoBinarizerTool
             //Convert all binerized frames to Video.
             Console.WriteLine("Converting to Video......");
             BWToVid(width, height, frameRate, framesBWPath);
+            
 
-            Console.Write("Delete used folder or not ?(true/false) : ");
-            DeleteFolder = Convert.ToBoolean(Console.ReadLine());
+            DeleteFolders(framesPath, framesBWPath);
 
-            if (DeleteFolder)
-            {
-                ClearMemory(framesPath, framesBWPath);
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.WriteLine($@"The extracted frames can be found at " + framesPath);
-                Console.WriteLine($@"The binerized frames can be found at " + framesBWPath);
-            }
         }
-
-
 
         /// <summary>
-        /// Get the width and height for video base on the frame.
+        /// Binerized the output image into black and white (no grey) image
         /// </summary>
-        /// <param name="samplePath">the path to one of the frames png</param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        private void GetDim(string samplePath, out int width, out int height)
-        {
-            width = System.Drawing.Image.FromFile(samplePath).Width;
-            height = System.Drawing.Image.FromFile(samplePath).Height;
-        }
-
-        ///<sumary>
-        ///Binerized the output image into black and white (no grey) image
-        /// </sumary>
+        /// <param name="inputPath"></param>
+        /// <param name="outputPath"></param>
         private void ToBW(string inputPath, string outputPath)
         {
             int ognWidth = Bitmap.FromFile(inputPath).Width > 512 ? 512 : Bitmap.FromFile(inputPath).Width;
-            //var config = new BinarizerParams()
-            //{
-            //    InputImagePath = inputPath,
-            //    ImageWidth = ognWidth
-            //};
             config.InputImagePath = inputPath;
             config.ImageWidth = ognWidth;
-
-            //Console.WriteLine(Path.GetFullPath(config.OutputImagePath));
+            
+            
             var img = new ImageBinarizer(config);
             var k = img.GetArrayBinary();
             for (int a = 0; a < k.GetLength(0); a++)
@@ -133,13 +108,25 @@ namespace VideoBinarizerTool
         }
 
         /// <summary>
+        /// Get the width and height for video base on the frame.
+        /// </summary>
+        /// <param name="samplePath">the path to one of the frames png</param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        private void GetDim(string samplePath, out int width, out int height)
+        {
+            width = System.Drawing.Image.FromFile(samplePath).Width;
+            height = System.Drawing.Image.FromFile(samplePath).Height;
+        }
+        
+        /// <summary>
         /// Join all binarized image into Video.
         /// </summary>
         /// <param name="wd"></param>
         /// <param name="ht"></param>
-        /// <param name="frameRate"></param>
-        /// <param name="inputBW"></param>
-        private void BWToVid(int wd, int ht, int frameRate, string inputBW)
+        /// <param name="frameRate">framerate of the output radio</param>
+        /// <param name="frameBWPath">Path to the binerized frames</param>
+        private void BWToVid(int wd, int ht, int frameRate,string frameBWPath)
         {
             string outputPath = $".\\BinerizedVideo.mp4";
             string fullPath = Path.GetFullPath(outputPath);
@@ -147,11 +134,17 @@ namespace VideoBinarizerTool
             settings.EncoderPreset = EncoderPreset.Fast;
             settings.CRF = 17;
             var file = MediaBuilder.CreateContainer(fullPath).WithVideo(settings).Create();
+            //
+            //Get the paths of all binerized frames,this loop can be replace with
+            //files = Directory.GetFiles(inputBW)
             List<string> files = new List<string>();
-            for (int k = 0; k < Directory.GetFiles(inputBW).Length; k++)
+            for (int k = 0; k < Directory.GetFiles(frameBWPath).Length; k++)
             {
-                files.Add($"{inputBW}/BW{k}.png");
+                files.Add($"{frameBWPath}/BW{k}.png");
             }
+            
+            //
+            //Read all binerized frames and add it together to make an video
             foreach (var inputFile in files)
             {
                 var binInputFile = File.ReadAllBytes(inputFile);
@@ -174,30 +167,57 @@ namespace VideoBinarizerTool
         }
 
         /// <summary>
-        /// Delete two temporary folders after binarizing video
+        /// Ask users if would like to delete the temporary frames or keep it for 
+        /// investigation. If the user decide to keep the folders, the paths will
+        /// then printed in the console.
         /// </summary>
         /// <param name="framesPath"></param>
         /// <param name="framesBWPath"></param>
-        private void ClearMemory(string framesPath, string framesBWPath)
+        private void DeleteFolders(string framesPath, string framesBWPath)
         {
-            //
-            //After output the binerized video, delete two folder which used to stored frames
-            Console.WriteLine("Delete Folder....");
-            Directory.Delete(framesPath, true);
-            Directory.Delete(framesBWPath, true);
+            bool ans;
+            bool isValid;
+            do
+            {
+                Console.WriteLine("Delete Temporary Folder(yes/no)?:");
+                (ans, isValid) = ParseInput(Console.ReadLine());
+                if (!isValid)
+                {
+                    Console.WriteLine("You can only answer with Yes or No");
+                }
+            }
+            while (!isValid);
+
+            if (ans)
+            {
+                Console.WriteLine("Delete Folder....");
+                Directory.Delete(framesPath, true);
+                Directory.Delete(framesBWPath, true);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine($@"The extracted frames can be found at " + framesPath);
+                Console.WriteLine($@"The binerized frames can be found at " + framesBWPath);
+                Console.ResetColor();
+            }
         }
-
-        //private bool VidExist(string outputPath, string outputName)
-        //{
-        //    var dir = new DirectoryInfo(outputPath).GetFiles("*.mp4");
-        //    foreach (FileInfo vid in dir)
-        //    {
-        //        if (vid.Name == outputName)
-        //            return true;
-
-        //    }
-        //        return false;
-
-        //}
+        
+        /// <summary>
+        /// map the input answer with the bool value 
+        /// </summary>
+        /// <param name="input">the input from keyboard of user</param>
+        /// <returns></returns>
+        (bool ans, bool isValid) ParseInput(string input) =>
+        
+            char.ToUpper(input.FirstOrDefault()) switch
+            {
+                'Y' => (true, true),
+                'N' => (false, true),
+                _ =>(default, false)
+            };
+        
+ 
     }
 }

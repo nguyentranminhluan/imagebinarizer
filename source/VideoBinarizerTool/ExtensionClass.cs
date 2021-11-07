@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace VideoBinarizerTool
 {
+    /// <summary>
+    /// this extension method is required by the FFMediaToolkit package to get the frames
+    /// from video in .Net framework 
+    /// </summary>
     public static class ExtensionClass
     {
         public static unsafe Bitmap ToBitmap(this ImageData bitmap)
@@ -19,6 +23,13 @@ namespace VideoBinarizerTool
                 return new Bitmap(bitmap.ImageSize.Width, bitmap.ImageSize.Height, bitmap.Stride, PixelFormat.Format24bppRgb, new IntPtr(p));
             }
         }
+        
+        
+        /// <summary>
+        /// Set Pixel data to System.Drawing.Bitmap object
+        /// </summary>
+        /// <param name="data">3D array of image data</param>
+        /// <returns>System.Drawing.Bitmap object</returns>
         public static Bitmap SetPixelsColors(this double[,,] data)
         {
             Bitmap bitmapOutput = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
@@ -39,7 +50,7 @@ namespace VideoBinarizerTool
                     // calculate new pixel value
                     pixels[currentLine + x] = (byte)data[x / bytesPerPixel, y, 2];
                     pixels[currentLine + x + 1] = (byte)data[x / bytesPerPixel, y, 1];
-                    pixels[currentLine + x + 2] = (byte)data[x / bytesPerPixel, y, 0];
+                    pixels[currentLine + x+2] = (byte)data[x / bytesPerPixel, y, 0];
                 }
             }
 
