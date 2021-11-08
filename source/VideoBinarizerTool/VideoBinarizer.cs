@@ -25,8 +25,8 @@ namespace VideoBinarizerTool
         /// <summary>
         /// This method receive the string path of source video as input, use the package FFMediaToolkit to extract all the 
         /// frames of the video into .png files(Bitmap) in a specified folder.
-        /// The frames then go into other private methods in sequences : ToBW() => GetDim() => BWToVid() after finishing binerize the 
-        /// source video, the method DeleteFolder() is used to clear temporary data which used for the binerized process.
+        /// The frames then go into other private methods in sequences : ToBW() => GetDim() => BWToVid() after finishing binarize the 
+        /// source video, the method DeleteFolder() is used to clear temporary data which used for the binarized process.
         /// </summary>
         /// <param name="src">the path to the source video</param>
         /// <param name="config">the configuration of the Video binarizer</param>
@@ -54,7 +54,7 @@ namespace VideoBinarizerTool
 
             //
             //Extract all frames from source video then export them into specified folder.
-            Console.WriteLine("Binerizing all Frames....");
+            Console.WriteLine("Binarizing all Frames....");
             int frameNum = 0;
             while (file.Video.TryGetNextFrame(out var imageData))
             {
@@ -71,7 +71,7 @@ namespace VideoBinarizerTool
             GetDim($"{framesBWPath}\\BW{frameNum - 1}.png", out width, out height);
             int frameRate = Convert.ToInt32(frameNum / duration);
 
-            //Convert all binerized frames to Video.
+            //Convert all binarized frames to Video.
             Console.WriteLine("Converting to Video......");
             BWToVid(width, height, frameRate, framesBWPath);
             
@@ -83,8 +83,8 @@ namespace VideoBinarizerTool
         /// <summary>
         /// Binerized the output image into black and white (no grey) image
         /// </summary>
-        /// <param name="inputPath"></param>
-        /// <param name="outputPath"></param>
+        /// <param name="inputPath">string path to the folder that contain frames </param>
+        /// <param name="outputPath">string path to the folder that contain binarized frames</param>
         private void ToBW(string inputPath, string outputPath)
         {
             int ognWidth = Bitmap.FromFile(inputPath).Width > 512 ? 512 : Bitmap.FromFile(inputPath).Width;
@@ -126,7 +126,7 @@ namespace VideoBinarizerTool
         /// <param name="wd"></param>
         /// <param name="ht"></param>
         /// <param name="frameRate">framerate of the output radio</param>
-        /// <param name="frameBWPath">Path to the binerized frames</param>
+        /// <param name="frameBWPath">Path to the binarized frames</param>
         private void BWToVid(int wd, int ht, int frameRate,string frameBWPath)
         {
             string outputPath = $".\\{videoName}_Binerized.mp4";
@@ -136,7 +136,7 @@ namespace VideoBinarizerTool
             settings.CRF = 17;
             var file = MediaBuilder.CreateContainer(fullPath).WithVideo(settings).Create();
             //
-            //Get the paths of all binerized frames,this loop can be replace with
+            //Get the paths of all binarized frames,this loop can be replace with
             //files = Directory.GetFiles(inputBW)
             List<string> files = new List<string>();
             for (int k = 0; k < Directory.GetFiles(frameBWPath).Length; k++)
@@ -145,7 +145,7 @@ namespace VideoBinarizerTool
             }
             
             //
-            //Read all binerized frames(bitmap) and add them together to make an video
+            //Read all binarized frames(bitmap) and add them together to make an video
             foreach (var inputFile in files)
             {
                 var binInputFile = File.ReadAllBytes(inputFile);
@@ -163,7 +163,7 @@ namespace VideoBinarizerTool
 
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.BackgroundColor = ConsoleColor.White;
-            Console.WriteLine($@"The binerized video can be found at " + fullPath);
+            Console.WriteLine($@"The binarized video can be found at " + fullPath);
             Console.ResetColor();
         }
 
@@ -200,7 +200,7 @@ namespace VideoBinarizerTool
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.WriteLine($@"The extracted frames can be found at " + framesPath);
-                Console.WriteLine($@"The binerized frames can be found at " + framesBWPath);
+                Console.WriteLine($@"The binarized frames can be found at " + framesBWPath);
                 Console.ResetColor();
             }
         }
