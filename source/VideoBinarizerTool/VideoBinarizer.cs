@@ -19,12 +19,13 @@ namespace VideoBinarizerTool
     public class VideoBinarizer
     {
         private BinarizerParams config { get; set; }
-
+        public string videoName { get; set; }
+        public string videoPath { get; set; }
 
         /// <summary>
         /// This method receive the string path of source video as input, use the package FFMediaToolkit to extract all the 
         /// frames of the video into .png files(Bitmap) in a specified folder.
-        /// The frames then go into other private methods in sequences => ToBW() => GetDim() => ToVid() after finishing binerize the 
+        /// The frames then go into other private methods in sequences : ToBW() => GetDim() => BWToVid() after finishing binerize the 
         /// source video, the method DeleteFolder() is used to clear temporary data which used for the binerized process.
         /// </summary>
         /// <param name="src">the path to the source video</param>
@@ -34,8 +35,8 @@ namespace VideoBinarizerTool
             this.config = config;
             //
             //Get the video name, path to the video and path of the directory.
-            string videoName = Path.GetFileName(src);
-            string videoPath = Path.GetFullPath(src);
+            videoName = Path.GetFileName(src);
+            videoPath = Path.GetFullPath(src);
             string sourcePath = Path.GetDirectoryName(videoPath);
             
             //
@@ -74,7 +75,7 @@ namespace VideoBinarizerTool
             Console.WriteLine("Converting to Video......");
             BWToVid(width, height, frameRate, framesBWPath);
             
-
+            //let users decide to keep or delete the frames folders
             DeleteFolders(framesPath, framesBWPath);
 
         }
@@ -128,7 +129,7 @@ namespace VideoBinarizerTool
         /// <param name="frameBWPath">Path to the binerized frames</param>
         private void BWToVid(int wd, int ht, int frameRate,string frameBWPath)
         {
-            string outputPath = $".\\BinerizedVideo.mp4";
+            string outputPath = $".\\{videoName}_Binerized.mp4";
             string fullPath = Path.GetFullPath(outputPath);
             var settings = new VideoEncoderSettings(width: wd, height: ht, framerate: frameRate, codec: VideoCodec.H264);
             settings.EncoderPreset = EncoderPreset.Fast;
@@ -144,7 +145,7 @@ namespace VideoBinarizerTool
             }
             
             //
-            //Read all binerized frames and add it together to make an video
+            //Read all binerized frames(bitmap) and add them together to make an video
             foreach (var inputFile in files)
             {
                 var binInputFile = File.ReadAllBytes(inputFile);
