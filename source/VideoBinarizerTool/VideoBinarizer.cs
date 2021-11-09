@@ -87,6 +87,7 @@ namespace VideoBinarizerTool
         /// <param name="outputPath">string path to the folder that contain binarized frames</param>
         private void ToBW(string inputPath, string outputPath)
         {
+
             int ognWidth = Bitmap.FromFile(inputPath).Width > 512 ? 512 : Bitmap.FromFile(inputPath).Width;
             config.InputImagePath = inputPath;
             config.ImageWidth = ognWidth;
@@ -94,11 +95,14 @@ namespace VideoBinarizerTool
             
             var img = new ImageBinarizer(config);
             var k = img.GetArrayBinary();
+            //
+            // the pixel is white if R-G-B values = 255
+            //the pixel is black if R-G-B values = 0
             for (int a = 0; a < k.GetLength(0); a++)
             {
                 for (int b = 0; b < k.GetLength(1); b++)
                 {
-                    k[a, b, 0] = k[a, b, 0] * 225;
+                    k[a, b, 0] = k[a, b, 0] * 255;
                     k[a, b, 1] = k[a, b, 0];
                     k[a, b, 2] = k[a, b, 0];
                 }
