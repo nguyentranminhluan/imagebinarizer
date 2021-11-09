@@ -107,6 +107,9 @@ namespace ImageBinarizerUnitTest
             Assert.IsFalse(output.Contains("1"));
         }
 
+        /// <summary>
+        /// Test if green threshhold work correctly with custom threshold value 
+        /// </summary>
         [TestMethod]
         public void GreenThresholdTest()
         {
@@ -149,6 +152,9 @@ namespace ImageBinarizerUnitTest
 
         }
 
+        /// <summary>
+        /// Test if blue threshhold work correctly with custom threshold value 
+        /// </summary>
         [TestMethod]
         public void BlueThresholdTest()
         {

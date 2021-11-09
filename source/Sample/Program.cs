@@ -373,12 +373,14 @@ namespace Sample
             var vidToBinerize = new VideoBinarizer();            
             var config = new BinarizerParams()
             {
+                InputImagePath = "..\\..\\..\\..\\CommonFiles\\pedestrian.mp4",
                 //RedThreshold = 100,
                 //BlueThreshold = 80,
                 //GreenThreshold = 200,
                 //GetContour = true
+
             };
-            vidToBinerize.VidBinarize("..\\..\\..\\..\\CommonFiles\\pedestrian.mp4",config);
+            vidToBinerize.VidBinarize(config);
         }
 
 

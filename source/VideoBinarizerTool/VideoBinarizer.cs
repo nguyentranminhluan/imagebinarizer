@@ -30,13 +30,13 @@ namespace VideoBinarizerTool
         /// </summary>
         /// <param name="src">the path to the source video</param>
         /// <param name="config">the configuration of the Video binarizer</param>
-        public void VidBinarize(string src, BinarizerParams config)
+        public void VidBinarize( BinarizerParams config)
         {
             this.config = config;
             //
             //Get the video name, path to the video and path of the directory.
-            videoName = Path.GetFileName(src);
-            videoPath = Path.GetFullPath(src);
+            videoName = Path.GetFileName(config.InputImagePath);
+            videoPath = Path.GetFullPath(config.InputImagePath);
             string sourcePath = Path.GetDirectoryName(videoPath);
             
             //
@@ -129,7 +129,7 @@ namespace VideoBinarizerTool
         /// <param name="frameBWPath">Path to the binarized frames</param>
         private void BWToVid(int wd, int ht, int frameRate,string frameBWPath)
         {
-            string outputPath = $".\\{videoName}_Binerized.mp4";
+            string outputPath = $".\\Binerized_{videoName}";
             string fullPath = Path.GetFullPath(outputPath);
             var settings = new VideoEncoderSettings(width: wd, height: ht, framerate: frameRate, codec: VideoCodec.H264);
             settings.EncoderPreset = EncoderPreset.Fast;

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageBinarizerTool\ImageBinarizerTool.csproj" />
+    
     <ProjectReference Include="..\ImageBinarizer\ImageBinarizer.csproj" />
   </ItemGroup>
 
