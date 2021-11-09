@@ -2,8 +2,6 @@ using Daenet.ImageBinarizerLib;
 using Daenet.ImageBinarizerLib.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace ImageBinarizerUnitTest
 {

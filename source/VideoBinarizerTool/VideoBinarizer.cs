@@ -10,8 +10,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VideoBinarizerTool
 {
@@ -87,7 +85,8 @@ namespace VideoBinarizerTool
         /// <param name="outputPath">string path to the folder that contain binarized frames</param>
         private void ToBW(string inputPath, string outputPath)
         {
-
+            //
+            //scaledown the video to 512 pixels in width if resolution too large.
             int ognWidth = Bitmap.FromFile(inputPath).Width > 512 ? 512 : Bitmap.FromFile(inputPath).Width;
             config.InputImagePath = inputPath;
             config.ImageWidth = ognWidth;
