@@ -1,24 +1,23 @@
-﻿using Daenet.ImageBinarizerLib.ExtensionMethod;
+﻿using Daenet.Binarizer.ExtensionMethod;
 using SkiaSharp;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace Daenet.ImageBinarizerLib
+namespace Daenet.Binarizer
 {
     /// <summary>
     /// Get Set pixels data
     /// </summary>
-    public class ImagePixelsDataHandler
+    class ImagePixelsDataHandler
     {
-
         /// <summary>
         /// Get Pixels data from System.Drawing.Bitmap object.
         /// </summary>
         /// <param name="bitmapInput">Input Bitmap</param>
         /// <returns>3D array of color data</returns>
-        private protected double[,,] GetPixelsColors(Bitmap bitmapInput)
+        public double[,,] GetPixelsColors(Bitmap bitmapInput)
         {
             double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
 
@@ -41,6 +40,8 @@ namespace Daenet.ImageBinarizerLib
                 int currentLine = y * stride;
                 for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
                 {
+                    //
+                    // Bimap object saves the color bits in BGRA order in the byte array, where as the 3D array is in RGB order
                     colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x];
                     colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
                     colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x + 2];
@@ -52,10 +53,11 @@ namespace Daenet.ImageBinarizerLib
 
         /// <summary>
         /// Get Pixels data from SkiaSharp.SKBitmap object.
+        /// In this method, the input colors order of SKBitmap object needs to be converted to RGBA before passing to the method
         /// </summary>
-        /// <param name="bitmapInput">Input Bitmap</param>
+        /// <param name="bitmapInput">Input SKBitmap</param>
         /// <returns>3D array of color data</returns>
-        private protected double[,,] GetPixelsColors(SKBitmap bitmapInput)
+        public double[,,] GetPixelsColors(SKBitmap bitmapInput)
         {
             double[,,] colorData = new double[bitmapInput.Width, bitmapInput.Height, 3];
 
@@ -73,6 +75,8 @@ namespace Daenet.ImageBinarizerLib
                 int currentLine = y * stride;
                 for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
                 {
+                    //
+                    // The 3D array colors is in RGB order like the colors order of input Skbitmap.                    
                     colorData[x / bytesPerPixel, y, 0] = pixels[currentLine + x];
                     colorData[x / bytesPerPixel, y, 1] = pixels[currentLine + x + 1];
                     colorData[x / bytesPerPixel, y, 2] = pixels[currentLine + x + 2];
@@ -87,7 +91,7 @@ namespace Daenet.ImageBinarizerLib
         /// </summary>
         /// <param name="data">3D array of image data</param>
         /// <returns>System.Drawing.Bitmap object</returns>
-        private protected Bitmap SetPixelsColors(double[,,] data)
+        public Bitmap SetPixelsColors(double[,,] data)
         {
             Bitmap bitmapOutput = new Bitmap(data.GetLength(0), data.GetLength(1), PixelFormat.Format24bppRgb);
             BitmapData bitmapData = bitmapOutput.LockBits(new Rectangle(0, 0, bitmapOutput.Width, bitmapOutput.Height), ImageLockMode.ReadWrite, bitmapOutput.PixelFormat);
@@ -104,7 +108,9 @@ namespace Daenet.ImageBinarizerLib
                 int currentLine = y * bitmapData.Stride;
                 for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
                 {
-                    // calculate new pixel value
+                    //
+                    // Bimap object saves the color bits in BGRA order in the byte array, where as the 3D array is in RGB order.
+                    // Calculate new pixel value
                     pixels[currentLine + x] = (byte)data[x / bytesPerPixel, y, 2];
                     pixels[currentLine + x + 1] = (byte)data[x / bytesPerPixel, y, 1];
                     pixels[currentLine + x + 2] = (byte)data[x / bytesPerPixel, y, 0];

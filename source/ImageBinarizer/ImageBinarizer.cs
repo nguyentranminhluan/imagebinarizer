@@ -1,19 +1,20 @@
 ﻿using System.Drawing;
 using System.IO;
 using System.Text;
-using Daenet.ImageBinarizerLib.Entities;
+using Daenet.Binarizer.Entities;
 using LearningFoundation;
 using SkiaSharp;
 
-namespace Daenet.ImageBinarizerLib
+namespace Daenet.Binarizer
 {
     /// <summary>
     /// Main class for the Image Binarizer algorithm using Ipipeline
     /// </summary>
-    public class ImageBinarizer : ImagePixelsDataHandler, IPipelineModule<double[,,], double[,,]>
+    public class ImageBinarizer : IPipelineModule<double[,,], double[,,]>
     {
         #region Private members
         private BinarizerParams configuration;
+        private ImagePixelsDataHandler imageDataHandler;
 
         private int m_white = 1;
         private int m_black = 0;
@@ -29,6 +30,8 @@ namespace Daenet.ImageBinarizerLib
         public ImageBinarizer(BinarizerParams configuration)
         {
             this.configuration = configuration;
+            imageDataHandler = new ImagePixelsDataHandler();
+
             if (this.configuration.Inverse)
             {
                 this.m_white = 0;
@@ -106,8 +109,8 @@ namespace Daenet.ImageBinarizerLib
                 info.Height = this.m_TargetSize.Value.Height;
             }
             skBitmap = skBitmap.Resize(info, SKFilterQuality.High);
-
-            double[,,] inputData = GetPixelsColors(skBitmap);
+            
+            double[,,] inputData = imageDataHandler.GetPixelsColors(skBitmap);
 
             double[,,] outputData = GetBinary(inputData);
 
@@ -183,15 +186,15 @@ namespace Daenet.ImageBinarizerLib
         /// <param name="data">Data of bitmap for binarization</param>
         /// <returns>3D resized array for binarization</returns>
         private double[,,] ResizeImageData(double[,,] data)
-        {
-            Bitmap img = SetPixelsColors(data);
+        {            
+            Bitmap img = imageDataHandler.SetPixelsColors(data);
 
             this.m_TargetSize = GetTargetSizeFromConfigOrDefault(data.GetLength(0), data.GetLength(1));
 
             if (this.m_TargetSize != null)
                 img = new Bitmap(img, this.m_TargetSize.Value);
 
-            double[,,] resizedData = GetPixelsColors(img);
+            double[,,] resizedData = imageDataHandler.GetPixelsColors(img);
 
             return resizedData;
         }

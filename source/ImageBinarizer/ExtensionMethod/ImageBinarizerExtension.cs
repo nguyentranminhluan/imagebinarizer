@@ -1,10 +1,11 @@
-﻿using Daenet.ImageBinarizerLib.Entities;
+﻿using Daenet.Binarizer;
+using Daenet.Binarizer.Entities;
 using LearningFoundation;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Daenet.ImageBinarizerLib.ExtensionMethod
+namespace LearningFoundation.Binarizer
 {
     /// <summary>
     /// Extention Method class as per Learning Api Architecture

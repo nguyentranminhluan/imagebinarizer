@@ -1,11 +1,11 @@
-﻿using Daenet.ImageBinarizerApp.Entities;
-using Daenet.ImageBinarizerLib;
+﻿using Daenet.ImageBinarizerTool.Entities;
+using Daenet.Binarizer;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Daenet.ImageBinarizerApp
+namespace Daenet.ImageBinarizerTool
 {
     /// <summary>
     /// Program Class of Console App

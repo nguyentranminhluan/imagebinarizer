@@ -1,11 +1,11 @@
-﻿using Daenet.ImageBinarizerApp.Entities;
+﻿using Daenet.ImageBinarizerTool.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Daenet.ImageBinarizerApp
+namespace Daenet.ImageBinarizerTool
 {
     /// <summary>
     /// This class is use to Parse the arguments of the Application

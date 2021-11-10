@@ -1,5 +1,5 @@
-using Daenet.ImageBinarizerLib;
-using Daenet.ImageBinarizerLib.Entities;
+using Daenet.Binarizer;
+using Daenet.Binarizer.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing;
 

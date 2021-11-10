@@ -3,13 +3,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace Daenet.ImageBinarizerLib.ExtensionMethod
+namespace Daenet.Binarizer.ExtensionMethod
 {
 
     /// <summary>
     /// Extension for System.Drawing.Bitmap
     /// </summary>
-    public static class BitmapExtension
+    static class BitmapExtension
     {
         /// <summary>
         /// Get Bytes array that contains color info of Image

@@ -1,6 +1,6 @@
 using System;
 
-namespace Daenet.ImageBinarizerApp
+namespace Daenet.ImageBinarizerTool
 {
     public class LogoPrinter
     {

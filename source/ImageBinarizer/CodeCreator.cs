@@ -2,7 +2,7 @@
 using System.Text;
 
 
-namespace Daenet.ImageBinarizerLib
+namespace Daenet.Binarizer
 {
     /// <summary>
     /// Create LogoCreator.cs file for printing logo to console.

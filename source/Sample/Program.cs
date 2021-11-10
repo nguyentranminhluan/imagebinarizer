@@ -1,6 +1,6 @@
-﻿using Daenet.ImageBinarizerLib;
-using Daenet.ImageBinarizerLib.Entities;
-using Daenet.ImageBinarizerLib.ExtensionMethod;
+﻿using Daenet.Binarizer;
+using Daenet.Binarizer.Entities;
+using Daenet.Binarizer.ExtensionMethod;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

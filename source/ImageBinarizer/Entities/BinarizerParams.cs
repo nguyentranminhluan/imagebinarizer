@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Daenet.ImageBinarizerLib.Entities
+namespace Daenet.Binarizer.Entities
 {
     /// <summary>
     /// Object contains binarizer parameters used for binarization.
