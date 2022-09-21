@@ -50,7 +50,8 @@ namespace Sample
             //Sample14();
             //Sample15();
             //Sample16();
-            Sample17();
+            //Sample17();
+            VideoToImage("L:\\TrainingSet12.09.22\\Schraubendreher\\VID_20220912_123445.mp4",480,240,10);
 
         }
 
@@ -372,7 +373,7 @@ namespace Sample
             var vidToBinerize = new VideoBinarizer();            
             var config = new BinarizerParams()
             {
-                InputImagePath = "..\\..\\..\\..\\CommonFiles\\pedestrian.mp4",
+                InputImagePath = "L:\\TrainingSet12.09.22\\Schraubendreher\\VID_20220912_123445.mp4",
                 //RedThreshold = 100,
                 //BlueThreshold = 80,
                 //GreenThreshold = 200,
@@ -382,7 +383,21 @@ namespace Sample
             vidToBinerize.VidBinarize(config);
         }
 
-
+        /// <summary>
+        /// Convert video to Images for training
+        /// </summary>
+        public static void VideoToImage(string videoPath, int outputWidth, int outputHeight, int frameFilter)
+        {
+            var vidToImage = new VideoToImages();
+            var config = new BinarizerParams()
+            {
+                ImageHeight = outputHeight,
+                ImageWidth = outputWidth,
+                FrameFilter = frameFilter,
+                InputImagePath = videoPath
+            };
+            vidToImage.VidToImage(config);
+        }
         
 
 

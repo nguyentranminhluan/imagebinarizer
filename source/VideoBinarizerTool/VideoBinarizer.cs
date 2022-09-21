@@ -56,10 +56,26 @@ namespace VideoBinarizerTool
             int frameNum = 0;
             while (file.Video.TryGetNextFrame(out var imageData))
             {
-                imageData.ToBitmap().Save($"{framesPath}\\{frameNum}.png");
-                ToBW($"{framesPath}\\{frameNum}.png", $"{framesBWPath}\\BW{frameNum}.png");
+                if (frameNum % 10 == 0)
+                {
+                    //imageData.ToBitmap().Save($"{framesPath}\\{frameNum}.png");
+                    Bitmap b = new Bitmap(480, 270);
+                    Graphics g = Graphics.FromImage((System.Drawing.Image)b);
+                    g.DrawImage(imageData.ToBitmap(), 0, 0, 480, 270);
+                    g.Dispose();
+                    b.Save($"{framesPath}\\{frameNum}.png");
+                }
                 frameNum++;
+
+                //ToBW($"{framesPath}\\{frameNum}.png", $"{framesBWPath}\\BW{frameNum}.png");
+
+
+
             }
+
+            string[] allImages = Directory.GetFiles($"{framesPath}");
+
+
 
             //
             //Get the info of Dimension and Framerate for the output video.

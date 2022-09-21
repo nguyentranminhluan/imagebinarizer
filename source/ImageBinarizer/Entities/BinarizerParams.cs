@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace Daenet.Binarizer.Entities
@@ -69,6 +70,9 @@ namespace Daenet.Binarizer.Entities
         /// Get contour of the image
         /// </summary>
         public bool GetContour { get; set; } = false;
+
+
+        public int FrameFilter { get; set; } = 5;
         #endregion
     }
 
