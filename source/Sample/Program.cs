@@ -1,12 +1,14 @@
 ﻿using Daenet.Binarizer;
 using Daenet.Binarizer.Entities;
 using Daenet.Binarizer.ExtensionMethod;
+using Daenet.ImageBinarizerApp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using VideoBinarizerTool;
 
 namespace Sample
@@ -51,8 +53,57 @@ namespace Sample
             //Sample15();
             //Sample16();
             //Sample17();
-            VideoToImage("L:\\TrainingSet12.09.22\\Schraubendreher\\VID_20220912_123445.mp4",480,240,10);
 
+            //5241, 5243, 5288
+
+
+
+            //VideoToImage("D:\\gow\\OneDrive_1_07-11-2023\\Squeeze Connector 50252259 (Quetschverbinder 59)\\IMG_5260.MOV", 480, 240, 10);
+            //MoveImageToFolder("D:\\gow\\OneDrive_1_07-11-2023\\Squeeze Connector 50252259 (Quetschverbinder 59)\\frames", "D:\\gow\\OneDrive_1_07-11-2023\\Squeeze Connector 50252259 (Quetschverbinder 59)\\New folder");
+
+            //This method use VideoToImage method to go through all video in a folder and apple the method to each of them 
+
+            //VideoToImageFolder("D:\\gow\\OneDrive_1_07-11-2023\\Crimp Connector 50252411 (Quetschverbinder 11)", 480, 240, 10);
+
+
+            Sample27();
+
+        }
+
+        public static void MoveImageToFolder(string folderToMove, string targetFolder)
+        {
+            //this method move images from one folder to the destination folder, if image namge is exist, change the name of the image and move
+            string[] files = Directory.GetFiles(folderToMove, "*.png");
+            foreach (string sourceFilePath in files)
+            {
+                string fileName = Path.GetFileName(sourceFilePath);
+                string destinationFilePath = Path.Combine(targetFolder, fileName);
+
+                // Check if a file with the same name already exists in the destination folder
+                int count = 1;
+                while (File.Exists(destinationFilePath))
+                {
+                    string nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                    string fileExtension = Path.GetExtension(fileName);
+                    string newFileName = $"{nameWithoutExtension}_{count}{fileExtension}";
+                    destinationFilePath = Path.Combine(targetFolder, newFileName);
+                    count++;
+                }
+
+                // Move the file to the destination folder with the unique name
+                File.Move(sourceFilePath, destinationFilePath);
+            }
+        }
+
+
+        private static void VideoToImageFolder(string v1, int v2, int v3, int v4)
+        {
+            //this method go through all video in the folder and apply VideoToImage for each video 
+            string[] files = Directory.GetFiles(v1, "*.MOV");
+            foreach (string file in files)
+            {
+                VideoToImage(file, v2, v3, v4);
+            }
         }
 
         /// <summary>
@@ -74,6 +125,7 @@ namespace Sample
             Console.WriteLine(img.GetStringBinary());
 
         }
+
 
         /// <summary>
         /// This sample demonstrates how to create the image binary and save it to a text file with default setting.
@@ -369,8 +421,8 @@ namespace Sample
         /// </summary>
         public static void Sample17()
         {
-            
-            var vidToBinerize = new VideoBinarizer();            
+
+            var vidToBinerize = new VideoBinarizer();
             var config = new BinarizerParams()
             {
                 InputImagePath = "L:\\TrainingSet12.09.22\\Schraubendreher\\VID_20220912_123445.mp4",
@@ -398,9 +450,43 @@ namespace Sample
             };
             vidToImage.VidToImage(config);
         }
-        
 
 
-        
+        public static void Sample25()
+        {
+            //var vidToBinerize = new VideoBinarizer();
+            var objectDetector = new ObjectDetector($@"D:\test for heckler and koch\videotest1.wmv", $@"D:\test for heckler and koch\videoresult1.wmv");
+
+            objectDetector.CutVideo(0.0, 30.0);
+            //var config = new BinarizerParams()
+            //{
+            //    InputImagePath = $@"D:\test for heckler and koch\videotest1.wmv",
+            //    //RedThreshold = 100,
+            //    //BlueThreshold = 80,
+            //    //GreenThreshold = 200,
+            //    //GetContour = true
+
+            //};
+            //vidToBinerize.VidBinarize(config);
+        }
+
+        public static void Sample26()
+        {
+            var objectDetector = new ObjectDetector($@"D:\test for heckler and koch\videoresult1.wmv", $@"D:\test for heckler and koch\videoresultdetect.wmv");
+
+            objectDetector.ProcessVideo();
+        }
+
+
+        public static void Sample27()
+        {
+            var opticalFlowDetector = new OpticalFlowDetector();
+            opticalFlowDetector.Process();
+
+        }
+
+
+
+
     }
 }
