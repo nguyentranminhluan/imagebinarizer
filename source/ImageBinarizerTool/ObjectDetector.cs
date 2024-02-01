@@ -59,8 +59,8 @@ namespace Daenet.ImageBinarizerApp
                     break; // Break the loop if the video is finished
 
 
-                    // Apply the background subtraction
-                    Mat fgMask = new Mat();
+                // Apply the background subtraction
+                Mat fgMask = new Mat();
                 _bgndSub.Apply(frame, fgMask);
 
                 // Find contours in the foreground mask
@@ -81,8 +81,8 @@ namespace Daenet.ImageBinarizerApp
 
                     if (contourArea > minContourArea && roi.Contains(CvInvoke.BoundingRectangle(contours[i])))
                     {
-                    Rectangle boundingBox = CvInvoke.BoundingRectangle(contours[i]);
-                    CvInvoke.Rectangle(frame, boundingBox, new MCvScalar(0, 255, 0), 2); // Draw a green rectangle
+                        Rectangle boundingBox = CvInvoke.BoundingRectangle(contours[i]);
+                        CvInvoke.Rectangle(frame, boundingBox, new MCvScalar(0, 255, 0), 2); // Draw a green rectangle
                     }
                 }
 
@@ -127,7 +127,7 @@ namespace Daenet.ImageBinarizerApp
                 {
                     Mat frame = videoCapture.QueryFrame();
 
-                    if (frame == null || videoCapture.Get(CapProp.PosFrames) > endTime*fps)
+                    if (frame == null || videoCapture.Get(CapProp.PosFrames) > endTime * fps)
                         break;
 
                     // Write the frame to the output video

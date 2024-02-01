@@ -53,6 +53,7 @@ namespace Sample
             //Sample15();
             //Sample16();
             //Sample17();
+            RunAll($@"D:\test for heckler and koch\all videos\Trimmed", $@"D:\test for heckler and koch\all videos\Trimmed\Processed");
 
             //5241, 5243, 5288
 
@@ -65,8 +66,6 @@ namespace Sample
 
             //VideoToImageFolder("D:\\gow\\OneDrive_1_07-11-2023\\Crimp Connector 50252411 (Quetschverbinder 11)", 480, 240, 10);
 
-
-            Sample27();
 
         }
 
@@ -470,20 +469,47 @@ namespace Sample
             //vidToBinerize.VidBinarize(config);
         }
 
-        public static void Sample26()
+        public static void Sample26(string videoPath, string videoOutputPath)
         {
-            var objectDetector = new ObjectDetector($@"D:\test for heckler and koch\videoresult1.wmv", $@"D:\test for heckler and koch\videoresultdetect.wmv");
+            var objectDetector = new ObjectDetector(videoPath, videoOutputPath);
 
-            objectDetector.ProcessVideo();
+            objectDetector.CutVideo(0, 30.0);
         }
 
 
-        public static void Sample27()
+        public static void Sample27(string input, string output)
         {
             var opticalFlowDetector = new OpticalFlowDetector();
-            opticalFlowDetector.Process();
+            opticalFlowDetector.Process(input, output);
 
         }
+
+
+
+        static void RunAll(string folderPath, string outputFolderPath)
+        {
+            // Replace "your_folder_path" with the actual path of your video folder
+
+            // Get all video files in the folder with specific extensions (you can add more if needed)
+            string[] videoFiles = Directory.GetFiles(folderPath, "*.wmv");
+
+            // Process each video file
+            //foreach (string videoFile in videoFiles)
+            //{
+            //    string outputFileName = Path.GetFileNameWithoutExtension(videoFile) + "_processed.wmv";
+            //    string outputPath = Path.Combine(outputFolderPath, outputFileName);
+            //    // Replace "YourProcessingMethod" with the method you want to apply to each video file
+            //    Sample26(Path.GetFullPath(videoFile),outputPath);
+            //}
+            foreach (var videoFile in videoFiles)
+            {
+                string outputFileName = Path.GetFileNameWithoutExtension(videoFile) + "_processed.wmv";
+                string output = Path.Combine(outputFolderPath, outputFileName);
+                Sample27(Path.GetFullPath(videoFile), output);
+            }
+        }
+
+
 
 
 
